@@ -119,7 +119,7 @@ export function ChatRooms() {
 
   return chatRoomsElement.length > 0 ? (
     <div className="chat-rooms-page">
-      <h1 style={{ marginLeft: "45vw" }}>Chat rooms:</h1>
+      <h1 style={{ marginLeft: "auto", paddingLeft: "40vw", position: "absolute"}}>Chat rooms:</h1>
       <div className="chat-rooms-list">{chatRoomsElement}</div>
       <Link to="/newroom" className="new-room-button">
         <h3>Create new room +</h3>

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link, Routes, Route, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Sidebar from "../components/Sidebar";
 
 export default function HomePage(props) {
   const {
@@ -35,44 +36,29 @@ export default function HomePage(props) {
 
   return (
     <div>
-      <nav className="nav-bar">
-        {username ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "20px",
-            }}
-          >
-            <Link to="profile" className="profile-link">
-              <h1>{userInfo?.username ? userInfo?.username : username}</h1>
-            </Link>
-            <Link to="/" className="profile-page homepage">
-              <h1>Home</h1>
-            </Link>
-            <Link to="/chatrooms" className="profile-page chatrooms">
-              <h1>Chatrooms</h1>
-            </Link>
-            <Link to="/viewusers" className="profile-page viewusers">
-              <h1>View Users</h1>
-            </Link>
-          </div>
-        ) : (
-          <Link to="login" className="navbar-link">
-            <button>Login</button>
-          </Link>
-        )}
+      
+        
 
-        {username && (
-          <form onSubmit={handleLogout}>
-            <button className="logout-button">Logout</button>
-          </form>
-        )}
-      </nav>
-      <main>
-        <Outlet />
-      </main>
+          <main>
+            <div style={{display: "flex", flexDirection: "row"}}>
+            {username ? (
+              <Sidebar />
+              ) : (
+                <nav className="nav-bar">
+                  <Link to="login" className="navbar-link">
+                    <button>Login</button>
+                  </Link>
+                  {username && (
+                  <form onSubmit={handleLogout}>
+                    <button className="logout-button">Logout</button>
+                  </form>
+                  )}
+                </nav>  
+              )}
+              <Outlet />
+            </div>
+        </main>
+      
     </div>
   );
 }

@@ -5,6 +5,7 @@ import {
   ExpressUsersPutBio,
   ExpressUsersPutUsername,
 } from "../functions/ExpressFunctions.jsx";
+import ProfilePicture from "../components/assets/profile.png"
 
 export default function ProfilePage() {
   const {
@@ -67,15 +68,28 @@ export default function ProfilePage() {
 
   return username ? (
     userInfo?.username ? (
-      <div>
+      <div style={{color: "white"}}>
         <div className="profile-page header">
-          <h1 style={{ fontSize: "3rem" }}>My profile</h1>
+          <img src={ProfilePicture}/>
+          <div>
+            <h1 style={{ fontSize: "3rem", fontWeight: "300" }}>{fullName} ({userInfo?.username})</h1>
+            <h3 style={{fontWeight: "300"}}>{mail}</h3>
+          </div>
+        </div>
+        <div className="profile-page intermediary-line">
+          <h1>Profile Details</h1>
+          <h3 style={{fontWeight: "100", marginTop: "10px"}}>Update your profile information</h3>
+          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
+            borderWidth: "1px", color: "rgba(176, 176, 176, 0.84)"}}
+          ></div>
         </div>
         <div className="profile-page info">
-          <div style={{ display: "flex" }}>
-            <h3>
-              Username:{" "}
-              {loadingUsername ? "Loading new username..." : userInfo?.username}
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "10px"}}>
+            <h2>
+              Username:
+            </h2>
+            <h3 style={{fontWeight: "100"}}>
+                {loadingUsername ? "Loading new username..." : userInfo?.username}
             </h3>
             <div>
               <div className="list-element-div">
@@ -106,8 +120,15 @@ export default function ProfilePage() {
               <button> Submit Change </button>
             </form>
           )}
-          <h3>Full name: {fullName}</h3>
-          <h3>Email: {mail}</h3>
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "10px"}}>
+            <h2>Full name: </h2>
+            <h3 style={{fontWeight: "100"}}>{fullName}</h3>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "50px"}}>
+            <h2>Email: </h2>
+            <h3 style={{fontWeight: "100"}}>{mail}</h3>
+          </div>
 
           <div style={{ display: "flex" }}>
             <div
@@ -118,8 +139,10 @@ export default function ProfilePage() {
                 justifyContent: "center",
               }}
             >
-              <h3>Bio: </h3>
-              <h3>{loadingBio ? "Loading new bio..." : userInfo?.bio}</h3>
+              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "75px"}}>
+                <h2>Bio: </h2>
+                <h3 style={{fontWeight: "100"}}>{loadingBio ? "Loading new bio..." : userInfo?.bio}</h3>
+              </div>
             </div>
             <div
               style={{
@@ -157,7 +180,13 @@ export default function ProfilePage() {
             </form>
           )}
         </div>
-
+        <div className="profile-page intermediary-line">
+          <h1>Activity</h1>
+          <h3 style={{fontWeight: "100", marginTop: "10px"}}>Handle your activity</h3>
+          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "80vw", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
+            borderWidth: "1px", color: "rgba(176, 176, 176, 0.84)"}}
+          ></div>
+        </div>
         <div className="profile-page lists">
           <h1>Actions:</h1>
           <div style={{ display: "flex" }}>

@@ -1,50 +1,42 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactDOM from "react-dom/client";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+import "./chatpage.css";
 
 export default function ChatRoom() {
-  const { username, userId, setUsername, setWebSocket, webSocket, loadUser } =
-    useAuth();
+  const { username } = useAuth();
 
   return username ? <Chat /> : <h1>Please log in</h1>;
 }
 
 export function Chat() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  // const chatId = searchParams.get("chatid");
   const { roomid } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [updatedMessage, setUpdatedMessage] = useState("");
-  const [chatRoom, setChatRoom] = useState();
   const [newSendMessage, setNewSendMessage] = useState();
-  const {
-    username,
-    setUsername,
-    userId,
-    userInfo,
-    fetchUserInfo,
-    setWebSocket,
-    webSocket,
-    loadUser,
-  } = useAuth();
-  const [receivingUser, setReceivingUser] = React.useState();
+  const { userInfo, userId, setWebSocket, webSocket, fetchUserInfo } = useAuth();
+  const [chatRoom, setChatRoom] = useState();
+  const [logsRendered, setLogsRendered] = useState(false);
+  const [showEditMessage, setShowEditMessage] = useState();
   const navigate = useNavigate();
-  const [initiateChat, setInitiateChat] = React.useState(false);
-  const [logsRendered, setLogsRendered] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState();
-  const [showEditMessage, setShowEditMessage] = React.useState();
 
   async function fetchRoom() {
-    fetch(`/api/chats/room/${roomid}`).then((response) =>
-      response.json().then((data) => {
-        setChatRoom(data[0]);
-      }),
-    );
+    const response = await fetch(`/api/chats/room/${roomid}`);
+    const data = await response.json();
+    setChatRoom(data[0]);
   }
 
-  React.useEffect(() => {
+  async function fetchLog() {
+    const res = await fetch(`/api/chats/log/${userId}/${roomid}`);
+    if (res.status === 204) {
+      setMessages([]);
+    } else {
+      const data = await res.json();
+      setMessages(data);
+    }
+  }
+
+  useEffect(() => {
     fetchRoom();
     fetchUserInfo();
   }, []);
@@ -52,14 +44,11 @@ export function Chat() {
   useEffect(() => {
     const webSocket = new WebSocket(
       window.location.origin.replace(/^http/, "ws") +
-        `?roomid=${roomid}&userid=${userId}`,
+        `?roomid=${roomid}&userid=${userId}`
     );
 
     webSocket.addEventListener("open", () => {
-      const joinEventData = {
-        type: "join",
-        chat_room: roomid,
-      };
+      const joinEventData = { type: "join", chat_room: roomid };
       webSocket.send(JSON.stringify(joinEventData));
     });
 
@@ -68,15 +57,8 @@ export function Chat() {
       if (data?.type === "edited" || data?.type === "deleted") {
         fetchLog();
       } else if (data.type === "new-message") {
-        // console.log(data.messages[data.messages.length - 1].chat_room);
-        // console.log(roomid);
-        if (
-          data.messages[data.messages.length - 1].chat_room === parseInt(roomid)
-        ) {
-          setMessages((prev) => [
-            ...prev,
-            data.messages[data.messages.length - 1],
-          ]);
+        if (data.messages[data.messages.length - 1].chat_room === parseInt(roomid)) {
+          setMessages((prev) => [...prev, data.messages[data.messages.length - 1]]);
         }
       }
     };
@@ -86,7 +68,20 @@ export function Chat() {
     return () => {
       webSocket.close();
     };
-  }, []);
+  }, [roomid, userId]);
+
+  useEffect(() => {
+    if (!logsRendered) {
+      fetchLog();
+      setLogsRendered(true);
+    }
+  }, [logsRendered]);
+
+  useEffect(() => {
+    if (newSendMessage?.sending_user) {
+      webSocket.send(JSON.stringify(newSendMessage));
+    }
+  }, [newSendMessage]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -116,7 +111,6 @@ export function Chat() {
       message: e.target.updatedMessage.value,
       date: new Date().toString(),
     });
-    setNewMessage("");
   }
 
   function handleDeleteMessage(e, messageId) {
@@ -132,35 +126,7 @@ export function Chat() {
       message: "",
       date: new Date().toString(),
     });
-    setNewMessage("");
   }
-
-  async function fetchLog() {
-    const res = await fetch(`/api/chats/log/${userId}/${roomid}`);
-
-    if (res.status === 204) {
-      setInitiateChat(true);
-    } else {
-      const data = await res.json();
-      setMessages(data);
-    }
-  }
-  React.useEffect(() => {
-    if (newSendMessage?.sending_user) {
-      webSocket.send(JSON.stringify(newSendMessage));
-    }
-  }, [newSendMessage]);
-
-  React.useEffect(() => {
-    if (!logsRendered) {
-      fetchLog();
-    }
-  }, [logsRendered]);
-
-  React.useEffect(() => {
-    fetchLog();
-    setLogsRendered(true);
-  }, []);
 
   function handleLeave(e) {
     e.preventDefault();
@@ -169,131 +135,61 @@ export function Chat() {
     navigate("/chatrooms");
   }
 
-  const messageElements = messages.map((item, index) => {
-    return (
-      <div key={index} className="chat-message">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "left",
-          }}
-        >
-          <h5>
-            {item?.date.split(" ")[0] +
-              " " +
-              item?.date.split(" ")[1] +
-              " " +
-              item?.date.split(" ")[2] +
-              " " +
-              item?.date.split(" ")[3] +
-              " " +
-              item?.date.split(" ")[4]}
-            :
-          </h5>
-          <h2> {item?.sending_user}: </h2>
-        </div>
-        <div style={{ display: "flex", gap: "20px" }}>
-          {showEditMessage?.show === true &&
-          showEditMessage?.id === item?.message_id ? (
-            <form onSubmit={(e) => handleEditMessage(e, item?.message_id)}>
-              <input name="updatedMessage" />
-              <button>submit</button>
-            </form>
-          ) : (
-            <h3>
-              {" "}
-              {!item?.deleted ? (
-                item?.message
-              ) : (
-                <i style={{ color: "red" }}>{`message was deleted by user`}</i>
-              )}
-              {!item?.deleted && item?.edited ? (
-                <i style={{ fontWeight: "bold" }}>{` (edited)`}</i>
-              ) : null}{" "}
-            </h3>
-          )}
-          {userId === item?.sending_user_id && (
-            <div>
-              <button
-                onClick={() =>
-                  setShowEditMessage((prev) => {
-                    if (!prev?.show) {
-                      return { show: true, id: item?.message_id };
-                    } else {
-                      return { show: false, id: item?.message_id };
-                    }
-                  })
-                }
-              >
-                Edit message
-              </button>
-              <button onClick={(e) => handleDeleteMessage(e, item?.message_id)}>
-                Delete message
-              </button>
-            </div>
-          )}
-        </div>
+  const messageElements = messages.map((item, index) => (
+    <div key={index} className="chat-message">
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "left" }}>
+        <h5>{new Date(item?.date).toLocaleString()}</h5>
+        <h2>{item?.sending_user}: </h2>
       </div>
-    );
-  });
+      <div style={{ display: "flex", gap: "20px" }}>
+        {showEditMessage?.show && showEditMessage?.id === item?.message_id ? (
+          <form onSubmit={(e) => handleEditMessage(e, item?.message_id)}>
+            <input name="updatedMessage" />
+            <button>submit</button>
+          </form>
+        ) : (
+          <h3>
+            {!item?.deleted ? item?.message : <i style={{ color: "red" }}>message was deleted by user</i>}
+            {!item?.deleted && item?.edited ? <i style={{ fontWeight: "bold" }}> (edited)</i> : null}
+          </h3>
+        )}
+        {userId === item?.sending_user_id && (
+          <div>
+            <button onClick={() => setShowEditMessage((prev) => ({ show: !prev?.show, id: item?.message_id }))}>
+              Edit message
+            </button>
+            <button onClick={(e) => handleDeleteMessage(e, item?.message_id)}>Delete message</button>
+          </div>
+        )}
+      </div>
+    </div>
+  ));
 
   return chatRoom?.title ? (
-    <div style={{ height: "700px" }}>
-      <h1
-        style={{
-          marginLeft: "50vw",
-          transform: "translate(-50%)",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {chatRoom?.title}
-      </h1>
-      <div className="chatroom-list">{messages && messageElements}</div>
+    <div className="chat-page">
+      <h1>{chatRoom?.title}</h1>
+      <div className="chatroom-list">{messageElements}</div>
       <div className="title-div chat">
-        <form
-          style={{
-            display: "flex",
-            maxWidth: "50vw",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onSubmit={handleSubmit}
-        >
+        <form onSubmit={handleSubmit}>
           <input
             placeholder="Send a message"
             name="addMessage"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            style={{ width: "200px", height: "40px", display: "flex" }}
+            style={{ width: "200px", height: "40px" }}
           />
-          <button
-            style={{ height: "40px", width: "100px" }}
-            disabled={newMessage === "" ? true : false}
-          >
+          <button disabled={newMessage === ""} style={{ height: "40px", width: "100px" }}>
             Send message
           </button>
         </form>
-        <button
-          style={{
-            height: "40px",
-            width: "100px",
-            marginTop: "40px",
-            backgroundColor: "",
-            color: "red",
-            fontSize: "1rem",
-          }}
-          onClick={handleLeave}
-        >
+        <button onClick={handleLeave} style={{ height: "40px", width: "100px", marginTop: "40px", color: "red" }}>
           Leave chat
         </button>
       </div>
     </div>
   ) : (
-    <div className="lodaing-results-layout-div">
-      <h1> Loading chat... </h1>
+    <div className="loading-results-layout-div">
+      <h1>Loading chat...</h1>
     </div>
   );
 }

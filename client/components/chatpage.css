@@ -1,0 +1,45 @@
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh; /* Full viewport height */
+  width: 100vw;
+  float: right;
+  color: white;
+}
+
+.chatroom-list {
+  flex: 1; /* Take the remaining height after the header and input form */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.chat-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.title-div.chat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.title-div.chat form {
+  display: flex;
+  gap: 10px;
+}
+
+.title-div.chat button {
+  width: 100px;
+  height: 40px;
+}
