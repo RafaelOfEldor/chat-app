@@ -79,7 +79,7 @@ export default function ProfilePage() {
         <div className="profile-page intermediary-line">
           <h1>Profile Details</h1>
           <h3 style={{fontWeight: "100", marginTop: "10px"}}>Update your profile information</h3>
-          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
+          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "70vw", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
             borderWidth: "1px", color: "rgba(176, 176, 176, 0.84)"}}
           ></div>
         </div>
@@ -183,7 +183,7 @@ export default function ProfilePage() {
         <div className="profile-page intermediary-line">
           <h1>Activity</h1>
           <h3 style={{fontWeight: "100", marginTop: "10px"}}>Handle your activity</h3>
-          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "80vw", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
+          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "70vw", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
             borderWidth: "1px", color: "rgba(176, 176, 176, 0.84)"}}
           ></div>
         </div>

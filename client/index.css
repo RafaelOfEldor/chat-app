@@ -1,6 +1,6 @@
 * {
   margin: 0;
-  
+  font-family: "Nunito", sans-serif;
   
 }
 
@@ -273,7 +273,10 @@ body {
 }
 
 .chat-rooms-page {
+  text-align: center;
   height: 90vh;
+  width: 100vw;
+  color: white;
 }
 
 .chat-rooms-list {
@@ -283,19 +286,127 @@ body {
   margin-top: 20px;
 }
 
+
+
 .chat-room-card.div {
   display: flex;
   flex-direction: column;
-  border-style: solid;
+  border: 2px solid transparent;
+  border-radius: 10px; /* Rounded corners */
   min-width: 260px;
   min-height: 145px;
-  border-color: rgba(107, 207, 107, 0.2);
   text-decoration: none;
-  color: black;
+  color: white;
   justify-content: center;
+  padding: 20px;
   align-items: center;
   text-align: center;
-  background-color: rgba(107, 207, 107, 0.2);
+  background: #070E13;
+  position: relative; /* For positioning elements */
+  overflow: hidden; /* Prevent overflow from pseudo-element */ 
+  border-image-slice: 1;
+  border-image-width: 3px;
+  animation: rotate-border 20s linear infinite; /* Rotate animation */
+  cursor: pointer;
+}
+
+@keyframes rotate-border {
+  0% {
+    border-image-source: linear-gradient(142deg, rgba(255, 159, 55, 0.709) 0%, rgba(247, 217, 92, 1) 21%, rgba(255, 223, 132, 1) 37%, rgba(255, 109, 183, 1) 57%, rgba(255, 7, 91, 1) 72%, rgba(255, 200, 48, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  }
+  5% {
+    border-image-source: linear-gradient(142deg, rgba(247, 217, 92, 1) 0%, rgba(255, 223, 132, 1) 21%, rgba(255, 159, 55, 0.709) 37%, rgba(255, 109, 183, 1) 57%, rgba(255, 7, 91, 1) 72%, rgba(255, 200, 48, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  }
+  10% {
+    border-image-source: linear-gradient(142deg, rgba(255, 223, 132, 1) 0%, rgba(255, 159, 55, 0.709) 21%, rgba(247, 217, 92, 1) 37%, rgba(255, 109, 183, 1) 57%, rgba(255, 7, 91, 1) 72%, rgba(255, 200, 48, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  }
+  15% {
+    border-image-source: linear-gradient(142deg, rgba(255, 109, 183, 1) 0%, rgba(255, 223, 132, 1) 21%, rgba(255, 159, 55, 0.709) 37%, rgba(247, 217, 92, 1) 57%, rgba(255, 7, 91, 1) 72%, rgba(255, 200, 48, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  }
+  20% {
+    border-image-source: linear-gradient(142deg, rgba(255, 7, 91, 1) 0%, rgba(255, 109, 183, 1) 21%, rgba(255, 223, 132, 1) 37%, rgba(255, 159, 55, 0.709) 57%, rgba(247, 217, 92, 1) 72%, rgba(255, 200, 48, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  }
+  25% {
+    border-image-source: linear-gradient(142deg, rgba(255, 200, 48, 1) 0%, rgba(255, 7, 91, 1) 21%, rgba(255, 109, 183, 1) 37%, rgba(255, 223, 132, 1) 57%, rgba(255, 159, 55, 0.709) 72%, rgba(247, 217, 92, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  }
+  30% {
+    border-image-source: linear-gradient(142deg, rgba(209, 255, 52, 0.854) 0%, rgba(255, 200, 48, 1) 21%, rgba(255, 7, 91, 1) 37%, rgba(255, 109, 183, 1) 57%, rgba(255, 223, 132, 1) 72%, rgba(255, 159, 55, 0.709) 87%, rgba(247, 217, 92, 1) 100%);
+  }
+  35% {
+    border-image-source: linear-gradient(142deg, rgba(255, 159, 55, 0.709) 0%, rgba(209, 255, 52, 0.854) 21%, rgba(255, 200, 48, 1) 37%, rgba(255, 7, 91, 1) 57%, rgba(255, 109, 183, 1) 72%, rgba(255, 223, 132, 1) 87%, rgba(255, 223, 132, 1) 100%);
+  }
+  40% {
+    border-image-source: linear-gradient(142deg, rgba(255, 223, 132, 1) 0%, rgba(255, 159, 55, 0.709) 21%, rgba(209, 255, 52, 0.854) 37%, rgba(255, 200, 48, 1) 57%, rgba(255, 7, 91, 1) 72%, rgba(255, 109, 183, 1) 87%, rgba(255, 7, 91, 1) 100%);
+  }
+  45% {
+    border-image-source: linear-gradient(142deg, rgba(255, 109, 183, 1) 0%, rgba(255, 223, 132, 1) 21%, rgba(255, 223, 132, 1) 37%, rgba(255, 159, 55, 0.709) 57%, rgba(247, 217, 92, 1) 72%, rgba(255, 200, 48, 1) 87%, rgba(255, 159, 55, 0.709) 100%);
+  }
+  50% {
+    border-image-source: linear-gradient(142deg, rgba(255, 159, 55, 0.709) 0%, rgba(255, 200, 48, 1) 21%, rgba(255, 7, 91, 1) 37%, rgba(255, 223, 132, 1) 57%, rgba(255, 109, 183, 1) 72%, rgba(255, 159, 55, 0.709) 87%, rgba(247, 217, 92, 1) 100%);
+  }
+  55% {
+    border-image-source: linear-gradient(142deg, rgba(255, 200, 48, 1) 0%, rgba(255, 159, 55, 0.709) 21%, rgba(255, 223, 132, 1) 37%, rgba(255, 109, 183, 1) 57%, rgba(255, 7, 91, 1) 72%, rgba(209, 255, 52, 0.854) 87%, rgba(255, 223, 132, 1) 100%);
+  }
+  60% {
+    border-image-source: linear-gradient(142deg, rgba(209, 255, 52, 0.854) 0%, rgba(255, 200, 48, 1) 21%, rgba(255, 159, 55, 0.709) 37%, rgba(255, 7, 91, 1) 57%, rgba(255, 223, 132, 1) 72%, rgba(255, 109, 183, 1) 87%, rgba(255, 200, 48, 1) 100%);
+  }
+  65% {
+    border-image-source: linear-gradient(142deg, rgba(255, 159, 55, 0.709) 0%, rgba(255, 7, 91, 1) 21%, rgba(209, 255, 52, 0.854) 37%, rgba(255, 200, 48, 1) 57%, rgba(255, 109, 183, 1) 72%, rgba(255, 223, 132, 1) 87%, rgba(255, 223, 132, 1) 100%);
+  }
+  70% {
+    border-image-source: linear-gradient(142deg, rgba(255, 7, 91, 1) 0%, rgba(255, 200, 48, 1) 21%, rgba(255, 159, 55, 0.709) 37%, rgba(255, 109, 183, 1) 57%, rgba(209, 255, 52, 0.854) 72%, rgba(255, 223, 132, 1) 87%, rgba(255, 159, 55, 0.709) 100%);
+  }
+  75% {
+    border-image-source: linear-gradient(142deg, rgba(255, 200, 48, 1) 0%, rgba(255, 223, 132, 1) 21%, rgba(255, 159, 55, 0.709) 37%, rgba(255, 7, 91, 1) 57%, rgba(255, 109, 183, 1) 72%, rgba(209, 255, 52, 0.854) 87%, rgba(255, 7, 91, 1) 100%);
+  }
+  80% {
+    border-image-source: linear-gradient(142deg, rgba(255, 223, 132, 1) 0%, rgba(255, 159, 55, 0.709) 21%, rgba(255, 7, 91, 1) 37%, rgba(209, 255, 52, 0.854) 57%, rgba(255, 200, 48, 1) 72%, rgba(255, 109, 183, 1) 87%, rgba(255, 200, 48, 1) 100%);
+  }
+  85% {
+    border-image-source: linear-gradient(142deg, rgba(255, 109, 183, 1) 0%, rgba(255, 7, 91, 1) 21%, rgba(255, 223, 132, 1) 37%, rgba(255, 159, 55, 0.709) 57%, rgba(255, 200, 48, 1) 72%, rgba(209, 255, 52, 0.854) 87%, rgba(255, 159, 55, 0.709) 100%);
+  }
+  90% {
+    border-image-source: linear-gradient(142deg, rgba(255, 7, 91, 1) 0%, rgba(255, 159, 55, 0.709) 21%, rgba(255, 200, 48, 1) 37%, rgba(255, 109, 183, 1) 57%, rgba(255, 223, 132, 1) 72%, rgba(255, 223, 132, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  }
+  95% {
+    border-image-source: linear-gradient(142deg, rgba(255, 200, 48, 1) 0%, rgba(255, 7, 91, 1) 21%, rgba(209, 255, 52, 0.854) 37%, rgba(255, 159, 55, 0.709) 57%, rgba(255, 223, 132, 1) 72%, rgba(255, 109, 183, 1) 87%, rgba(255, 159, 55, 0.709) 100%);
+  }
+  100% {
+    border-image-source: linear-gradient(142deg, rgba(255, 159, 55, 0.709) 0%, rgba(247, 217, 92, 1) 21%, rgba(255, 223, 132, 1) 37%, rgba(255, 109, 183, 1) 57%, rgba(255, 7, 91, 1) 72%, rgba(255, 200, 48, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  }
+}
+
+.chatroom-card-title {
+  display: inline-block;
+  background: linear-gradient(142deg, rgba(255, 85, 55, 0.709) 0%, rgb(228, 119, 17) 21%, rgb(209, 82, 23) 37%, rgba(255, 109, 183, 1) 57%, rgba(255, 7, 91, 1) 72%, rgba(255, 200, 48, 1) 87%, rgba(209, 255, 52, 0.854) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: wave-colors 10s linear infinite, wave-position 5s ease-in-out infinite;
+}
+
+@keyframes wave-colors {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes wave-position {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+  75% {
+    transform: translateY(-2px);
+  }
 }
 
 .chat-room-card.link {
@@ -303,31 +414,48 @@ body {
   width: 100%;
   height: 100%;
 }
+
 .chat-room-card.editlink {
   width: 100%;
   height: 100%;
-  background-color: azure;
-  color: black;
+  background-color: rgba(67, 99, 201, 0.5);
+  color: white;
   font-size: 1.4rem;
   text-decoration: none;
+  border-radius: 8px; /* Rounded corners */
+  padding: 10px;
 }
 
 .chat-room-card.editlink:hover {
-  width: 100%;
+  color: white;
   background-color: rgba(67, 99, 201, 0.3);
 }
 
 .chat-room-card:hover {
-  background-color: rgba(107, 207, 107, 0.3);
+  background-color: #353E47;
+}
+
+.chat-room-card h4 {
+  margin: 5px 0; /* Adjust margin */
+  color: white;
+}
+
+.chat-room-card h4.red {
+  color: red;
+}
+
+.chat-room-card p {
+  margin: 0; /* Remove default margin */
 }
 
 .new-room-button {
-  position: sticky;
+  position: fixed;
   text-decoration: none;
   color: rgb(25, 0, 255);
   display: flex;
   top: 90vh;
-  margin-left: 45vw;
+  margin-left: 40vw;
+  transform: translate(-50%);
   border-style: solid;
   width: 170px;
   height: 50px;
@@ -458,11 +586,12 @@ body {
 .lodaing-results-layout-div {
   display: flex;
   margin-top: 50vh;
-  margin-left: 50vw;
+  margin-left: 45vw;
   align-items: center;
   justify-content: center;
   text-align: center;
   transform: translate(-50%, -50%);
+  color: white;
 }
 
 

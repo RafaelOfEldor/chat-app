@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ChatRoomsPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } =
@@ -29,6 +29,7 @@ export function ChatRooms() {
   const [initiateChat, setInitiateChat] = React.useState(false);
   const [logsRendered, setLogsRendered] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState();
+  const navigate = useNavigate()
 
   async function fetchRooms() {
     fetch(`/api/chats/rooms`).then((response) =>
@@ -82,44 +83,34 @@ export function ChatRooms() {
 
   const chatRoomsElement = chatRooms.map((item, index) => {
     return (
-      <div key={index} className="chat-room-card div">
-        <Link to={`/chatrooms/room/${item.id}`} className="chat-room-card link">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px 20px",
-            }}
-          >
-            <h2 style={{ color: "blue" }}>{item.title}</h2>
-            <h4 style={{ color: "black" }}>{item.description}</h4>
-            <h4 style={{ color: "red", marginBottom: "10px" }}>
-              Created by: {item.created_by}
-              {userId === item.created_by_id &&
-                item.created_by !== userInfo?.username && (
-                  <p style={{ color: "indigo" }}> {`(old username)`}</p>
-                )}
-              {userId === item.created_by_id && (
-                <p style={{ color: "blue", fontWeight: "bold" }}> {`(You)`}</p>
-              )}
-            </h4>
-          </div>
+      <div key={index} className="chat-room-card div" onClick={() => navigate(`/chatrooms/room/${item.id}`)}>
+      <Link to={`/chatrooms/room/${item.id}`} className="chat-room-card link">
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          <h2 className="chatroom-card-title">{item.title}</h2>
+          <h4 style={{minHeight: "20px"}}>{item.description !== "" ? <i>{item.description}</i>: <i>no description...</i>}</h4>
+          <h4 className="red" style={{fontWeight: "100", letterSpacing: "1"}}>
+            Created by: {item.created_by}
+            {userId === item.created_by_id && item.created_by !== userInfo?.username && (
+              <p style={{ color: "indigo" }}> (old username)</p>
+            )}
+            {userId === item.created_by_id && (
+              <p style={{ color: "orange", fontWeight: "bold" }}> (You)</p>
+            )}
+          </h4>
+        </div>
+      </Link>
+      {userId === item.created_by_id && (
+        <Link to={`/newroom/editroom?roomid=${item.id}`} className="chat-room-card editlink">
+          Edit
         </Link>
-        {userId === item.created_by_id && (
-          <Link
-            to={`/newroom/editroom?roomid=${item.id}`}
-            className="chat-room-card editlink"
-          >
-            Edit
-          </Link>
-        )}
-      </div>
+      )}
+    </div>
     );
   });
 
   return chatRoomsElement.length > 0 ? (
     <div className="chat-rooms-page">
-      <h1 style={{ marginLeft: "auto", paddingLeft: "40vw", position: "absolute"}}>Chat rooms:</h1>
+      <h1 style={{ left: "50vw"}}>Chat rooms:</h1>
       <div className="chat-rooms-list">{chatRoomsElement}</div>
       <Link to="/newroom" className="new-room-button">
         <h3>Create new room +</h3>
