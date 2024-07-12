@@ -1,0 +1,207 @@
+.profile-page.header {
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding-left: 50px;
+  margin-top: 10vh;
+  font-weight: thin;
+  gap: 20px;
+  margin-bottom: 50px;
+}
+
+.profile-page.header img {
+  border-radius: 10px;
+  width: 200px;
+  height: 200px;
+}
+
+.profile-page.intermediary-line {
+  margin-left: auto;
+  padding-left: 50px;
+  align-items: center;
+  text-align: start;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-weight: thin;
+}
+
+.profile-page.viewusers {
+  width: 120px;
+}
+
+.profile-page.info {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  text-align: start;
+  justify-content: start;
+  margin-left: auto;
+  padding-left: 50px;
+  gap: 30px 30px;
+}
+
+.profile-page.lists {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: start;
+  justify-content: start;
+  margin-left: auto;
+  padding-left: 50px;
+}
+
+.profile-page.list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 5px;
+  border-style: solid;
+  height: 50px;
+  width: 200px;
+  font-size: 2rem;
+  text-decoration: none;
+  border-color: rgb(82, 9, 150);
+  transition: ease-in-out 0.2s;
+}
+
+.profile-page.list:hover {
+  background-color: rgba(82, 9, 150, 0.2);
+  color: black;
+}
+
+.list-element-div {
+  display: flex;
+  gap: 10px;
+  font-size: 2rem;
+}
+
+.list-element-div > button {
+  
+  /* display: inline-block;
+  outline: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0 56px;
+  height: 45px;
+  line-height: 45px;
+  border-radius: 7px;
+  background-color: #0070f3;
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease; */
+
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  padding: 2px 16px;
+  height: 38px;
+  min-width: 96px;
+  min-height: 38px;
+  border: none;
+  color: #fff;
+  background-color: rgb(88, 101, 242);
+  transition: background-color .17s ease,color .17s ease;
+  
+  
+}
+
+.list-element-div > button:hover{
+  background-color: rgb(71, 82, 196);
+}
+
+.show-edit-div {
+  display: flex;
+  margin-top: 10px;
+  width: 300px;
+  justify-content: space-around;
+  gap: 20px;
+}
+.show-edit-div > input {
+  
+  padding: 6px 12px;
+  background: rgb(31, 32, 35);
+  border: 1px solid rgb(60, 63, 68);
+  border-radius: 4px;
+  font-size: 13px;
+  color: rgb(247, 248, 248);
+  height: 46px;
+  appearance: none;
+  transition: border 0.15s ease 0s;
+  
+
+}
+
+.show-edit-div > input:focus{
+  outline: none;
+  box-shadow: none;
+  border-color: rgb(100, 153, 255);
+}
+
+.show-edit-div > textarea {
+  
+  padding: 6px 12px;
+  background: rgb(31, 32, 35);
+  border: 1px solid rgb(60, 63, 68);
+  border-radius: 4px;
+  font-size: 1.2rem;
+  color: rgb(247, 248, 248);
+  height: 200px;
+  min-width: 400px;
+  appearance: none;
+  transition: border 0.15s ease 0s;
+  resize: none;
+
+}
+
+.show-edit-div > textarea:focus{
+  outline: none;
+  box-shadow: none;
+  border-color: rgb(100, 153, 255);
+}
+
+.show-edit-div > button {
+  /* display: inline-block;
+  outline: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0 56px;
+  height: 45px;
+  
+  border-radius: 7px;
+  background-color: #0070f3;
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease; */
+  
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  padding: 2px 16px;
+  height: 38px;
+  min-width: 96px;
+  min-height: 38px;
+  border: none;
+  color: #fff;
+  background-color: rgb(88, 101, 242);
+  transition: background-color .17s ease,color .17s ease;
+  
+}
+.show-edit-div > button:hover {
+  background-color: rgb(71, 82, 196);
+}

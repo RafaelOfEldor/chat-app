@@ -2,6 +2,8 @@ import React, { useContext, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { ExpressUsersPut } from "../functions/ExpressFunctions.jsx";
+import "./css/viewUsersPage.css"
+import "./css/loadingAndFiller.css"
 
 export default function ViewUsersPage() {
   const { username, fullName, userBio, userId, mail, loadUser, setUsername } =
@@ -60,7 +62,7 @@ export default function ViewUsersPage() {
         </Link>
       </div>
     ) : (
-      <div className="lodaing-results-layout-div">
+      <div className="loading-results-layout-div">
         <h1> Loading users... </h1>
       </div>
     )

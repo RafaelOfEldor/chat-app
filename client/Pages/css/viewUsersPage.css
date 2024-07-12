@@ -1,0 +1,83 @@
+.select-user-profile-card.nohover {
+  text-decoration: none;
+  display: flex;
+  border-style: solid;
+  border-width: 0.2rem;
+  width: 150px;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 25px;
+  border-color: green;
+  background-color: rgba(19, 146, 19, 0.3);
+  margin: 40px 40px;
+  color: blue;
+  transition: ease-in-out 0.1s;
+}
+
+.select-user-profile-card.hover {
+  text-decoration: none;
+  display: flex;
+  border-style: solid;
+  border-width: 0.2rem;
+  width: 150px;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 25px;
+  border-color: green;
+  background-color: rgba(9, 71, 9, 0.3);
+  margin: 40px 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.select-user-profiles-list {
+  margin-top: 10vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.exit-profile-button {
+  position: fixed;
+  display: flex;
+  width: 160px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  margin-top: 30vh;
+  margin-left: 35vw;
+  
+  border-style: solid;
+  border-width: 0.15rem;
+  /* background-color:rgba(207, 135, 107, 0.3); */
+  color: red;
+}
+
+.exit-profile-button:hover {
+  background-color: rgba(207, 135, 107, 0.3);
+}
+
+.exit-profile-select-button {
+  display: flex;
+  width: 160px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  margin-top: 5vh;
+  margin-left: 45vw;
+  border-style: solid;
+  border-width: 0.15rem;
+  /* background-color:rgba(207, 135, 107, 0.3); */
+  color: red;
+}
+
+.exit-profile-select-button:hover {
+  background-color: rgba(207, 135, 107, 0.3);
+}

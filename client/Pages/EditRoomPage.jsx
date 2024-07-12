@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ExpressChatroomPost } from "../functions/ExpressFunctions.jsx";
+import "./css/newRoomPage.css"
 
 export default function ChatRoomsPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } =
@@ -71,17 +72,16 @@ export function ChatRooms() {
       <form className="create-new-room-form" onSubmit={handleSubmit}>
         <div>
           <h2>Enter new title:</h2>
-          <input name="title" style={{ height: "30px", width: "200px" }} />
+          <input name="title" />
         </div>
         <div>
           <h2>Enter new description:</h2>
           <textarea
             name="description"
-            style={{ height: "200px", width: "300px" }}
           />
         </div>
         <div>
-          <button style={{ marginTop: "20px", width: "200px", height: "40px" }}>
+          <button >
             Save changes
           </button>
         </div>

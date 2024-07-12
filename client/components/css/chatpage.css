@@ -97,7 +97,11 @@
 .leave-chat-button {
   height: 40px;
   width: 100px;
-  color: red;
+  color: white;
+  background-color: rgba(255, 0, 0, 0.45);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 .title-div.chat button {

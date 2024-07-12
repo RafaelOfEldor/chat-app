@@ -5,7 +5,9 @@ import {
   ExpressUsersPutBio,
   ExpressUsersPutUsername,
 } from "../functions/ExpressFunctions.jsx";
-import ProfilePicture from "../components/assets/profile.png"
+import "./css/loadingAndFiller.css"
+import "./css/profilePage.css"
+
 
 export default function ProfilePage() {
   const {
@@ -70,7 +72,6 @@ export default function ProfilePage() {
     userInfo?.username ? (
       <div style={{color: "white"}}>
         <div className="profile-page header">
-          <img src={ProfilePicture}/>
           <div>
             <h1 style={{ fontSize: "3rem", fontWeight: "300" }}>{fullName} ({userInfo?.username})</h1>
             <h3 style={{fontWeight: "300"}}>{mail}</h3>
@@ -169,7 +170,7 @@ export default function ProfilePage() {
           </div>
           {showEditBio && (
             <form onSubmit={handleEditBio} className="show-edit-div">
-              <input
+              <textarea
                 placeholder="change here"
                 value={updatedBio}
                 onChange={(e) => handleChangeBio(e)}
@@ -180,30 +181,9 @@ export default function ProfilePage() {
             </form>
           )}
         </div>
-        <div className="profile-page intermediary-line">
-          <h1>Activity</h1>
-          <h3 style={{fontWeight: "100", marginTop: "10px"}}>Handle your activity</h3>
-          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "70vw", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
-            borderWidth: "1px", color: "rgba(176, 176, 176, 0.84)"}}
-          ></div>
-        </div>
-        <div className="profile-page lists">
-          <h1>Actions:</h1>
-          <div style={{ display: "flex" }}>
-            <Link to={`/chatrooms/room/${1}`} className="profile-page list">
-              General chat
-            </Link>
-            <Link to="/chatrooms" className="profile-page list">
-              Chat-rooms
-            </Link>
-            <Link to="/viewusers" className="profile-page list">
-              Users
-            </Link>
-          </div>
-        </div>
       </div>
     ) : (
-      <div className="lodaing-results-layout-div">
+      <div className="loading-results-layout-div">
         <h1> Loading profile... </h1>
       </div>
     )

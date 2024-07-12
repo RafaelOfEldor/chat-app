@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoginWithOpenidButton from "../functions/LoginWithOpenidButton";
 import LoginWithActiveDirectoryButton from "../functions/LoginWithActiveDirectoryButton";
+import "./css/loginPage.css"
 
 export default function LoginPage(props) {
   const [username, setUsername] = React.useState("");

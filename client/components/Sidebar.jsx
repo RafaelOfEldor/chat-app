@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FiSettings, FiSearch, FiChevronLeft, FiMessageCircle, FiZap, FiLogOut, FiUsers, FiChevronRight } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
-import "./sidebar.css";
+import "./css/sidebar.css";
 import logo from "./assets/logo.gif";
 import { useAuth } from "../context/AuthContext";
-import ProfileImg from "./assets/profile.png";
+
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -47,7 +47,7 @@ const Sidebar = () => {
     <nav className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-top-wrapper">
         <div className="sidebar-top">
-          <a href="/profile" className="logo__wrapper">
+          <a href="/" className="logo__wrapper">
             <img src={logo} alt="Logo" className="logo-small" />
             <span className="hide">Yappington</span>
           </a>
@@ -148,7 +148,6 @@ const Sidebar = () => {
       <div className="divider"></div>
       <div className="sidebar__profile">
         <div className="avatar__wrapper">
-          <img className="avatar" src={ProfileImg} alt="Joe Doe Picture" />
           <div className="online__status"></div>
         </div>
         <section className="avatar__name hide">

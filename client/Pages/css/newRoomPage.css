@@ -1,0 +1,86 @@
+.create-new-room-page {
+  display: flex;
+  height: auto;
+  width: 100vw;
+  color: white;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-new-room-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px 30px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.create-new-room-form input{
+  width: 400px;
+  padding: 6px 12px;
+  background: rgb(31, 32, 35);
+  border: 1px solid rgb(60, 63, 68);
+  border-radius: 4px;
+  font-size: 13px;
+  color: rgb(247, 248, 248);
+  height: 60px;
+  appearance: none;
+  transition: border 0.15s ease 0s;
+  font-size: 1.2rem;
+}
+
+.create-new-room-form textarea{
+  font-size: 1.2rem;
+  width: 600px;
+  padding: 6px 12px;
+  background: rgb(31, 32, 35);
+  border: 1px solid rgb(60, 63, 68);
+  border-radius: 4px;
+
+  color: rgb(247, 248, 248);
+  height: 400px;
+  appearance: none;
+  transition: border 0.15s ease 0s;
+  resize: none;
+}
+
+.create-new-room-form input:focus{
+  outline: none;
+  box-shadow: none;
+  border-color: rgb(100, 153, 255);
+}
+
+.create-new-room-form textarea:focus{
+  outline: none;
+  box-shadow: none;
+  border-color: rgb(100, 153, 255);
+}
+
+.create-new-room-form button{
+  text-decoration: none;
+
+  width: auto;
+  height: 50px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  outline: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0 56px;
+  line-height: 45px;
+  border-radius: 7px;
+  /* background-color: #0070f3; */
+  background: rgba(0,118,255,0.7);
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
+}
+
+.create-new-room-form button:hover{
+  background-color: #0070f3;
+  box-shadow: 0 6px 20px rgb(0 118 255 / 23%);
+}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import { FiEdit3, FiTrash2, FiXCircle } from "react-icons/fi";
-import "./chatpage.css";
+import "./css/chatpage.css";
 
 export default function ChatRoom() {
   const { username } = useAuth();
@@ -316,7 +316,10 @@ export function Chat() {
     chatRoom?.title ? (
     <div className="chat-page" style={{textAlign: "center"}}>
       <div style={{textAlign: "start", backgroundColor: "grey"}}>
-        <h1 style={{marginRight: "auto", marginLeft: "50px", marginTop: "20px"}}>{chatRoom?.title}</h1>
+        <div style={{display: "flex", alignItems: "center"}}>
+          <h1 style={{marginRight: "auto", marginLeft: "50px", marginTop: "20px"}}>{chatRoom?.title}</h1>
+          <button className="leave-chat-button" onClick={(e) => handleLeave(e)} style={{marginTop: "20px", marginRight: "50px"}}>Leave chat</button>
+        </div>
         <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "auto", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
           borderWidth: "1px", color: "rgba(176, 176, 176, 0.84)"}}
           >

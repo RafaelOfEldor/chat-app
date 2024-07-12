@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link, Routes, Route, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
+import "./css/HomePage.css"
 
 export default function HomePage(props) {
   const {
@@ -18,6 +19,7 @@ export default function HomePage(props) {
   React.useEffect(() => {
     loadUser();
     fetchUserInfo();
+    console.log(window.location.pathname)
   }, []);
 
   async function handleLogout(e) {
@@ -33,17 +35,23 @@ export default function HomePage(props) {
     await loadUser();
     navigate("/");
   }
-
+  
   return (
     <div>
-      
-        
-
           <main>
             <div style={{display: "flex", flexDirection: "row"}}>
-            {username ? (
-              <Sidebar />
-              ) : (
+            {username ? 
+            window.location.pathname !== "/" ?
+              ( <Sidebar />) 
+              :
+              (
+                <div >
+               
+                </div>  
+              )
+              
+              :
+              (
                 <nav className="nav-bar">
                   <Link to="login" className="navbar-link">
                     <button>Login</button>

@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./css/loadingAndFiller.css"
 
 export default function LoginCallbackPage(props) {
   const [debug, setDebug] = React.useState();
@@ -74,7 +75,7 @@ export default function LoginCallbackPage(props) {
   }, [window.location.hash]);
   return (
     <div style={{ marginTop: "100px" }}>
-      <div className="lodaing-results-layout-div">
+      <div className="loading-results-layout-div">
         <h1> Loading profile... </h1>
       </div>
       <div>{error}</div>
