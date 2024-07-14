@@ -311,6 +311,11 @@
   background: none;
   border: none;
   margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.logout:hover {
+  scale: 1.6
 }
 
 .expand-btn {

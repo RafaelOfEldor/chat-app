@@ -15,6 +15,10 @@
   transition: ease-in-out 0.1s;
 }
 
+body {
+  
+}
+
 .back-to-home-from-login-button:hover {
   background-color: rgba(10, 16, 36, 0.3);
   cursor: pointer;

@@ -1,19 +1,160 @@
+
+
+.view-users-page {
+  text-align: start;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  padding-right: 100px;
+  padding-left: 40px;
+  overflow-y: auto;
+}
+
+/* WebKit Scrollbar Styles */
+.view-users-page::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+.view-users-page::-webkit-scrollbar-track {
+  background: rgb(31, 32, 35); /* Track color */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.view-users-page::-webkit-scrollbar-thumb {
+  background: rgb(60, 63, 68); /* Thumb color */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.view-users-page::-webkit-scrollbar-thumb:hover {
+  background: rgb(100, 153, 255); /* Thumb color on hover */
+}
+
 .select-user-profile-card.nohover {
   text-decoration: none;
   display: flex;
-  border-style: solid;
-  border-width: 0.2rem;
-  width: 150px;
-  height: 100px;
+
+  width: auto;
+  height: 60px;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-radius: 25px;
-  border-color: green;
-  background-color: rgba(19, 146, 19, 0.3);
-  margin: 40px 40px;
-  color: blue;
+  color: white;
   transition: ease-in-out 0.1s;
+}
+
+.header-section {
+  margin-top: 80px;
+}
+
+.header-section h4{
+  font-weight: 100;
+  
+}
+
+
+.header-section-bar {
+  display: flex;
+}
+
+.header-section-bar h1 {
+  font-size: 3rem;
+}
+
+.view-profile-button {
+  margin-right: 20px;
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  padding: 2px 16px;
+  height: 32px;
+  min-width: 60px;
+  min-height: 32px;
+  border: none;
+  color: #fff;
+  background-color: rgb(88, 155, 242);
+  transition: background-color .17s ease,color .17s ease;
+}
+
+.view-profile-button:hover {
+  background-color: rgb(70, 135, 242);
+}
+
+.send-message-button {
+  margin-right: 20px;
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  padding: 2px 16px;
+  height: 32px;
+  min-width: 60px;
+  min-height: 32px;
+  border: none;
+  color: #fff;
+  background-color: rgb(88, 101, 242);
+  transition: background-color .17s ease,color .17s ease;
+}
+
+.send-message-button:hover {
+  background-color: rgb(71, 82, 196);
+}
+
+.add-user {
+  scale: 1.5; 
+  margin-right: 30px;
+  cursor: pointer;
+  transition: .17s;
+}
+
+.add-user:hover {
+  scale: 1.6; 
+  color: rgb(10, 216, 113);
+}
+
+.search-wrapper {
+  position: relative;
+  margin-left: auto;
+  height: 50px
+}
+
+.search-wrapper input {
+  background: var(--background);
+  height: 2.5rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 0 0.5rem;
+  padding-left: 2rem;
+  flex-grow: 1;
+  outline: none;
+  border: none;
+}
+
+.search-wrapper svg {
+  position: absolute;
+  z-index: 10;
+  top: 25%;
+  left: 0.4rem;
+  transform: translateY(-50,);
+  pointer-events: none;
+  right: 1.5rem;
+  color: black;
+  scale: 1.2;
+}
+
+.user-element {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  gap: 15px;
 }
 
 .select-user-profile-card.hover {
@@ -21,7 +162,7 @@
   display: flex;
   border-style: solid;
   border-width: 0.2rem;
-  width: 150px;
+  width: auto;
   height: 100px;
   align-items: center;
   justify-content: center;
@@ -34,10 +175,13 @@
   cursor: pointer;
 }
 
+
 .select-user-profiles-list {
-  margin-top: 10vh;
+  margin-top: 1vh;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  max-width: 90vw;
+  padding-bottom: 100px;
 }
 
 .exit-profile-button {

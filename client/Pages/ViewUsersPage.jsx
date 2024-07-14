@@ -2,6 +2,8 @@ import React, { useContext, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { ExpressUsersPut } from "../functions/ExpressFunctions.jsx";
+import { FiUser, FiUserPlus, FiSearch, FiSend } from "react-icons/fi";
+import { VscAccount, VscSend  } from "react-icons/vsc";
 import "./css/viewUsersPage.css"
 import "./css/loadingAndFiller.css"
 
@@ -12,6 +14,7 @@ export default function ViewUsersPage() {
   const [updatedBio, setUpdatedBio] = React.useState("");
   const [allUsers, setAllUsers] = React.useState([]);
   const [isHovering, setIsHovering] = React.useState();
+  const [searchQuery, setSearchQuery] = React.useState("");
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
@@ -28,38 +31,134 @@ export default function ViewUsersPage() {
     fetchAllUsers();
   }, []);
 
+  // React.useEffect(() => {
+  //   if(searchedUserProfileElement) {
+  //     console.log(searchedUserProfileElement)
+  //   }
+    
+  // }, [searchQuery]);
+
+  
+
+  const handleSearchChange = (event) => {
+    console.log(searchQuery)
+    setSearchQuery(event.target.value);
+  };
+
   const userProfileElement = allUsers.map((item, index) => {
     return (
-      <NavLink
-        key={index}
-        onMouseOver={() => setIsHovering({ hover: true, hoveringId: index })}
-        onMouseLeave={() => setIsHovering()}
-        className={
-          isHovering?.hover === true && isHovering?.hoveringId === index
-            ? "select-user-profile-card hover"
-            : "select-user-profile-card nohover"
+      <div style={{height: "60px", marginTop: "3px"}}>
+        {index === 0 && 
+          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "auto", gap: "20px", borderStyle: "solid", borderRadius: "10px",
+            borderWidth: "1px", color: "rgba(176, 176, 176, 0.5)"}}
+          ></div>
         }
-        to={`/viewusers/user?userid=${item.id}`}
-      >
-        <div>
-          <h2>
-            {isHovering?.hover === true && isHovering?.hoveringId === index
-              ? "View profile"
-              : item.username}
-          </h2>
+        <div className="select-user-profile-card nohover">
+          <div className="user-element">
+                <VscAccount  style={{scale: "1.5", marginLeft: "10px"}}/>
+                <h4 style={{fontSize: "1.2rem", fontWeight: "300"}}>
+                  {item.username}
+                </h4>
+                <i style={{fontSize: "0.9rem", fontWeight: "300"}}>
+                  {item.email}
+                </i>
+                <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
+                  onClick={() => navigate(`/viewusers/user?userid=${item.id}`)}
+                >
+                  View profile
+                  
+                </button>
+                <button className="send-message-button" style={{ display: "flex", alignItems: "center", gap: "5px"}}>
+                  Message
+                  <VscSend />
+                </button>
+                <FiUserPlus className="add-user" />
+          </div>
         </div>
-      </NavLink>
+        <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "auto", gap: "20px",  borderStyle: "solid", borderRadius: "10px",
+            borderWidth: "1px", color: "rgba(176, 176, 176, 0.5)"}}
+          ></div>
+      </div>
     );
   });
 
+  const searchedUserProfileElement = allUsers
+  .filter((a) => a.username.toLowerCase().includes(searchQuery.toLowerCase()))
+  .map((item, index) => (
+    <div key={item.id} style={{ height: "60px", marginTop: "3px" }}>
+      {index === 0 && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "auto",
+            gap: "20px",
+            borderStyle: "solid",
+            borderRadius: "10px",
+            borderWidth: "1px",
+            color: "rgba(176, 176, 176, 0.5)",
+          }}
+        ></div>
+      )}
+      <div className="select-user-profile-card nohover">
+        <div className="user-element">
+          <VscAccount style={{ scale: "1.5", marginLeft: "10px" }} />
+          <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>{item.username}</h4>
+          <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>{item.email}</i>
+          <button
+            className="view-profile-button"
+            style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px" }}
+            onClick={() => navigate(`/viewusers/user?userid=${item.id}`)}
+          >
+            View profile
+          </button>
+          <button className="send-message-button" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            Message
+            <VscSend />
+          </button>
+          <FiUserPlus className="add-user" />
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "auto",
+          gap: "20px",
+          borderStyle: "solid",
+          borderRadius: "10px",
+          borderWidth: "1px",
+          color: "rgba(176, 176, 176, 0.5)",
+        }}
+      ></div>
+    </div>
+  ));
+
+
   return username ? (
-    userProfileElement?.length > 0 ? (
-      <div>
-        <h1 style={{ marginLeft: "45vw", marginTop: "50px" }}>All profiles:</h1>
-        <div className="select-user-profiles-list">{userProfileElement}</div>
-        <Link to="/profile" className="exit-profile-select-button">
+    userProfileElement?.length > 0 ? 
+    (
+      <div className="view-users-page">
+        <div className="header-section">
+          <h4>View all users</h4>
+          <div className="header-section-bar">
+
+            <h1 >Users</h1>
+            <div className="search-wrapper">
+              <FiSearch />
+              <input type="search" placeholder="Search users..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="select-user-profiles-list">{searchQuery === "" ? userProfileElement : searchedUserProfileElement}</div>
+        {/* <Link to="/profile" className="exit-profile-select-button">
           <h2>Back to my profile</h2>
-        </Link>
+        </Link> */}
       </div>
     ) : (
       <div className="loading-results-layout-div">

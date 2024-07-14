@@ -15,6 +15,9 @@ const Sidebar = () => {
     username,
     mail,
     userInfo,
+    setUsername,
+    setUserId,
+    loadUser
   } = useAuth();
 
   useEffect(() => {
@@ -154,8 +157,8 @@ const Sidebar = () => {
           <div className="user-name">{userInfo?.username}</div>
           <div className="email">{mail}</div>
         </section>
-        <button  className="logout" onClick={() => handleLogout}>
-          {!collapsed && <FiLogOut />}
+        <button onClick={(e) => handleLogout(e)} className="logout" >
+          {!collapsed && <FiLogOut/>}
         </button>
       </div>
     </nav>

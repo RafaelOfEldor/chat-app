@@ -14,6 +14,7 @@ export function Chat() {
   const { roomid } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [chatLoaded, setChatLoaded] = useState(false);
   const [newSendMessage, setNewSendMessage] = useState();
   const { userInfo, userId, setWebSocket, webSocket, fetchUserInfo } = useAuth();
   const [chatRoom, setChatRoom] = useState();
@@ -31,12 +32,17 @@ export function Chat() {
   }
 
   async function fetchLog() {
+    if (messages?.length < 0) {
+      setChatLoaded(false)
+    }
     const res = await fetch(`/api/chats/log/${userId}/${roomid}`);
     if (res.status === 204) {
       setMessages([]);
+      setChatLoaded(true)
     } else {
       const data = await res.json();
       setMessages(data);
+      setChatLoaded(true)
     }
   }
 
@@ -312,8 +318,8 @@ export function Chat() {
     )
   });
 
-  return messageElements?.length > 0 ? 
-    chatRoom?.title ? (
+  return chatLoaded ? 
+      (
     <div className="chat-page" style={{textAlign: "center"}}>
       <div style={{textAlign: "start", backgroundColor: "grey"}}>
         <div style={{display: "flex", alignItems: "center"}}>
@@ -326,7 +332,7 @@ export function Chat() {
 
         </div>
       </div>
-      <div className="chatroom-list" ref={chatroomRef}>{messageElements}</div>
+      <div className="chatroom-list" ref={chatroomRef}>{messageElements?.length > 0 ? messageElements : <i>New chat</i>}</div>
       <div className="title-div chat">
         <form onSubmit={handleSubmit}>
           <textarea
@@ -342,10 +348,6 @@ export function Chat() {
           </button>
         </form>
       </div>
-    </div>
-  ) : (
-    <div className="loading-results-layout-div">
-      <h1>Loading chat...</h1>
     </div>
   ) :
   (

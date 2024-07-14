@@ -52,16 +52,16 @@ export default function HomePage(props) {
               
               :
               (
-                <nav className="nav-bar">
-                  <Link to="login" className="navbar-link">
+                <div>
+                  {/* <Link to="login" className="navbar-link">
                     <button>Login</button>
                   </Link>
                   {username && (
                   <form onSubmit={handleLogout}>
                     <button className="logout-button">Logout</button>
                   </form>
-                  )}
-                </nav>  
+                  )} */}
+                </div>  
               )}
               <Outlet />
             </div>
