@@ -31,12 +31,66 @@ export default function ViewUsersPage() {
     fetchAllUsers();
   }, []);
 
+  React.useEffect(() => {
+   console.log(allUsers)
+    
+  }, [allUsers]);
+
   // React.useEffect(() => {
   //   if(searchedUserProfileElement) {
   //     console.log(searchedUserProfileElement)
   //   }
     
   // }, [searchQuery]);
+
+  async function handleDirectMessageChat(receivingUserId, receivingUserUsername) {
+
+    const res = await fetch(`/api/chats/rooms`)
+    
+
+    if (res.ok) {
+      const data = await res.json();
+      const isDm = data.find(room => {
+        if (room.users.length === 2) {
+          if (room.users.includes(userId) && room.users.includes(receivingUserId)) {
+            return true;
+          }
+        }
+      })
+      console.log(isDm)
+      console.log(data)
+      if (isDm) {
+        // navigate(`/chatrooms/room/${isDm.id}`)
+      } else {
+        const newRoom = {
+          title: receivingUserUsername,
+          description: "",
+          id: data?.length + 1,
+          type: "dm",
+          isPublic: false,
+          users: [userId, receivingUserId],
+          created_by: username,
+          created_by_id: userId,
+        };
+        const res = await fetch("/api/chats/rooms/newroom", {
+          method: "POST",
+          body: JSON.stringify(newRoom),
+          headers: {
+            "content-type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          setErrorMessage("A room with that name already exists!");
+        } else if (res.ok) {
+          // navigate("/chatrooms");
+        }
+      }
+      
+    } else {
+      console.error("Couldn't fetch rooms")
+    }
+    // navigate(`/api/chats/rooms`)
+  }
 
   
 
@@ -68,7 +122,7 @@ export default function ViewUsersPage() {
                   View profile
                   
                 </button>
-                <button className="send-message-button" style={{ display: "flex", alignItems: "center", gap: "5px"}}>
+                <button className="send-message-button" onClick={() => handleDirectMessageChat(item?.id, item?.username)} style={{ display: "flex", alignItems: "center", gap: "5px"}}>
                   Message
                   <VscSend />
                 </button>
@@ -113,7 +167,7 @@ export default function ViewUsersPage() {
           >
             View profile
           </button>
-          <button className="send-message-button" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <button className="send-message-button" onClick={() => handleDirectMessageChat(item?.id, item?.username)} style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             Message
             <VscSend />
           </button>

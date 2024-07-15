@@ -8,6 +8,7 @@ import WelcomePage from "./Pages/WelcomePage";
 import ChatRoomsPage from "./Pages/ChatRoomsPage";
 import NewRoomPage from "./Pages/NewRoomPage";
 import ChatRoom from "./components/ChatRoom";
+import DirectMessagesRoom from "./components/DirectMessagesRoom";
 import ViewUsersPage from "./Pages/ViewUsersPage";
 import UserProfile from "./components/UserProfile";
 import EditRoomPage from "./Pages/EditRoomPage";
@@ -21,6 +22,7 @@ export default function RoutesPage() {
         <Route path="login/callback" element={<LoginCallbackPage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="chatrooms" element={<ChatRoomsPage />} />
+        <Route path="directmessage/:receivinguser" element={<DirectMessagesRoom />} />
         <Route path="chatrooms/room/:roomid" element={<ChatRoom />} />
         <Route path="newroom" element={<NewRoomPage />} />
         <Route path="newroom/:editroom" element={<EditRoomPage />} />

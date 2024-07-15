@@ -338,6 +338,7 @@
 
 .online__status {
   position: absolute;
+  transform: translate(0, 70%);
   bottom: 0;
   right: 0;
   width: 0.75rem;

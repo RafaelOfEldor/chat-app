@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiSettings, FiSearch, FiChevronLeft, FiMessageCircle, FiZap, FiLogOut, FiUsers, FiChevronRight } from 'react-icons/fi';
+import { VscAccount, VscSend  } from "react-icons/vsc";
 import { useNavigate, Link } from 'react-router-dom';
 import "./css/sidebar.css";
 import logo from "./assets/logo.gif";
@@ -151,6 +152,7 @@ const Sidebar = () => {
       <div className="divider"></div>
       <div className="sidebar__profile">
         <div className="avatar__wrapper">
+          <VscAccount style={{scale: "2", marginRight: "10px"}}/>
           <div className="online__status"></div>
         </div>
         <section className="avatar__name hide">

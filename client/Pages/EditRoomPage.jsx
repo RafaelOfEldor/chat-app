@@ -14,6 +14,7 @@ export default function ChatRoomsPage() {
 
 export function ChatRooms() {
   const [chatRooms, setChatRooms] = useState([]);
+  const [isPublic, setIsPublic] = useState([]);
   const {
     username,
     setUsername,
@@ -67,6 +68,10 @@ export function ChatRooms() {
     }
   }
 
+  const handleSelectionChange = (event) => {
+    setIsPublic(event.target.value === 'public');
+  };
+
   return (
     <div className="create-new-room-page">
       <form className="create-new-room-form" onSubmit={handleSubmit}>
@@ -80,9 +85,15 @@ export function ChatRooms() {
             name="description"
           />
         </div>
-        <div>
-          <button >
-            Save changes
+        <div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
+          <select onChange={handleSelectionChange} defaultValue="public" style={{display: "flex", alignItems: "center", textAlign: "start", justifyContent: "center",
+          marginLeft: "40px"
+          }}>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+          <button style={{marginRight: "40px"}}>
+            Create room
           </button>
         </div>
         {errorMessage && <h1 style={{ color: "red" }}>{errorMessage}</h1>}

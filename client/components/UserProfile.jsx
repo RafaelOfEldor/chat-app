@@ -66,8 +66,6 @@ export default function UserProfile() {
               </div>
             </div>
           </div>
-
-
           <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "50px"}}>
             <h2>Email: </h2>
             <h3 style={{fontWeight: "100"}}>{userProfileInfo?.email}</h3>

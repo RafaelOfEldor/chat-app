@@ -7,6 +7,8 @@ dotenv.config();
 export function ChatRouter(mongoDatabase) {
   const router = new Router();
 
+  //Chat rooms
+
   router.get("/log/:sendingUserId/:chatId", async (req, res) => {
     try {
       const { sendingUserId } = req.params;
@@ -180,6 +182,130 @@ export function ChatRouter(mongoDatabase) {
           {
             sending_user_id: sendinguserid,
             chat_room: chatroom,
+            message_id: parseInt(messageid),
+          },
+          { $set: { deleted: true } },
+          { returnDocument: true },
+        );
+        res.sendStatus(200);
+      } catch (error) {
+        console.error("Error login in:", error);
+        res.status(500).json({ error: "Failed to create goal" });
+      }
+      res.end();
+    },
+  );
+
+
+  // Direct messages
+
+  router.get(
+    "/log/:sendingUserId/:recievingUserId/:chatId",
+    async (req, res) => {
+      try {
+        const { sendingUserId, recievingUserId, chatId } = req.params;
+        const chats = [];
+        let i = 1;
+        do {
+          const chatExist = await mongoDatabase
+            .collection("direct-messages")
+            .findOne({
+              sending_user_id: sendingUserId.toString(),
+              receiving_user_id: recievingUserId.toString(),
+              chat_id: 1,
+              message_id: i,
+            });
+  
+          const chatExistMirror = await mongoDatabase
+            .collection("direct-messages")
+            .findOne({
+              sending_user_id: recievingUserId.toString(),
+              receiving_user_id: sendingUserId.toString(),
+              chat_id: 1,
+              message_id: i,
+            });
+          if (chatExist) {
+            const chat = await mongoDatabase
+              .collection("direct-messages")
+              .find({
+                sending_user_id: sendingUserId.toString(),
+                receiving_user_id: recievingUserId.toString(),
+                chat_id: 1,
+                message_id: i,
+              })
+              .toArray();
+            chats.push(chat[0]);
+          } else if (chatExistMirror) {
+            const chat = await mongoDatabase
+              .collection("direct-messages")
+              .find({
+                sending_user_id: recievingUserId.toString(),
+                receiving_user_id: sendingUserId.toString(),
+                chat_id: 1,
+                message_id: i,
+              })
+              .toArray();
+            chats.push(chat[0]);
+          } else {
+            break;
+          }
+          i++;
+        } while (true);
+        if (chats.length > 0) {
+          // console.log(chats)
+          res.json(chats);
+        } else {
+          res.status(204).json({ message: "Currently no messages in this chat" });
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ error: "Failed to fetch user" });
+      }
+    },
+  );
+
+  router.post("/send/directmessage", async (req, res) => {
+    try {
+      const userInput = req.body;
+      await mongoDatabase.collection("direct-messages").insertOne(userInput);
+      res.sendStatus(204);
+    } catch (error) {
+      console.error("Error login in:", error);
+      res.status(500).json({ error: "Failed to create goal" });
+    }
+    res.end();
+  });
+
+  router.put("/send/directmessage", async (req, res) => {
+    try {
+      const userInput = req.body;
+      await mongoDatabase.collection("direct-messages").updateOne(
+        {
+          sending_user_id: userInput.sending_user_id,
+          receiving_user_id: userInput.receiving_user_id,
+          message_id: userInput.message_id,
+        },
+        { $set: { message: userInput.message, edited: true } },
+        { returnDocument: true },
+      );
+      res.sendStatus(200);
+    } catch (error) {
+      console.error("Error login in:", error);
+      res.status(500).json({ error: "Failed to create goal" });
+    }
+    res.end();
+  });
+
+  router.delete(
+    "/delete/directmessage/:sendinguserid/:receivinguserid/:messageid",
+    async (req, res) => {
+      try {
+        const { sendinguserid, receivignuserid, messageid } = req.params;
+        const chatroom = parseInt(req.params.chatroom);
+        await mongoDatabase.collection("direct-messages").updateOne(
+          {
+            sending_user_id: sendinguserid,
+            receiving_user_id: receivignuserid,
             message_id: parseInt(messageid),
           },
           { $set: { deleted: true } },

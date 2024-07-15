@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { VscAccount, VscSend  } from "react-icons/vsc";
 import "./css/chatRoomsPage.css"
 import "./css/loadingAndFiller.css"
 
@@ -17,6 +18,7 @@ export function ChatRooms() {
   const [chatRooms, setChatRooms] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [newSendMessage, setNewSendMessage] = useState();
+  const [allUsers, setAllUsers] = React.useState([]);
   const {
     username,
     setUsername,
@@ -41,11 +43,28 @@ export function ChatRooms() {
     );
   }
 
+  async function fetchAllUsers() {
+    fetch(`/api/users/get/allusers`).then((response) =>
+      response.json().then((data) => {
+        setAllUsers(data);
+        console.log(data);
+      }),
+    );
+  }
+
+  React.useEffect(() => {
+    fetchAllUsers();
+  }, []);
+
   React.useEffect(() => {
     if (newSendMessage?.receiving_user) {
       webSocket.send(JSON.stringify(newSendMessage));
     }
   }, [newSendMessage]);
+
+  useEffect(() => {
+    console.log(chatRooms);
+  }, [chatRooms])
 
   React.useEffect(() => {
     fetchRooms();
@@ -84,6 +103,8 @@ export function ChatRooms() {
   }
 
   const chatRoomsElement = chatRooms.map((item, index) => {
+    if (item?.type === "dm") return;
+    if (item?.isPublic || item?.users.find(a => a === userId)) {
     return (
       <div key={index} className="chat-room-card full-element">
         <div className="chat-room-card div">
@@ -104,18 +125,57 @@ export function ChatRooms() {
         </Link>
         </div>
           {userId === item.created_by_id && (
-            <Link to={`/newroom/editroom?roomid=${item.id}`} className="chat-room-card-editlink">
-              Edit
-            </Link>
+            <div style={{display: "flex", width: "100%", height: "auto", justifyContent: "center"}}>
+              <Link to={`/newroom/editroom?roomid=${item.id}`} className="chat-room-card-editlink">
+                Edit
+              </Link>
+              <button style={{width: "50%"}} className="chat-room-card-delete-button">
+              Delete
+              </button>
+            </div>
           )}
       </div>
-      );
+      )}
     });
+
+    const directMessagesElement = chatRooms.map((item, index) => {
+      if (item?.type !== "dm") return;
+      if (item?.users?.length !== 2) return;
+      if (item?.users?.includes(userId)) {
+        const otherDmUser = item?.users?.find(user => user !== userId)
+        const user = allUsers?.find(user => (user.id === otherDmUser))
+      return (
+          <Link to={`/chatrooms/room/${item.id}`} className="chat-room-dm-link">
+            <div className="chat-room-dm-link-content">
+              <VscAccount style={{scale: "2"}}/>
+              <div>
+                <h4>{user?.username}</h4>
+                <i>{user?.email}</i>
+              </div>
+            </div>
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "99%", gap: "20px",  borderStyle: "solid", borderRadius: "10px",
+            borderWidth: "1px", color: "rgba(69, 218, 190, 0.3)"}}
+          ></div>
+          </Link>
+        )}
+      });
+
 
   return chatRoomsElement.length > 0 ? (
     <div className="chat-rooms-page">
-      <h1 style={{ left: "50vw"}}>Chat rooms:</h1>
-      <div className="chat-rooms-list">{chatRoomsElement}</div>
+      
+      <div style={{display: "flex", gap: "40px"}}>
+        <div style={{display: "flex", flexDirection: "column", textAlign: "start"}}>  
+         <h1 style={{ marginLeft: "2vw"}}>Chat rooms:</h1>
+          <div className="chat-rooms-list">
+            {chatRoomsElement}
+          </div>
+        </div>
+        <div className="direct-messages-sidebar">
+          <h2 style={{marginBottom: "10px"}}>Direct messages</h2>
+          {directMessagesElement}
+          </div>
+      </div>
       <Link to="/newroom" className="new-room-button">
         <h3>Create new room +</h3>
       </Link>
