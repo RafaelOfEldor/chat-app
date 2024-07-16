@@ -22,7 +22,11 @@ const Sidebar = () => {
   } = useAuth();
 
   useEffect(() => {
-    setActiveLink(window.location.href);
+    if (window.location.pathname === "/chatrooms") {
+      setActiveLink("#messages");
+    }
+    // setActiveLink(window.location.href);
+    // console.log(window.location.pathname);
   }, []);
 
   async function handleLogout(e) {
@@ -152,7 +156,7 @@ const Sidebar = () => {
       <div className="divider"></div>
       <div className="sidebar__profile">
         <div className="avatar__wrapper">
-          <VscAccount style={{scale: "2", marginRight: "10px"}}/>
+          <VscAccount style={{scale: "2", }}/>
           <div className="online__status"></div>
         </div>
         <section className="avatar__name hide">

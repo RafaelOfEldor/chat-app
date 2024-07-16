@@ -188,6 +188,11 @@ export default function ProfilePage() {
       </div>
     )
   ) : (
-    <h1>please log in</h1>
+    <div style={{display: "flex", gap: "40px", color: "white"}}>
+    <h1>Please log in</h1>
+    <button onClick={() => navigate("/login")}
+    style={{width: "150px", height: "50px", fontSize: "1.3rem"}}
+      >Login</button>
+  </div>
   );
 }

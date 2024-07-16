@@ -2,14 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { VscAccount, VscSend  } from "react-icons/vsc";
-import "./css/chatRoomsPage.css"
+import "./css/communitiesPage.css"
 import "./css/loadingAndFiller.css"
 
-export default function ChatRoomsPage() {
+export default function CommunitiesPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } =
     useAuth();
-  const navigate = useNavigate()
 
   return username ? <ChatRooms /> : 
   <div style={{display: "flex", gap: "40px", color: "white"}}>
@@ -25,7 +23,6 @@ export function ChatRooms() {
   const [chatRooms, setChatRooms] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [newSendMessage, setNewSendMessage] = useState();
-  const [allUsers, setAllUsers] = React.useState([]);
   const {
     username,
     setUsername,
@@ -50,28 +47,11 @@ export function ChatRooms() {
     );
   }
 
-  async function fetchAllUsers() {
-    fetch(`/api/users/get/allusers`).then((response) =>
-      response.json().then((data) => {
-        setAllUsers(data);
-        console.log(data);
-      }),
-    );
-  }
-
-  React.useEffect(() => {
-    fetchAllUsers();
-  }, []);
-
   React.useEffect(() => {
     if (newSendMessage?.receiving_user) {
       webSocket.send(JSON.stringify(newSendMessage));
     }
   }, [newSendMessage]);
-
-  useEffect(() => {
-    console.log(chatRooms);
-  }, [chatRooms])
 
   React.useEffect(() => {
     fetchRooms();
@@ -113,36 +93,30 @@ export function ChatRooms() {
     if (item?.type === "dm") return;
     if (item?.isPublic || item?.users.find(a => a === userId)) {
     return (
-      <div key={index} className="chat-room-card full-element">
-        <div className="chat-room-card div">
-        <Link to={`/chatrooms/room/${item.id}`} className="chat-room-card link">
-          <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+      <div key={index} className="community-room-card full-element">
+        <div className="community-room-card div">
+        <Link to={`/chatrooms/room/${item.id}`} className="community-room-card link">
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <h2 className="chatroom-card-title">{item.title}</h2>
-            <h4 style={{minHeight: "20px"}}>{item.description !== "" ? 
-              <i>{item.description.slice(0, 21)}<br/>{item.description.slice(21, 40)}{item.description.length > 40 && "..."}</i>
-              :
-              <i style={{fontWeight: "100"}}>no description</i>}
-            </h4>
+            <h4 style={{minHeight: "20px"}}>{item.description !== "" ? <i>{item.description}</i>: <i>no description...</i>}</h4>
             <h4 className="red" style={{fontWeight: "100", letterSpacing: "1"}}>
-              Created by:
-            {userId === item.created_by_id ? <i style={{ color: "cyan"}}> You</i>: <t style={{ color: "white"}}> {item.created_by}</t>}
-              {/* Created by: {item.created_by}
+              Created by: {item.created_by}
               {userId === item.created_by_id && item.created_by !== userInfo?.username && (
                 <p style={{ color: "indigo" }}> (old username)</p>
               )}
               {userId === item.created_by_id && (
                 <p style={{ color: "orange", fontWeight: "bold" }}> (You)</p>
-              )} */}
+              )}
             </h4>
           </div>
         </Link>
         </div>
           {userId === item.created_by_id && (
             <div style={{display: "flex", width: "100%", height: "auto", justifyContent: "center"}}>
-              <Link to={`/newroom/editroom?roomid=${item.id}`} className="chat-room-card-editlink">
+              <Link to={`/newroom/editroom?roomid=${item.id}`} className="community-room-card-editlink">
                 Edit
               </Link>
-              <button style={{width: "50%"}} className="chat-room-card-delete-button">
+              <button style={{width: "50%"}} className="community-room-card-delete-button">
               Delete
               </button>
             </div>
@@ -151,53 +125,13 @@ export function ChatRooms() {
       )}
     });
 
-    const directMessagesElement = chatRooms.map((item, index) => {
-      if (item?.type !== "dm") return;
-      if (item?.users?.length !== 2) return;
-      if (item?.users?.includes(userId)) {
-        const otherDmUser = item?.users?.find(user => user !== userId)
-        const user = allUsers?.find(user => (user.id === otherDmUser))
-      return (
-          <Link to={`/chatrooms/room/${item.id}`} className="chat-room-dm-link">
-            <div className="chat-room-dm-link-content">
-              <VscAccount style={{scale: "2"}}/>
-              <div>
-                <h4>{user?.username}</h4>
-                <i>{user?.email}</i>
-              </div>
-            </div>
-            <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "99%", gap: "20px",  borderStyle: "solid", borderRadius: "10px",
-            borderWidth: "1px", color: "rgba(69, 218, 190, 0.3)"}}
-          ></div>
-          </Link>
-        )}
-      });
   return chatRoomsElement.length > 0 ? (
-    <div className="chat-rooms-page">
-      
-      
-      <div style={{display: "flex", gap: "0", height: "100%"}}>
-        <div className="chat-rooms-list-container">  
-        <h1 style={{ marginLeft: "2vw"}}>Chat rooms</h1>
-          <div className="chat-rooms-list">
-            {chatRoomsElement}
-          </div>
-          <div className="new-room-button-div">
-              <Link to="/newroom" className="new-room-button">
-                <h3>Create new room +</h3>
-              </Link>
-            </div>
-        </div>
-        <div className="direct-messages-sidebar">
-          <h2 style={{marginBottom: "10px", position: "sticky", top: "0", 
-            background: "linear-gradient(to bottom right, rgba(39, 16, 82, 1), rgba(50, 20, 100, 1), rgba(70, 30, 120, 1), rgba(100, 40, 150, 1), rgba(39, 16, 82, 1))", 
-            marginLeft: "auto", width: "100%", zIndex: "100", color: "#43B4D8",
-            borderBottom: "solid 1px #151A1E", boxShadow: "0 4px 2px -2px rgba(0, 0, 0, 0.4)"
-          }}>Direct messages</h2>
-          {directMessagesElement?.length > 0 ? directMessagesElement : <i style={{marginTop: "10px"}}>You currently have no direct messages.</i>}
-          </div>
-      </div>
-      
+    <div className="community-rooms-page">
+      <h1 style={{ left: "50vw"}}>Chat rooms:</h1>
+      <div className="community-rooms-list">{chatRoomsElement}</div>
+      <Link to="/newroom" className="new-room-button-communities">
+        <h3>Create new room +</h3>
+      </Link>
     </div>
   ) : chatRooms ? (
     <div className="loading-results-layout-div">

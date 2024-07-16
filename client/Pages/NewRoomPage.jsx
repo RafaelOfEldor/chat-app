@@ -9,7 +9,13 @@ export default function ChatRoomsPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } =
     useAuth();
 
-  return username ? <ChatRooms /> : <h1>Please log in</h1>;
+  return username ? <ChatRooms /> : 
+  <div style={{display: "flex", gap: "40px", color: "white"}}>
+    <h1>Please log in</h1>
+    <button onClick={() => navigate("/login")}
+    style={{width: "150px", height: "50px", fontSize: "1.3rem"}}
+      >Login</button>
+  </div>
 }
 
 export function ChatRooms() {

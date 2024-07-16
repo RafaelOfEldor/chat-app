@@ -17,6 +17,7 @@
   bottom: 0;
   min-height: 100vh;
   max-height: 100vh;
+  min-width: 300px;
   padding: 0rem 0rem;
   border-bottom-right-radius: 1rem;
   border-top-right-radius: 1rem;
@@ -30,6 +31,7 @@
 }
 
 .collapsed {
+  min-width: 0rem;
   max-width: 5rem;
   display: flex;
   align-items: center;

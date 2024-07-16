@@ -108,6 +108,7 @@ export default function ViewUsersPage() {
           ></div>
         }
         <div className="select-user-profile-card nohover">
+            {item?.id === userId ?
           <div className="user-element">
                 <VscAccount  style={{scale: "1.5", marginLeft: "10px"}}/>
                 <h4 style={{fontSize: "1.2rem", fontWeight: "300"}}>
@@ -117,7 +118,22 @@ export default function ViewUsersPage() {
                   {item.email}
                 </i>
                 <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
-                  onClick={() => navigate(`/viewusers/user?userid=${item.id}`)}
+                onClick={() => navigate(`/profile`)}
+                >
+                  Go to profile  
+                </button>
+                </div>
+                :
+                <div className="user-element">
+                <VscAccount  style={{scale: "1.5", marginLeft: "10px"}}/>
+                <h4 style={{fontSize: "1.2rem", fontWeight: "300"}}>
+                  {item.username}
+                </h4>
+                <i style={{fontSize: "0.9rem", fontWeight: "300"}}>
+                  {item.email}
+                </i>
+                <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
+                onClick={() => navigate(`/viewusers/user?userid=${item.id}`)}
                 >
                   View profile
                   
@@ -127,7 +143,8 @@ export default function ViewUsersPage() {
                   <VscSend />
                 </button>
                 <FiUserPlus className="add-user" />
-          </div>
+              </div>
+              }
         </div>
         <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "auto", gap: "20px",  borderStyle: "solid", borderRadius: "10px",
             borderWidth: "1px", color: "rgba(176, 176, 176, 0.5)"}}
@@ -137,7 +154,7 @@ export default function ViewUsersPage() {
   });
 
   const searchedUserProfileElement = allUsers
-  .filter((a) => a.username.toLowerCase().includes(searchQuery.toLowerCase()))
+  .filter((a) => a.username.toLowerCase().includes(searchQuery.toLowerCase()) || a.email.toLowerCase().includes(searchQuery.toLowerCase()))
   .map((item, index) => (
     <div key={item.id} style={{ height: "60px", marginTop: "3px" }}>
       {index === 0 && (
@@ -156,23 +173,43 @@ export default function ViewUsersPage() {
         ></div>
       )}
       <div className="select-user-profile-card nohover">
-        <div className="user-element">
-          <VscAccount style={{ scale: "1.5", marginLeft: "10px" }} />
-          <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>{item.username}</h4>
-          <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>{item.email}</i>
-          <button
-            className="view-profile-button"
-            style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px" }}
-            onClick={() => navigate(`/viewusers/user?userid=${item.id}`)}
-          >
-            View profile
-          </button>
-          <button className="send-message-button" onClick={() => handleDirectMessageChat(item?.id, item?.username)} style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            Message
-            <VscSend />
-          </button>
-          <FiUserPlus className="add-user" />
-        </div>
+      {item?.id === userId ?
+          <div className="user-element">
+                <VscAccount  style={{scale: "1.5", marginLeft: "10px"}}/>
+                <h4 style={{fontSize: "1.2rem", fontWeight: "300"}}>
+                  {item.username}
+                </h4>
+                <i style={{fontSize: "0.9rem", fontWeight: "300"}}>
+                  {item.email}
+                </i>
+                <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
+                onClick={() => navigate(`/profile`)}
+                >
+                  Go to profile  
+                </button>
+                </div>
+                :
+                <div className="user-element">
+                <VscAccount  style={{scale: "1.5", marginLeft: "10px"}}/>
+                <h4 style={{fontSize: "1.2rem", fontWeight: "300"}}>
+                  {item.username}
+                </h4>
+                <i style={{fontSize: "0.9rem", fontWeight: "300"}}>
+                  {item.email}
+                </i>
+                <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
+                onClick={() => navigate(`/viewusers/user?userid=${item.id}`)}
+                >
+                  View profile
+                  
+                </button>
+                <button className="send-message-button" onClick={() => handleDirectMessageChat(item?.id, item?.username)} style={{ display: "flex", alignItems: "center", gap: "5px"}}>
+                  Message
+                  <VscSend />
+                </button>
+                <FiUserPlus className="add-user" />
+              </div>
+              }
       </div>
       <div
         style={{
@@ -220,6 +257,11 @@ export default function ViewUsersPage() {
       </div>
     )
   ) : (
-    <h1>please log in</h1>
+    <div style={{display: "flex", gap: "40px", color: "white"}}>
+    <h1>Please log in</h1>
+    <button onClick={() => navigate("/login")}
+    style={{width: "150px", height: "50px", fontSize: "1.3rem"}}
+      >Login</button>
+  </div>
   );
 }
