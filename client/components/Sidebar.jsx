@@ -111,14 +111,14 @@ const Sidebar = () => {
 
           <li>
             <Link
-              to="/viewusers"
-              title="Friends"
-              className={`tooltip ${activeLink === '#friends' ? 'active' : ''}`}
+              to="/social/viewusers"
+              title="Social"
+              className={`tooltip ${activeLink === '#social' ? 'active' : ''}`}
               onClick={() => handleLinkClick('#friends')}
             >
               <FiUsers />
-              <span className="link hide">Friends</span>
-              <span className="tooltip__content">Friends</span>
+              <span className="link hide">Social</span>
+              <span className="tooltip__content">Social</span>
             </Link>
           </li>
 

@@ -133,7 +133,7 @@ export default function ViewUsersPage() {
                   {item.email}
                 </i>
                 <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
-                onClick={() => navigate(`/viewusers/user?userid=${item.id}`)}
+                onClick={() => navigate(`/social/viewusers/user?userid=${item.id}`)}
                 >
                   View profile
                   
@@ -198,7 +198,7 @@ export default function ViewUsersPage() {
                   {item.email}
                 </i>
                 <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
-                onClick={() => navigate(`/viewusers/user?userid=${item.id}`)}
+                onClick={() => navigate(`/social/viewusers/user?userid=${item.id}`)}
                 >
                   View profile
                   

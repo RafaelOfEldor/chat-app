@@ -109,7 +109,7 @@ export default function UserProfile() {
 
 
      
-        <Link to="/viewusers" className="exit-profile-button">
+        <Link to="/social/viewusers" className="exit-profile-button">
           <h2>Exit profile</h2>
         </Link>
       </div>
