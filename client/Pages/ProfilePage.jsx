@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ExpressUsersPutBio,
   ExpressUsersPutUsername,
@@ -31,6 +31,7 @@ export default function ProfilePage() {
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
+  const location = useLocation()
 
   async function handleEditBio(e) {
     e.preventDefault();

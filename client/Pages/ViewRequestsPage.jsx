@@ -8,7 +8,7 @@ import "./css/viewUsersPage.css"
 import "./css/loadingAndFiller.css"
 
 export default function ViewRequestsPage() {
-  const { username, fullName, userBio, userId, userRequests,  userInfo, mail, loadUser, fetchUserInfo, setUserRequests, fetchAllRequests, setUsername } =
+  const { username, fullName, userBio, userId, userRequests, webSocket,  userInfo, mail, loadUser, fetchUserInfo, setUserRequests, fetchAllRequests, setUsername } =
     useAuth();
   const [showEdit, setShowEdit] = useState(false);
   const [updatedBio, setUpdatedBio] = useState("");
@@ -23,6 +23,9 @@ export default function ViewRequestsPage() {
 
   useEffect(() => {
     fetchUserInfo();
+    loadUser();
+    console.log(userRequests);
+    console.log(userInfo);
   }, []);
 
   useEffect(() => {
@@ -93,58 +96,91 @@ export default function ViewRequestsPage() {
 
   async function acceptFriendRequest(receivingUserId) {
 
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
+    if (webSocket) {
+      console.log(webSocket)
+      const message = {
+        type: "ACCEPT_FRIEND_UPDATE",
+        user_id: userId,
+        receiving_user_id: receivingUserId,
+      };
+      webSocket.send(JSON.stringify(message));
     }
 
-    const res = await fetch(`/api/users/accept/request`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
+    setActionEvent({
+      type: "success",
+      message: "Friend request accepted!"
     })
+    await fetchUserInfo();
 
-    if (res.status === 204) {
-      setActionEvent({
-        type: "success",
-        message: "Friend request accepted!"
-      })
-      setUserRequests((prevRequests) =>
-        prevRequests.filter((request) => request.id !== receivingUserId)
-      );
-      await fetchUserInfo();
-    } else {
-      console.log("Error accepting friend request.")
-    }
+    // const data = {
+    //   receiving_user_id: receivingUserId,
+    //   user_id: userId
+    // }
+
+    // const res = await fetch(`/api/users/accept/request`, {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //   "content-type": "application/json",
+    // },
+    // })
+
+    // if (res.status === 204) {
+    //   setActionEvent({
+    //     type: "success",
+    //     message: "Friend request accepted!"
+    //   })
+    //   setUserRequests((prevRequests) =>
+    //     prevRequests.filter((request) => request.id !== receivingUserId)
+    //   );
+    //   await fetchUserInfo();
+    // } else {
+    //   console.log("Error accepting friend request.")
+    // }
   }
 
   async function removeFriendRequest(receivingUserId) {
 
-    const data = {
-      receiving_user_id: userId,
-      user_id: receivingUserId
+    if (webSocket) {
+      console.log(webSocket)
+      const message = {
+        type: "REMOVE_REQUEST_UPDATE",
+        user_id: userId,
+        receiving_user_id: receivingUserId,
+      };
+      webSocket.send(JSON.stringify(message));
     }
-    const res = await fetch(`/api/users/remove/request`, {
-      method: "DELETE",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
+
+    setActionEvent({
+      type: "error",
+      message: "Friend request removed!"
     })
 
-    if (res.status === 204) {
-      setActionEvent({
-        type: "success",
-        message: "Friend request removed!"
-      })
-      setUserRequests((prevRequests) =>
-        prevRequests.filter((request) => request.id !== receivingUserId)
-      );
-    } else {
-      console.log("Error removing friend request.")
-    }
+    await fetchUserInfo();
+
+    // const data = {
+    //   receiving_user_id: userId,
+    //   user_id: receivingUserId
+    // }
+    // const res = await fetch(`/api/users/remove/request`, {
+    //   method: "DELETE",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //   "content-type": "application/json",
+    // },
+    // })
+
+    // if (res.status === 204) {
+    //   setActionEvent({
+    //     type: "success",
+    //     message: "Friend request removed!"
+    //   })
+    //   setUserRequests((prevRequests) =>
+    //     prevRequests.filter((request) => request.id !== receivingUserId)
+    //   );
+    // } else {
+    //   console.log("Error removing friend request.")
+    // }
   }
 
   

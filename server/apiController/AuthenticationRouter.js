@@ -68,7 +68,7 @@ export function AuthenticationRouter(mongoDatabase) {
       res.sendStatus(204);
     } catch (error) {
       console.error("Error getting access token:", error);
-      res.status(500).json({ error: "Failed to create goal" });
+      res.status(500).json({ error: "Failed to get access token" });
     }
     res.end();
   });

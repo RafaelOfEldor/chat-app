@@ -8,7 +8,22 @@ import "./css/viewUsersPage.css"
 import "./css/loadingAndFiller.css"
 
 export default function ViewUsersPage() {
-  const { username, fullName, userInfo, userFriends, allUsers, userRequests, userBio, userId, mail, loadUser, fetchUserInfo, fetchAllUsers, setUserFriends, setAllUsers, setUserRequests, setUsername } =
+  const { username,
+     fullName, userInfo,
+      userFriends,
+      allUsers,
+      userRequests,
+      userBio,
+      userId,
+      mail,
+      webSocket,
+      loadUser,
+      fetchUserInfo,
+      fetchAllUsers,
+      setUserFriends,
+      setAllUsers,
+      setUserRequests,
+      setUsername } =
     useAuth();
   const [showEdit, setShowEdit] = useState(false);
   const [updatedBio, setUpdatedBio] = useState("");
@@ -25,7 +40,29 @@ export default function ViewUsersPage() {
   useEffect(() => {
     fetchUserInfo();
     fetchAllUsers();
+    loadUser();
   }, []);
+
+  useEffect(() => {
+    // Initialize WebSocket connection
+    if (webSocket) {
+      // Example of listening to WebSocket messages
+      webSocket.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        console.log(message);
+        // Handle WebSocket messages as needed
+        console.log("Received WebSocket message:", message);
+        if (message.type === "FRIEND_UPDATE") {
+          fetchAllUsers();
+          fetchUserInfo();
+        }
+      };
+
+      webSocket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+    }
+  }, [webSocket]);
 
   useEffect(() => {
     if (actionEvent) {
@@ -43,108 +80,179 @@ export default function ViewUsersPage() {
 
   async function sendFriendRequest(receivingUserId) {
 
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
+    if (webSocket) {
+      console.log(webSocket)
+      const message = {
+        type: "SEND_REQUEST_UPDATE",
+        user_id: userId,
+        receiving_user_id: receivingUserId,
+      };
+      webSocket.send(JSON.stringify(message));
+      // console.log(message)
     }
-    const res = await fetch(`/api/users/send/request`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
-    })
 
-    if (res.status === 204) {
       setActionEvent({
         type: "success",
         message: "Friend request sent!"
       })
       await fetchUserInfo(userId);
       await fetchAllUsers();
-    } else {
-      console.log("Error sending friend request.")
-    }
+
+    // const data = {
+    //   receiving_user_id: receivingUserId,
+    //   user_id: userId
+    // }
+    // const res = await fetch(`/api/users/send/request`, {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //   "content-type": "application/json",
+    // },
+    // })
+
+    // if (res.status === 204) {
+    //   setActionEvent({
+    //     type: "success",
+    //     message: "Friend request sent!"
+    //   })
+      
+    //   await fetchUserInfo(userId);
+    //   await fetchAllUsers();
+    // } else {
+    //   console.log("Error sending friend request.")
+    // }
   }
 
   async function removeFriend(receivingUserId) {
 
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
+    if (webSocket) {
+      console.log(webSocket)
+      const message = {
+        type: "REMOVE_FRIEND_UPDATE",
+        user_id: userId,
+        receiving_user_id: receivingUserId,
+      };
+      webSocket.send(JSON.stringify(message));
     }
 
-    const res = await fetch(`/api/users/remove/friend`, {
-      method: "DELETE",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
-    })
-
-    if (res.status === 204) {
       setActionEvent({
         type: "error",
         message: "Friend successfully removed!"
       })
       await fetchUserInfo();
       await fetchAllUsers();
-    } else {
-      console.log("Error removing friend.")
-    }
+
+    // const data = {
+    //   receiving_user_id: receivingUserId,
+    //   user_id: userId
+    // }
+
+    // const res = await fetch(`/api/users/remove/friend`, {
+    //   method: "DELETE",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //   "content-type": "application/json",
+    // },
+    // })
+
+    // if (res.status === 204) {
+    //   setActionEvent({
+    //     type: "error",
+    //     message: "Friend successfully removed!"
+    //   })
+    //   await fetchUserInfo();
+    //   await fetchAllUsers();
+    // } else {
+    //   console.log("Error removing friend.")
+    // }
   }
 
   async function acceptFriendRequest(receivingUserId) {
 
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
+    if (webSocket) {
+      console.log(webSocket)
+      const message = {
+        type: "ACCEPT_FRIEND_UPDATE",
+        user_id: userId,
+        receiving_user_id: receivingUserId,
+      };
+      webSocket.send(JSON.stringify(message));
     }
 
-    const res = await fetch(`/api/users/accept/request`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
+    setActionEvent({
+      type: "success",
+      message: "Friend request accepted!"
     })
+    await fetchUserInfo();
+    await fetchAllUsers();
 
-    if (res.status === 204) {
-      setActionEvent({
-        type: "success",
-        message: "Friend request accepted!"
-      })
-      await fetchUserInfo();
-      await fetchAllUsers();
-    } else {
-      console.log("Error accepting friend request.")
-    }
+    // const data = {
+    //   receiving_user_id: receivingUserId,
+    //   user_id: userId
+    // }
+
+    // const res = await fetch(`/api/users/accept/request`, {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //   "content-type": "application/json",
+    // },
+    // })
+
+    // if (res.status === 204) {
+    //   setActionEvent({
+    //     type: "success",
+    //     message: "Friend request accepted!"
+    //   })
+    //   await fetchUserInfo();
+    //   await fetchAllUsers();
+    // } else {
+    //   console.log("Error accepting friend request.")
+    // }
   }
 
   async function removeFriendRequest(receivingUserId) {
 
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
+    if (webSocket) {
+      console.log(webSocket)
+      const message = {
+        type: "REMOVE_REQUEST_UPDATE",
+        user_id: userId,
+        receiving_user_id: receivingUserId,
+      };
+      webSocket.send(JSON.stringify(message));
     }
-    const res = await fetch(`/api/users/remove/request`, {
-      method: "DELETE",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
+
+    setActionEvent({
+      type: "error",
+      message: "Friend request removed!"
     })
 
-    if (res.status === 204) {
-      setActionEvent({
-        type: "error",
-        message: "Friend request removed!"
-      })
-      await fetchUserInfo();
-      await fetchAllUsers();
-    } else {
-      console.log("Error removing friend request.")
-    }
+    await fetchUserInfo();
+    await fetchAllUsers();
+
+    // const data = {
+    //   receiving_user_id: receivingUserId,
+    //   user_id: userId
+    // }
+    // const res = await fetch(`/api/users/remove/request`, {
+    //   method: "DELETE",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //   "content-type": "application/json",
+    // },
+    // })
+
+    // if (res.status === 204) {
+    //   setActionEvent({
+    //     type: "error",
+    //     message: "Friend request removed!"
+    //   })
+    //   await fetchUserInfo();
+    //   await fetchAllUsers();
+    // } else {
+    //   console.log("Error removing friend request.")
+    // }
   }
 
   async function handleDirectMessageChat(receivingUserId, receivingUserUsername) {
@@ -203,7 +311,7 @@ export default function ViewUsersPage() {
 
   const userProfileElement = allUsers.map((item, index) => {
     return (
-      <div style={{height: "60px", marginTop: "3px"}}>
+      <div style={{height: "60px", marginTop: "3px"}} key={index}>
         {index === 0 && 
           <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "auto", gap: "20px", borderStyle: "solid", borderRadius: "10px",
             borderWidth: "1px", color: "rgba(176, 176, 176, 0.5)"}}
@@ -220,7 +328,7 @@ export default function ViewUsersPage() {
                   {item.email}
                 </i>
                 <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
-                onClick={() => navigate(`/profile`)}
+                onClick={() => navigate(`/profile`, {state: {prevUrl: location.pathname}})}
                 >
                   Go to profile  
                 </button>
@@ -312,7 +420,7 @@ export default function ViewUsersPage() {
                   {item.email}
                 </i>
                 <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
-                onClick={() => navigate(`/social/viewusers/user?userid=${item.id}`)}
+                onClick={() => navigate(`/social/viewusers/user?userid=${item.id}`, {state: {prevUrl: location.pathname}})}
                 >
                   View profile
                   

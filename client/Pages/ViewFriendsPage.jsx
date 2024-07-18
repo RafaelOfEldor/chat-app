@@ -8,7 +8,7 @@ import "./css/viewUsersPage.css"
 import "./css/loadingAndFiller.css"
 
 export default function ViewFriendsPage() {
-  const { username, fullName, userBio, userFriends,  userId, userInfo, mail, loadUser, fetchAllFriends, fetchUserInfo, setUserFriends, setUsername } =
+  const { username, fullName, userBio, userFriends, webSocket,  userId, userInfo, mail, loadUser, fetchAllFriends, fetchUserInfo, setUserFriends, setUsername } =
     useAuth();
   const [showEdit, setShowEdit] = useState(false);
   const [updatedBio, setUpdatedBio] = useState("");
@@ -24,6 +24,7 @@ export default function ViewFriendsPage() {
 
   useEffect(() => {
     fetchUserInfo();
+    loadUser();
   }, []);
 
   useEffect(() => {
@@ -90,30 +91,47 @@ export default function ViewFriendsPage() {
 
   async function removeFriend(receivingUserId) {
 
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
+    if (webSocket) {
+      console.log(webSocket)
+      const message = {
+        type: "REMOVE_FRIEND_UPDATE",
+        user_id: userId,
+        receiving_user_id: receivingUserId,
+      };
+      webSocket.send(JSON.stringify(message));
     }
 
-    const res = await fetch(`/api/users/remove/friend`, {
-      method: "DELETE",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
+    setActionEvent({
+      type: "error",
+      message: "Friend request removed!"
     })
 
-    if (res.status === 204) {
-      setActionEvent({
-        type: "success",
-        message: "Friend successfully removed accepted!"
-      })
-      setUserFriends((prevRequests) =>
-        prevRequests.filter((friends) => friends.id !== receivingUserId)
-      );
-    } else {
-      console.log("Error removing friend.")
-    }
+    await fetchUserInfo();
+
+    // const data = {
+    //   receiving_user_id: receivingUserId,
+    //   user_id: userId
+    // }
+
+    // const res = await fetch(`/api/users/remove/friend`, {
+    //   method: "DELETE",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //   "content-type": "application/json",
+    // },
+    // })
+
+    // if (res.status === 204) {
+    //   setActionEvent({
+    //     type: "success",
+    //     message: "Friend successfully removed accepted!"
+    //   })
+    //   setUserFriends((prevRequests) =>
+    //     prevRequests.filter((friends) => friends.id !== receivingUserId)
+    //   );
+    // } else {
+    //   console.log("Error removing friend.")
+    // }
   }
 
   

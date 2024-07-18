@@ -54,12 +54,15 @@ export function AuthProvider({ children }) {
       setUserId(user.sub);
       setMail(user.mail);
       setUserBio(user.bio);
+
+      localStorage.setItem('userId', user.sub);
+      
       fetchUserInfo();
     }
   }
 
   async function fetchUserInfo() {
-    const response = await fetch(`/api/users/byid/${userId}`);
+    const response = await fetch(`/api/users/byid/${localStorage.getItem('userId')}`);
     const data = await response.json();
     setUserInfo(data);
   }
@@ -84,6 +87,7 @@ export function AuthProvider({ children }) {
 
     const data = await res.json();
     setUserFriends(data);
+    // console.log(data);
   }
 
   async function fetchAllRequests(requests) {
@@ -98,16 +102,10 @@ export function AuthProvider({ children }) {
 
     const data = await res.json();
     setUserRequests(data);
+    // console.log(data);
   }
 
-  // Fetch user info when userId is set
-  useEffect(() => {
-    if (userId) {
-      fetchUserInfo(userId);
-    }
-  }, [userId]);
 
-  // Fetch friends and requests when userInfo is set
   useEffect(() => {
     if (userInfo) {
       if (userInfo.friends && userInfo.friends.length > 0) {
@@ -121,6 +119,69 @@ export function AuthProvider({ children }) {
       fetchAllUsers();
     }
   }, [userInfo]);
+
+  useEffect(() => {
+    const ws = new WebSocket(
+      window.location.origin.replace(/^http/, "ws") +
+        `?userid=${userId}`,
+    );
+    setWebSocket(ws);
+
+    ws.onopen = () => {
+      console.log('WebSocket connection established');
+      console.log(ws);
+    };
+
+    ws.onmessage = (message) => {
+      const data = JSON.parse(message.data);
+      console.log(data);
+      console.log("yoo")
+      switch (data.type) {
+        case 'FRIEND_UPDATE':
+          // setUserFriends(data.friends);
+          // fetchAllFriends(userInfo.friends);
+          fetchUserInfo();
+          fetchAllUsers();
+          console.log(data.users);
+          // setUserRequests(data.users.filter(item => item.id === localStorage.getItem('userId'))?.requests)
+          break;
+        case 'USER_INFO_UPDATE':
+          // setUserInfo(data.userInfo);
+          fetchUserInfo()
+          break;
+        case 'REQUEST_UPDATE':
+          // console.log(data);
+          // console.log(userId);
+          // console.log(userInfo?.id);
+          fetchUserInfo();
+          // if (data.targetUser.id === localStorage.getItem('userId')) {
+          //   console.log("in here")
+          //   setUserRequests(data.targetUser.requests);
+          // }
+          // setUserRequests(data.requests);
+          // fetchAllRequests(userInfo.requests);
+          // fetchUserInfo();
+          break;
+        case 'ALL_USERS_UPDATE':
+          setAllUsers(data.allUsers);
+          break;
+        default:
+          console.log('Unknown message type:', data.type);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   return (
     <AuthContext.Provider
