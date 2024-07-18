@@ -58,6 +58,7 @@ const Sidebar = () => {
     if (!res.ok) {
       throw new Error("Something went wrong " + res.statusText);
     }
+    localStorage.clear();
     setUsername();
     setUserId();
     await loadUser();

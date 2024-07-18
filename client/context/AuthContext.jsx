@@ -58,6 +58,8 @@ export function AuthProvider({ children }) {
       localStorage.setItem('userId', user.sub);
       
       fetchUserInfo();
+    } else {
+      localStorage.clear();
     }
   }
 
