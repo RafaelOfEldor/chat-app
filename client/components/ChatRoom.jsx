@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useParams, useNavigate, useLocation } from "react-router-dom";
 import { FiEdit3, FiTrash2, FiXCircle } from "react-icons/fi";
 import "./css/chatpage.css";
 
@@ -16,19 +16,33 @@ export function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const [chatLoaded, setChatLoaded] = useState(false);
   const [newSendMessage, setNewSendMessage] = useState();
-  const { userInfo, userId, setWebSocket, webSocket, fetchUserInfo } = useAuth();
+  const { userInfo, userId, setWebSocket, allUsers, webSocket, fetchAllUsers, fetchUserInfo } = useAuth();
   const [chatRoom, setChatRoom] = useState();
+  const [dmTitle, setDmTitle] = useState("");
   const [logsRendered, setLogsRendered] = useState(false);
   const [showEditMessage, setShowEditMessage] = useState();
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const today = new Date().toLocaleDateString();
   const chatroomRef = useRef(null);
+  
 
   async function fetchRoom() {
     const response = await fetch(`/api/chats/room/${roomid}`);
     const data = await response.json();
     setChatRoom(data[0]);
+    if (data[0].type === "dm") {
+      const receivingUser = data[0].users?.find(user => user !== userId)
+      await fetch(`/api/users/byid/${receivingUser}`).then((response) =>
+        response.json().then((data) => {
+          console.log(data)
+          setDmTitle(data?.username);
+        }),
+      );
+      console.log(receivingUser)
+    }
+    
   }
 
   async function fetchLog() {
@@ -56,7 +70,14 @@ export function Chat() {
   useEffect(() => {
     fetchRoom();
     fetchUserInfo();
+    fetchAllUsers();
   }, []);
+
+  useEffect(() => {
+    console.log(chatRoom)
+  }, [chatRoom]);
+
+  
 
   useEffect(() => {
     if (showEditMessage?.show) {
@@ -155,7 +176,7 @@ export function Chat() {
     e.preventDefault();
     setMessages([]);
     setLogsRendered(false);
-    navigate("/chatrooms");
+    navigate(location.state.prevUrl);
   }
 
   const handleKeyDown = (e) => {
@@ -323,7 +344,11 @@ export function Chat() {
     <div className="chat-page" style={{textAlign: "center"}}>
       <div style={{textAlign: "start", backgroundColor: "grey"}}>
         <div style={{display: "flex", alignItems: "center"}}>
-          <h1 style={{marginRight: "auto", marginLeft: "50px", marginTop: "20px"}}>{chatRoom?.title}</h1>
+          <h1 style={{marginRight: "auto", marginLeft: "50px", marginTop: "20px"}}>
+            {chatRoom?.type === "dm" ?
+            dmTitle : chatRoom?.title
+          }
+          </h1>
           <button className="leave-chat-button" onClick={(e) => handleLeave(e)} style={{marginTop: "20px", marginRight: "50px"}}>Leave chat</button>
         </div>
         <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "auto", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",

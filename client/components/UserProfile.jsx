@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "../Pages/css/loadingAndFiller.css"
 
 export default function UserProfile() {
@@ -11,6 +11,8 @@ export default function UserProfile() {
   const inputRef = useRef(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const userParamId = searchParams.get("userid");
+  const navigate = useNavigate()
+  const location = useLocation()
 
   async function fetchUserInfo() {
     fetch(`/api/users/byid/${userParamId}`).then((response) =>
@@ -22,6 +24,7 @@ export default function UserProfile() {
 
   React.useEffect(() => {
     fetchUserInfo();
+    console.log(location.state)
   }, []);
 
   React.useEffect(() => {
@@ -109,7 +112,7 @@ export default function UserProfile() {
 
 
      
-        <Link to="/social/viewusers" className="exit-profile-button">
+        <Link to={location.state.prevUrl} className="exit-profile-button">
           <h2>Exit profile</h2>
         </Link>
       </div>
@@ -119,6 +122,11 @@ export default function UserProfile() {
       </div>
     )
   ) : (
-    <h1>please log in</h1>
+    <div style={{display: "flex", gap: "40px", color: "white"}}>
+      <h1>Please log in</h1>
+      <button onClick={() => navigate("/login")}
+      style={{width: "150px", height: "50px", fontSize: "1.3rem"}}
+        >Login</button>
+  </div>
   );
 }

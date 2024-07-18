@@ -271,7 +271,7 @@
   padding: 0 1rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .avatar__wrapper {
@@ -291,6 +291,7 @@
 .avatar__name {
   display: flex;
   flex-direction: column;
+  margin-left: 10px;
 }
 
 .user-name {
@@ -313,6 +314,7 @@
   background: none;
   border: none;
   margin-bottom: 10px;
+  margin-left: auto;
   cursor: pointer;
 }
 
@@ -364,5 +366,26 @@
   to {
     opacity: 1;
     width: 100%;
+  }
+}
+
+.glowing-circle {
+  position: absolute;
+  left: calc(100% - 150px);
+  width: 10px;
+  height: 10px; 
+  margin-right: auto;
+  background-color: cyan;
+  border-radius: 50%;
+  box-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+  }
+  to {
+    box-shadow: 0 0 20px cyan, 0 0 30px cyan, 0 0 40px cyan;
   }
 }

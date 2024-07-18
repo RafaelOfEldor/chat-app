@@ -1,157 +1,53 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import { useAuth } from "../context/AuthContext.jsx";
 import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { ExpressUsersPut } from "../functions/ExpressFunctions.jsx";
-import { FiUser, FiUserPlus, FiCheck, FiUserMinus, FiUserX, FiUserCheck, FiSearch, FiSend } from "react-icons/fi";
+import { FiUser, FiUserPlus, FiSearch, FiUserCheck, FiUserX, FiSend } from "react-icons/fi";
 import { VscAccount, VscSend  } from "react-icons/vsc";
 import "./css/viewUsersPage.css"
 import "./css/loadingAndFiller.css"
 
-export default function ViewUsersPage() {
-  const { username, fullName, userInfo, userFriends, allUsers, userRequests, userBio, userId, mail, loadUser, fetchUserInfo, fetchAllUsers, setUserFriends, setAllUsers, setUserRequests, setUsername } =
+export default function ViewRequestsPage() {
+  const { username, fullName, userBio, userId, userRequests,  userInfo, mail, loadUser, fetchUserInfo, setUserRequests, fetchAllRequests, setUsername } =
     useAuth();
   const [showEdit, setShowEdit] = useState(false);
   const [updatedBio, setUpdatedBio] = useState("");
-  // const [allUsers, setAllUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [isHovering, setIsHovering] = useState();
-  const [searchQuery, setSearchQuery] = useState("");
   const [actionEvent, setActionEvent] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
     fetchUserInfo();
-    fetchAllUsers();
   }, []);
 
   useEffect(() => {
     if (actionEvent) {
       const timer = setTimeout(() => {
         setActionEvent(null);
-      }, 3000); 
+      }, 3000);
   
       return () => clearTimeout(timer);
     }
   }, [actionEvent]);
 
   useEffect(() => {
-  
+    
+  }, [userInfo]);
+
+  useEffect(() => {
+  //  console.log(allUsers)
   }, [allUsers]);
 
-  async function sendFriendRequest(receivingUserId) {
-
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
-    }
-    const res = await fetch(`/api/users/send/request`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
-    })
-
-    if (res.status === 204) {
-      setActionEvent({
-        type: "success",
-        message: "Friend request sent!"
-      })
-      await fetchUserInfo(userId);
-      await fetchAllUsers();
-    } else {
-      console.log("Error sending friend request.")
-    }
-  }
-
-  async function removeFriend(receivingUserId) {
-
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
-    }
-
-    const res = await fetch(`/api/users/remove/friend`, {
-      method: "DELETE",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
-    })
-
-    if (res.status === 204) {
-      setActionEvent({
-        type: "error",
-        message: "Friend successfully removed!"
-      })
-      await fetchUserInfo();
-      await fetchAllUsers();
-    } else {
-      console.log("Error removing friend.")
-    }
-  }
-
-  async function acceptFriendRequest(receivingUserId) {
-
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
-    }
-
-    const res = await fetch(`/api/users/accept/request`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
-    })
-
-    if (res.status === 204) {
-      setActionEvent({
-        type: "success",
-        message: "Friend request accepted!"
-      })
-      await fetchUserInfo();
-      await fetchAllUsers();
-    } else {
-      console.log("Error accepting friend request.")
-    }
-  }
-
-  async function removeFriendRequest(receivingUserId) {
-
-    const data = {
-      receiving_user_id: receivingUserId,
-      user_id: userId
-    }
-    const res = await fetch(`/api/users/remove/request`, {
-      method: "DELETE",
-      body: JSON.stringify(data),
-      headers: {
-      "content-type": "application/json",
-    },
-    })
-
-    if (res.status === 204) {
-      setActionEvent({
-        type: "error",
-        message: "Friend request removed!"
-      })
-      await fetchUserInfo();
-      await fetchAllUsers();
-    } else {
-      console.log("Error removing friend request.")
-    }
-  }
 
   async function handleDirectMessageChat(receivingUserId, receivingUserUsername) {
 
     const res = await fetch(`/api/chats/rooms`)
     
-
     if (res.ok) {
       const data = await res.json();
       let roomId;
@@ -195,13 +91,69 @@ export default function ViewUsersPage() {
     }
   }
 
+  async function acceptFriendRequest(receivingUserId) {
+
+    const data = {
+      receiving_user_id: receivingUserId,
+      user_id: userId
+    }
+
+    const res = await fetch(`/api/users/accept/request`, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+      "content-type": "application/json",
+    },
+    })
+
+    if (res.status === 204) {
+      setActionEvent({
+        type: "success",
+        message: "Friend request accepted!"
+      })
+      setUserRequests((prevRequests) =>
+        prevRequests.filter((request) => request.id !== receivingUserId)
+      );
+      await fetchUserInfo();
+    } else {
+      console.log("Error accepting friend request.")
+    }
+  }
+
+  async function removeFriendRequest(receivingUserId) {
+
+    const data = {
+      receiving_user_id: userId,
+      user_id: receivingUserId
+    }
+    const res = await fetch(`/api/users/remove/request`, {
+      method: "DELETE",
+      body: JSON.stringify(data),
+      headers: {
+      "content-type": "application/json",
+    },
+    })
+
+    if (res.status === 204) {
+      setActionEvent({
+        type: "success",
+        message: "Friend request removed!"
+      })
+      setUserRequests((prevRequests) =>
+        prevRequests.filter((request) => request.id !== receivingUserId)
+      );
+    } else {
+      console.log("Error removing friend request.")
+    }
+  }
+
   
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  const userProfileElement = allUsers.map((item, index) => {
+  const requestsElement = userRequests?.map((item, index) => {
     return (
       <div style={{height: "60px", marginTop: "3px"}}>
         {index === 0 && 
@@ -234,11 +186,6 @@ export default function ViewUsersPage() {
                 <i style={{fontSize: "0.9rem", fontWeight: "300"}}>
                   {item.email}
                 </i>
-                {userInfo?.friends?.find(a => a === item?.id) && 
-                <i style={{fontSize: "0.9rem", fontWeight: "300", color: "#6EE7B7"}}>
-                  friend
-                </i>
-                }
                 <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
                 onClick={() => navigate(`/social/viewusers/user?userid=${item.id}`, {state: {prevUrl: location.pathname}})}
                 >
@@ -249,14 +196,8 @@ export default function ViewUsersPage() {
                   Message
                   <VscSend />
                 </button>
-                {userInfo?.requests?.find(a => a === item?.id) || userInfo?.friends?.find(a => a === item?.id) 
-                || item?.requests?.find(a => a === userId) || item?.friends?.find(a => a === userId) ?
-                userInfo?.friends?.find(a => a === item?.id) ? <FiUserMinus style={{color: "red"}} className="add-user" onClick={() => removeFriend(item?.id)}/> 
-                  : userInfo?.requests?.find(a => a === item?.id) ? <FiUserCheck className="add-user" style={{color: "green"}} onClick={() => acceptFriendRequest(item?.id)}/>
-                    : <FiUserX className="add-user" style={{color: "red"}} onClick={() => removeFriendRequest(item?.id)}/>
-                :
-                <FiUserPlus className="add-user" onClick={() => sendFriendRequest(item?.id)}/>
-                }
+                <FiUserCheck className="add-user" style={{color: "cyan", marginRight: "10px"}} onClick={() => acceptFriendRequest(item?.id)}/>
+                <FiUserX className="add-user" style={{color: "red"}} onClick={() => removeFriendRequest(item?.id)}/>
               </div>
               }
         </div>
@@ -267,8 +208,8 @@ export default function ViewUsersPage() {
     );
   });
 
-  const searchedUserProfileElement = allUsers
-  .filter((a) => a.username.toLowerCase().includes(searchQuery.toLowerCase()) || a.email.toLowerCase().includes(searchQuery.toLowerCase()))
+  const searchedRequestsElements = userRequests
+  ?.filter((a) => a?.username?.toLowerCase().includes(searchQuery?.toLowerCase()) || a?.email?.toLowerCase().includes(searchQuery?.toLowerCase()))
   .map((item, index) => (
     <div key={item.id} style={{ height: "60px", marginTop: "3px" }}>
       {index === 0 && (
@@ -312,7 +253,7 @@ export default function ViewUsersPage() {
                   {item.email}
                 </i>
                 <button className="view-profile-button" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: "5px"}}
-                onClick={() => navigate(`/social/viewusers/user?userid=${item.id}`)}
+                onClick={() => navigate(`/social/viewusers/user?userid=${item.id}`, {state: {prevUrl: location.pathname}})}
                 >
                   View profile
                   
@@ -321,15 +262,7 @@ export default function ViewUsersPage() {
                   Message
                   <VscSend />
                 </button>
-                {userInfo?.requests?.find(a => a === item?.id) || userInfo?.friends?.find(a => a === item?.id) 
-                || item?.requests?.find(a => a === userId) || item?.friends?.find(a => a === userId) ?
-                userInfo?.friends?.find(a => a === item?.id) ? <FiUserMinus style={{color: "red"}} className="add-user" onClick={() => removeFriend(item?.id)}/> 
-                  : userInfo?.requests?.find(a => a === item?.id) ? <FiUserCheck className="add-user" style={{color: "green"}} onClick={() => acceptFriendRequest(item?.id)}/>
-                    : <FiUserX className="add-user" style={{color: "red"}} onClick={() => removeFriendRequest(item?.id)}/>
-                :
-                <FiUserPlus className="add-user" onClick={() => sendFriendRequest(item?.id)}/>
-                }
-                
+                <FiUserCheck className="add-user" style={{color: "green"}} onClick={() => acceptFriendRequest(item?.id)}/>
               </div>
               }
       </div>
@@ -350,15 +283,14 @@ export default function ViewUsersPage() {
   ));
 
 
-  return username ? (
-    userProfileElement?.length > 0 ? 
+  return username ?
     (
       <div className="view-users-page">
         <div className="header-section">
-          <h4>View all users</h4>
+          <h4>view your incoming friend requests</h4>
           <div className="header-section-bar">
 
-            <h1 >Users</h1>
+            <h1>Requests</h1>
             <div className="search-wrapper">
               <FiSearch />
               <input type="search" placeholder="Search users..."
@@ -368,19 +300,16 @@ export default function ViewUsersPage() {
             </div>
           </div>
         </div>
-        <div className="select-user-profiles-list">{searchQuery === "" ? userProfileElement : searchedUserProfileElement}</div>
-        {actionEvent && (
-          <div className={`popup-notification ${actionEvent.type}`}>
-            {actionEvent.message}
-          </div>
-        )}
+        <div className="select-user-profiles-list">
+          {requestsElement?.length > 0 ? 
+          searchQuery === "" ? requestsElement : searchedRequestsElements
+          : <i>You currently don't have any incoming friend requests...</i>}
+        </div>
+        {/* <Link to="/profile" className="exit-profile-select-button">
+          <h2>Back to my profile</h2>
+        </Link> */}
       </div>
     ) : (
-      <div className="loading-results-layout-div">
-        <h1> Loading users... </h1>
-      </div>
-    )
-  ) : (
     <div style={{display: "flex", gap: "40px", color: "white"}}>
     <h1>Please log in</h1>
     <button onClick={() => navigate("/login")}

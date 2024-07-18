@@ -10,6 +10,8 @@ export default function SocialLayout(props) {
     setUsername,
     setUserId,
     setWebSocket,
+    userFriends,
+    userRequests,
     fetchUserInfo,
     loadUser,
   } = useAuth();
@@ -18,7 +20,6 @@ export default function SocialLayout(props) {
   React.useEffect(() => {
     loadUser();
     fetchUserInfo();
-    console.log(window.location.pathname)
   }, []);
 
   async function handleLogout(e) {
@@ -36,6 +37,8 @@ export default function SocialLayout(props) {
   }
   
   return (
+    username ?
+    (
     <div className="social-layout-page">
       <div className="social-layout-navbar-div">
         <NavLink to="/social/viewusers" 
@@ -47,9 +50,18 @@ export default function SocialLayout(props) {
         `social-layout-navbar-div-link friends`}>Friends</NavLink>
         <NavLink to="/social/requests" 
         className={({isActive}) => isActive ? `active-social-layout-navbar-div-link requests` :
-        `social-layout-navbar-div-link requests`}>Requests</NavLink>
+        `social-layout-navbar-div-link requests`}>Requests {userRequests?.length > 0 && <div className="glowing-circle-social-layout"></div>}</NavLink>
       </div>
-      <Outlet />
+      <Outlet /> 
+    </div> )
+    : 
+    (
+    <div style={{display: "flex", gap: "40px", color: "white"}}>
+      <h1>Please log in</h1>
+      <button onClick={() => navigate("/login")}
+      style={{width: "150px", height: "50px", fontSize: "1.3rem"}}
+        >Login</button>
     </div>
+    )
   );
 }

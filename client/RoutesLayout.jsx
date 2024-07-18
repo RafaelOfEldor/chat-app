@@ -13,6 +13,8 @@ import UserProfile from "./components/UserProfile";
 import EditRoomPage from "./Pages/EditRoomPage";
 import CommunitiesPage from "./Pages/CommunitiesPage";
 import SocialLayout from "./components/SocialLayout";
+import ViewFriendsPage from "./Pages/ViewFriendsPage";
+import ViewRequestsPage from "./Pages/ViewRequestsPage";
 
 export default function RoutesPage() {
   return (
@@ -29,6 +31,8 @@ export default function RoutesPage() {
         <Route path="newroom/:editroom" element={<EditRoomPage />} />
         <Route path="social" element={<SocialLayout />}>
           <Route path="viewusers" element={<ViewUsersPage />} />
+          <Route path="friends" element={<ViewFriendsPage />} />
+          <Route path="requests" element={<ViewRequestsPage />} />
         </Route>
         <Route path="social/viewusers/:user" element={<UserProfile />} />
       </Route>

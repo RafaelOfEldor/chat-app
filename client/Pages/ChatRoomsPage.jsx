@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { VscAccount, VscSend  } from "react-icons/vsc";
 import "./css/chatRoomsPage.css"
 import "./css/loadingAndFiller.css"
@@ -10,6 +10,7 @@ export default function ChatRoomsPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } =
     useAuth();
   const navigate = useNavigate()
+  const location = useLocation()
 
   return username ? <ChatRooms /> : 
   <div style={{display: "flex", gap: "40px", color: "white"}}>
@@ -32,6 +33,7 @@ export function ChatRooms() {
     userId,
     userInfo,
     setWebSocket,
+    userFriends,
     webSocket,
     fetchUserInfo,
     loadUser,
@@ -61,6 +63,7 @@ export function ChatRooms() {
 
   React.useEffect(() => {
     fetchAllUsers();
+    fetchUserInfo();
   }, []);
 
   React.useEffect(() => {
@@ -115,7 +118,7 @@ export function ChatRooms() {
     return (
       <div key={index} className="chat-room-card full-element">
         <div className="chat-room-card div">
-        <Link to={`/chatrooms/room/${item.id}`} className="chat-room-card link">
+        <Link to={`/chatrooms/room/${item.id}`} state={{prevUrl: location.pathname}} className="chat-room-card link">
           <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
             <h2 className="chatroom-card-title">{item.title}</h2>
             <h4 style={{minHeight: "20px"}}>{item.description !== "" ? 
@@ -158,7 +161,7 @@ export function ChatRooms() {
         const otherDmUser = item?.users?.find(user => user !== userId)
         const user = allUsers?.find(user => (user.id === otherDmUser))
       return (
-          <Link to={`/chatrooms/room/${item.id}`} className="chat-room-dm-link">
+          <Link to={`/chatrooms/room/${item.id}`} state={{prevUrl: location.pathname}} className="chat-room-dm-link">
             <div className="chat-room-dm-link-content">
               <VscAccount style={{scale: "2"}}/>
               <div>
@@ -190,8 +193,8 @@ export function ChatRooms() {
         </div>
         <div className="direct-messages-sidebar">
           <h2 style={{marginBottom: "10px", position: "sticky", top: "0", 
-            background: "linear-gradient(to bottom right, rgba(39, 16, 82, 1), rgba(50, 20, 100, 1), rgba(70, 30, 120, 1), rgba(100, 40, 150, 1), rgba(39, 16, 82, 1))", 
-            marginLeft: "auto", width: "100%", zIndex: "100", color: "#43B4D8",
+            backgroundColor: "rgba(68, 72, 119, 1)",
+            marginLeft: "auto", width: "100%", zIndex: "100", color: "#009bcb",
             borderBottom: "solid 1px #151A1E", boxShadow: "0 4px 2px -2px rgba(0, 0, 0, 0.4)"
           }}>Direct messages</h2>
           {directMessagesElement?.length > 0 ? directMessagesElement : <i style={{marginTop: "10px"}}>You currently have no direct messages.</i>}

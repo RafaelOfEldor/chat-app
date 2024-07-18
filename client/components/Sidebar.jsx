@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiSettings, FiSearch, FiChevronLeft, FiMessageCircle, FiZap, FiLogOut, FiUsers, FiChevronRight } from 'react-icons/fi';
 import { VscAccount, VscSend  } from "react-icons/vsc";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import "./css/sidebar.css";
 import logo from "./assets/logo.gif";
 import { useAuth } from "../context/AuthContext";
@@ -11,6 +11,7 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeLink, setActiveLink] = useState('');
   const navigate = useNavigate();
+  const location = useLocation()
 
   const {
     username,
@@ -18,16 +19,36 @@ const Sidebar = () => {
     userInfo,
     setUsername,
     setUserId,
-    loadUser
+    userFriends,
+    userRequests,
+    loadUser,
+    fetchUserInfo,
   } = useAuth();
 
   useEffect(() => {
-    if (window.location.pathname === "/chatrooms") {
+    if (location.pathname === "/chatrooms") {
       setActiveLink("#messages");
+    } else if (location.pathname === "/social/viewusers" 
+      || location.pathname === "/social/friends" 
+      || location.pathname === "/social/requests" 
+    ) {
+      setActiveLink("#social");
     }
-    // setActiveLink(window.location.href);
-    // console.log(window.location.pathname);
+    fetchUserInfo();
+    // setActiveLink(location.href);
+    // console.log(location.pathname);
   }, []);
+
+  useEffect(() => {
+    if (location.pathname === "/chatrooms") {
+      setActiveLink("#messages");
+    } else if (location.pathname === "/social/viewusers" 
+      || location.pathname === "/social/friends" 
+      || location.pathname === "/social/requests" 
+    ) {
+      setActiveLink("#social");
+    }
+  }, [location.pathname]);
 
   async function handleLogout(e) {
     e.preventDefault();
@@ -119,6 +140,7 @@ const Sidebar = () => {
               <FiUsers />
               <span className="link hide">Social</span>
               <span className="tooltip__content">Social</span>
+              {userRequests?.length > 0 && <div className="glowing-circle"></div>}
             </Link>
           </li>
 

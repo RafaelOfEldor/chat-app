@@ -16,6 +16,9 @@ export function AuthenticationRouter(mongoDatabase) {
           email: req.user.email,
           username: req.user.username,
           bio: "",
+          friends: [],
+          requests: [],
+          active_chats: []
         };
         const userExists = await mongoDatabase
           .collection("users")

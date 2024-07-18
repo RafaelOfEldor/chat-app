@@ -47,6 +47,52 @@ export function UsersRouter(mongoDatabase) {
     }
   });
 
+  router.post("/allfriends", async (req, res) => {
+    try {
+      const user_ids = req.body.user_ids;
+      if (!Array.isArray(user_ids)) {
+        return res.status(400).json({ error: "Invalid input, expected an array of user IDs" });
+      }
+  
+      const users = await mongoDatabase
+        .collection("users")
+        .find({ id: { $in: user_ids } })
+        .toArray();
+  
+      if (users.length > 0) {
+        res.json(users);
+      } else {
+        res.sendStatus(404); // No users found
+      }
+    } catch (error) {
+      console.error("Error looking for users:", error);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  });
+
+  router.post("/allrequests", async (req, res) => {
+    try {
+      const user_ids = req.body.user_ids;
+      if (!Array.isArray(user_ids)) {
+        return res.status(400).json({ error: "Invalid input, expected an array of user IDs" });
+      }
+  
+      const users = await mongoDatabase
+        .collection("users")
+        .find({ id: { $in: user_ids } })
+        .toArray();
+  
+      if (users.length > 0) {
+        res.json(users);
+      } else {
+        res.sendStatus(404); // No users found
+      }
+    } catch (error) {
+      console.error("Error looking for users:", error);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  });
+
   router.delete("/login", (req, res) => {
     try {
       // console.log(req.user);
@@ -84,6 +130,97 @@ export function UsersRouter(mongoDatabase) {
         { $set: { bio: updated_bio } },
         { returnDocument: true },
       );
+      res.sendStatus(204);
+    } catch (error) {
+      console.error("Error updating goal:", error);
+      res.status(500).json({ error: "Failed to update goal" });
+    }
+    res.end();
+  });
+
+  router.post("/send/request", async (req, res) => {
+    try {
+      const { receiving_user_id, user_id } = req.body;
+      // console.log(req.body);
+      await mongoDatabase.collection("users").updateOne(
+        {
+          id: receiving_user_id,
+        },
+        { $push: { requests: user_id } },
+        { returnDocument: true },
+      );
+      res.sendStatus(204);
+    } catch (error) {
+      console.error("Error updating goal:", error);
+      res.status(500).json({ error: "Failed to update goal" });
+    }
+    res.end();
+  });
+
+  router.post("/accept/request", async (req, res) => {
+    try {
+      const { receiving_user_id, user_id } = req.body;
+      // console.log(req.body);
+      await mongoDatabase.collection("users").updateOne(
+        { id: user_id },
+        { $pull: { requests: receiving_user_id } },
+        { returnDocument: true }
+      ).then(result => {
+        return mongoDatabase.collection("users").updateOne(
+          { id: user_id },
+          { $push: { friends: receiving_user_id } },
+          { returnDocument: true }
+        );
+      }).then(result => {
+        return mongoDatabase.collection("users").updateOne(
+          { id: receiving_user_id },
+          { $push: { friends: user_id } },
+          { returnDocument: true }
+        );
+      }).catch(error => {
+        console.error("An error occurred:", error);
+      });
+
+      res.sendStatus(204);
+    } catch (error) {
+      console.error("Error updating goal:", error);
+      res.status(500).json({ error: "Failed to update goal" });
+    }
+    res.end();
+  });
+
+  router.delete("/remove/request", async (req, res) => {
+    try {
+      const { receiving_user_id, user_id } = req.body;
+      // console.log(req.body);
+      await mongoDatabase.collection("users").updateOne(
+        { id: receiving_user_id },
+        { $pull: { requests: user_id } },
+        { returnDocument: true }
+      )
+      res.sendStatus(204);
+    } catch (error) {
+      console.error("Error updating goal:", error);
+      res.status(500).json({ error: "Failed to update goal" });
+    }
+    res.end();
+  });
+
+  router.delete("/remove/friend", async (req, res) => {
+    try {
+      const { receiving_user_id, user_id } = req.body;
+      // console.log(req.body);
+      await mongoDatabase.collection("users").updateOne(
+        { id: user_id },
+        { $pull: { friends: receiving_user_id } },
+        { returnDocument: true }
+      ).then(result => {
+        return mongoDatabase.collection("users").updateOne(
+          { id: receiving_user_id },
+          { $pull: { friends: user_id } },
+          { returnDocument: true }
+        );
+      })
       res.sendStatus(204);
     } catch (error) {
       console.error("Error updating goal:", error);

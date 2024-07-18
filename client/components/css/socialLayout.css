@@ -12,7 +12,7 @@
 .social-layout-navbar-div {
   display: flex;
   gap: 40px;
-  margin-top: 100px;
+  margin-top: 50px;
   margin-bottom: 30px;
 }
 
@@ -38,4 +38,49 @@
   text-underline-offset: 10px;
   color: #009bcb;
   scale: 1.2
+}
+
+.social-layout-navbar-div-link.requests {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  text-decoration: underline;
+  font-size: 1.4rem;
+  color: #5a5e9a;
+  transition: 0.1s ease-in-out;
+  text-underline-offset: 10px;
+}
+
+.active-social-layout-navbar-div-link.requests {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  text-decoration: underline;
+  font-size: 1.4rem;
+  transition: 0.1s ease-in-out;
+  text-underline-offset: 10px;
+  color: #009bcb;
+  scale: 1.2
+}
+
+.glowing-circle-social-layout {
+  width: 10px;
+  height: 10px;
+  margin-top: 5px; 
+  margin-right: auto;
+  background-color: cyan;
+  border-radius: 50%;
+  box-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+  }
+  to {
+    box-shadow: 0 0 20px cyan, 0 0 30px cyan, 0 0 40px cyan;
+  }
 }
