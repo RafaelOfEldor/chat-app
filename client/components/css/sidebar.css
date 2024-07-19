@@ -1,14 +1,14 @@
 :root {
   --primary-color: #191919;
-  --white: #FFFFFF;
-  --sidebar-primary: #353E47;
-  --sidebar-primary-hover: #353E47;
-  --sidebar-background: #070E13;
-  --background: #F1F3FF;
-  --text-link: #FFFFFF;
-  --headline: #CBD1D8;
-  --expand-button: #353E47;
-  --logout: #FA7575;
+  --white: #ffffff;
+  --sidebar-primary: #353e47;
+  --sidebar-primary-hover: #353e47;
+  --sidebar-background: #070e13;
+  --background: #f1f3ff;
+  --text-link: #ffffff;
+  --headline: #cbd1d8;
+  --expand-button: #353e47;
+  --logout: #fa7575;
 }
 
 .sidebar {
@@ -175,7 +175,7 @@
 
 .sidebar-links li svg {
   stroke: var(--text-link);
-  width: 1.;
+  width: 1;
   height: 1.75rem;
   min-width: 1.75rem;
 }
@@ -241,7 +241,9 @@
   position: absolute;
   z-index: 1;
   top: 50%; /* Positioning the tooltip relative to its parent */
-  left: calc(100% + 10px); /* Adjust the distance to the right of the parent element */
+  left: calc(
+    100% + 10px
+  ); /* Adjust the distance to the right of the parent element */
   transform: translateY(-50%);
 }
 
@@ -319,7 +321,7 @@
 }
 
 .logout:hover {
-  scale: 1.6
+  scale: 1.6;
 }
 
 .expand-btn {
@@ -347,11 +349,10 @@
   right: 0;
   width: 0.75rem;
   height: 0.75rem;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: 1px solid var(--sidebar-background);
   border-radius: 50%;
 }
-
 
 .collapsed.expand-btn svg {
   transform: rotate(180deg);
@@ -373,19 +374,67 @@
   position: absolute;
   left: calc(100% - 150px);
   width: 10px;
-  height: 10px; 
+  height: 10px;
   margin-right: auto;
   background-color: cyan;
   border-radius: 50%;
-  box-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+  box-shadow:
+    0 0 10px cyan,
+    0 0 20px cyan,
+    0 0 30px cyan;
   animation: glow 1.5s infinite alternate;
+}
+
+.glowing-circle-messages {
+  position: absolute;
+  left: calc(100% - 120px);
+  width: 10px;
+  height: 10px;
+  margin-top: 3px;
+  margin-right: auto;
+  background-color: cyan;
+  border-radius: 50%;
+  box-shadow:
+    0 0 10px cyan,
+    0 0 20px cyan,
+    0 0 30px cyan;
+  animation: glow 1.5s infinite alternate;
+}
+
+.glowing-circle-direct-messages {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  left: calc(100% - 50px);
+  width: 30px;
+  height: 30px;
+  margin-right: auto;
+  background-color: rgba(48, 49, 137, 0.8);
+  border-radius: 50%;
+  box-shadow:
+    0 0 10px cyan,
+    0 0 20px cyan,
+    0 0 30px rgba(11, 11, 73, 0.8);
+  /* animation: glow 1.5s infinite alternate; */
+}
+
+.glowing-circle-direct-messages h3 {
+  color: white;
 }
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+    box-shadow:
+      0 0 10px cyan,
+      0 0 20px cyan,
+      0 0 30px cyan;
   }
   to {
-    box-shadow: 0 0 20px cyan, 0 0 30px cyan, 0 0 40px cyan;
+    box-shadow:
+      0 0 20px cyan,
+      0 0 30px cyan,
+      0 0 40px cyan;
   }
 }

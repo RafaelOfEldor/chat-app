@@ -121,27 +121,191 @@ server.on("upgrade", (req, socket, head) => {
     sockets.push(socket);
 
     const urlParams = new URLSearchParams(req.url.split("?")[1]);
-    const roomId = urlParams.get("roomid") || null;
+    // const roomId = urlParams.get("roomid") || null;
     const userId = urlParams.get("userid") || null;
     const receivingUser = urlParams.get("receivinguser") || null;
-    if (roomId) {
-      socket.userId = userId;
-      socket.chatRoomId = roomId;
+    socket.userId = userId;
+    // socket.chatRoomId = roomId;
 
-      socket.on("message", async (message) => {
+    socket.on("message", async (message) => {
+      const userInput = JSON.parse(message.toString());
+      if (userInput.type === "UPDATE_ROOM") {
+        // console.log("userinput", userInput);
+        const { user_id } = userInput;
+        const dataElement = {
+          joining_user: user_id,
+          room_id: userInput.roomid,
+        };
+
+        const updateRoomsRes = await fetch(baseUrl + "/api/chats/updateview", {
+          method: "PUT",
+          body: JSON.stringify(dataElement),
+          headers: {
+            "content-type": "application/json",
+          },
+        });
+
+        const res = await fetch(
+          baseUrl + `/api/chats/room/${userInput.roomid}`,
+        );
+        const room = await res.json();
+        if (res.status === 200 || res.status === 204) {
+          const returnMessage = {
+            type: "UPDATE_ROOM",
+            message: {
+              id: user_id,
+            },
+          };
+          interestedSockets = sockets.filter((clientSocket) => {
+            return room[0]?.users?.includes(clientSocket.userId);
+          });
+          for (const recipient of interestedSockets) {
+            recipient.send(JSON.stringify(returnMessage));
+          }
+        }
+      }
+      if (userInput.type === "SEND_REQUEST_UPDATE") {
         try {
-          const userInput = JSON.parse(message.toString());
+          const { user_id, receiving_user_id } = userInput;
+          const data = {
+            receiving_user_id: receiving_user_id,
+            user_id: user_id,
+          };
+          // console.log(userInput)
+          const res = await fetch(baseUrl + `/api/users/send/request`, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "content-type": "application/json",
+            },
+          });
+          const updatedData = await res.json();
+          console.log(updatedData);
+          const messageToSend = {
+            type: "REQUEST_UPDATE",
+            targetUser: updatedData,
+          };
+          sockets.forEach((recipient) => {
+            recipient.send(JSON.stringify(messageToSend));
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (userInput.type === "REMOVE_REQUEST_UPDATE") {
+        try {
+          const { user_id, receiving_user_id } = userInput;
+          const data = {
+            receiving_user_id: user_id,
+            user_id: receiving_user_id,
+          };
+          console.log(userInput);
+          const res = await fetch(baseUrl + `/api/users/remove/request`, {
+            method: "DELETE",
+            body: JSON.stringify(data),
+            headers: {
+              "content-type": "application/json",
+            },
+          });
+          const updatedData = await res.json();
+          console.log(updatedData);
+          const messageToSend = {
+            type: "REQUEST_UPDATE",
+            targetUser: updatedData,
+          };
+          sockets.forEach((recipient) => {
+            recipient.send(JSON.stringify(messageToSend));
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      if (userInput.type === "ACCEPT_FRIEND_UPDATE") {
+        try {
+          const { user_id, receiving_user_id } = userInput;
+          const data = {
+            receiving_user_id: user_id,
+            user_id: receiving_user_id,
+          };
+          console.log(userInput);
+          const res = await fetch(baseUrl + `/api/users/accept/request`, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "content-type": "application/json",
+            },
+          });
+          const updatedData = await res.json();
+          console.log(updatedData);
+          const messageToSend = {
+            type: "FRIEND_UPDATE",
+            targetUser: updatedData,
+          };
+          sockets.forEach((recipient) => {
+            recipient.send(JSON.stringify(messageToSend));
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      if (userInput.type === "REMOVE_FRIEND_UPDATE") {
+        try {
+          const { user_id, receiving_user_id } = userInput;
+          const data = {
+            receiving_user_id: user_id,
+            user_id: receiving_user_id,
+          };
+          console.log(userInput);
+          const res = await fetch(baseUrl + `/api/users/remove/friend`, {
+            method: "DELETE",
+            body: JSON.stringify(data),
+            headers: {
+              "content-type": "application/json",
+            },
+          });
+          const updatedData = await res.json();
+          console.log(updatedData);
+          const messageToSend = {
+            type: "FRIEND_UPDATE",
+            targetUser: updatedData,
+          };
+          sockets.forEach((recipient) => {
+            recipient.send(JSON.stringify(messageToSend));
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      if (userInput.type === "SEND_MESSAGE") {
+        try {
+          // console.log("userinput:", userInput);
           // console.log("userinput chatroom: " + userInput.chat_room);
           // console.log("socket chatroom: " + socket.chatRoomId);
           // console.log("socket userid: " + socket.userId);
           // console.log("param chatroom: " + roomId);
           // console.log("param userid: " + userId);
-          if (userInput.type === "join") {
-            socket.chatRoomId = roomId;
+          const { user_id, roomid } = userInput;
+          socket.chatRoomId = roomid;
+          // socket.userId = userId;
+
+          // console.log(user_id);
+          // console.log(roomid);
+          // roomId = userInput?.roomid;
+
+          // userId = userInput?.user_id;
+          if (userInput.subtype === "join") {
+            const { joining_user, chat_room } = userInput;
+
+            const dataElement = {
+              joining_user: joining_user,
+              room_id: chat_room,
+            };
+
             // console.log(`Socket joined chatroom: ${socket.chatRoomId}`);
-            // console.log(userInput.chat_room)
+            // console.log(userInput.messageElement.chat_room)
             interestedSockets = sockets.filter((clientSocket) => {
-              return clientSocket.chatRoomId === roomId;
+              return clientSocket.chatRoomId === chat_room;
             });
 
             for (const recipient of interestedSockets) {
@@ -150,18 +314,52 @@ server.on("upgrade", (req, socket, head) => {
               );
             }
 
+            console.log("yo");
+            const res = await fetch(baseUrl + "/api/chats/updateview", {
+              method: "PUT",
+              body: JSON.stringify(dataElement),
+              headers: {
+                "content-type": "application/json",
+              },
+            });
+
+            const messageToSend = {
+              type: "CHAT_ROOMS_UPDATE",
+              targetUser: "updating rooms",
+            };
+            for (const recipient of interestedSockets) {
+              recipient.send(JSON.stringify(messageToSend));
+            }
+
+            sockets.forEach((recipient) => {
+              recipient.send(JSON.stringify(messageToSend));
+            });
+
+            // console.log(res.status);
+
             return;
           } else {
+            // console.log(roomid);
+            const res = await fetch(baseUrl + `/api/chats/room/${roomid}`);
+            // console.log("rees",res);
+            const data = await res.json();
+            // console.log("data:", data);
+
             interestedSockets = sockets.filter((clientSocket) => {
-              return clientSocket.chatRoomId === roomId;
+              console.log(clientSocket?.userId);
+              console.log(data[0]?.users);
+              return data[0]?.users?.includes(clientSocket.userId);
             });
           }
 
-          if (!userInput.edited && !userInput.deleted) {
+          if (
+            !userInput.messageElement?.edited &&
+            !userInput.messageElement?.deleted
+          ) {
             // console.log(interestedSockets)
+            // console.log("userinput:", userInput);
             fetch(
-              baseUrl +
-                `/api/chats/log/${userInput.sending_user_id}/${userInput.chat_id}`,
+              baseUrl + `/api/chats/log/${userInput.messageElement?.chat_id}`,
             )
               .then((response) => {
                 const contentType = response.headers.get("Content-Type");
@@ -180,7 +378,8 @@ server.on("upgrade", (req, socket, head) => {
               .catch((error) => {
                 console.error("Error fetching chat log:", error);
               });
-            currentChat.push(userInput);
+            // console.log(userInput.messageElement?);
+            currentChat.push(userInput.messageElement);
 
             const messageType = "new-message";
             const messageArrayWithType = {
@@ -188,30 +387,52 @@ server.on("upgrade", (req, socket, head) => {
               messages: currentChat,
             };
             // console.log(currentChat);
-            // console.log(userInput);
+            // console.log(userInput.messageElement?);
             await fetch(baseUrl + "/api/chats/sendmessage", {
               method: "POST",
-              body: JSON.stringify(userInput),
+              body: JSON.stringify(userInput.messageElement),
               headers: {
                 "content-type": "application/json",
               },
             });
+
+            const chatLogsRes = await fetch(
+              baseUrl + `/api/chats/log/${roomid}`,
+            );
+            if (chatLogsRes.status === 204) {
+              // console.log(chatLogsRes);
+            } else {
+              const data = await chatLogsRes.json();
+              // console.log("data:", data);
+              const roomElement = {
+                room_id: roomid,
+                room_length: data.length,
+              };
+              const roomRes = await fetch(baseUrl + "/api/chats/updateroom", {
+                method: "PUT",
+                body: JSON.stringify(roomElement),
+                headers: {
+                  "content-type": "application/json",
+                },
+              });
+            }
+
+            // console.log(messageArrayWithType);
+
             for (const recipient of interestedSockets) {
+              console.log(recipient?.userId);
               recipient.send(JSON.stringify(messageArrayWithType));
             }
-          } else if (userInput.deleted) {
+          } else if (userInput.messageElement?.deleted) {
             const res = await fetch(
               baseUrl +
-                `/api/chats/deletemessage/${userInput.sending_user_id}/${roomId}/${userInput.message_id}`,
+                `/api/chats/deletemessage/${userInput.messageElement?.sending_user_id}/${roomid}/${userInput.messageElement?.message_id}`,
               {
                 method: "DELETE",
               },
             );
             if (res.ok) {
-              fetch(
-                baseUrl +
-                  `/api/chats/log/${userInput.sending_user_id}/${roomId}`,
-              )
+              fetch(baseUrl + `/api/chats/log/${roomid}`)
                 .then((response) => {
                   const contentType = response.headers.get("Content-Type");
 
@@ -234,22 +455,19 @@ server.on("upgrade", (req, socket, head) => {
 
               // console.log(currentChat);
               // console.log("in deleting part of socket");
-              // console.log(userInput);
+              // console.log(userInput.messageElement?);
               // console.log("in deleting part of socket");
             }
-          } else if (userInput.edited) {
+          } else if (userInput.messageElement?.edited) {
             const res = await fetch(baseUrl + "/api/chats/sendmessage", {
               method: "PUT",
-              body: JSON.stringify(userInput),
+              body: JSON.stringify(userInput.messageElement),
               headers: {
                 "content-type": "application/json",
               },
             });
             if (res.ok) {
-              fetch(
-                baseUrl +
-                  `/api/chats/log/${userInput.sending_user_id}/${roomId}`,
-              )
+              fetch(baseUrl + `/api/chats/log/${roomid}`)
                 .then((response) => {
                   const contentType = response.headers.get("Content-Type");
 
@@ -272,131 +490,14 @@ server.on("upgrade", (req, socket, head) => {
 
               // console.log(currentChat);
               // console.log("in socket");
-              // console.log(userInput);
+              // console.log(userInput.messageElement);
               // console.log("in socket");
             }
           }
         } catch (error) {
           console.error("Something went wrong with websocket: ", error);
         }
-      });
-    } else {
-      socket.on("message", async (message) => {
-        const userInput = JSON.parse(message.toString());
-        
-        if (userInput.type === "SEND_REQUEST_UPDATE") {
-          try {
-            const { user_id, receiving_user_id } = userInput;
-            const data = {
-              receiving_user_id: receiving_user_id,
-              user_id: user_id
-            }
-            console.log(userInput)
-            const res = await fetch(baseUrl + `/api/users/send/request`, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-              "content-type": "application/json",
-            },
-          });
-
-          const updatedData = await res.json();
-          console.log(updatedData);
-          const messageToSend = { type: "REQUEST_UPDATE", targetUser: updatedData };
-          sockets.forEach((recipient) => {
-            recipient.send(JSON.stringify(messageToSend));
-          });
-        } catch(e) {
-          console.error(e)
-        }
       }
-
-      if (userInput.type === "REMOVE_REQUEST_UPDATE") {
-        try {
-          const { user_id, receiving_user_id } = userInput;
-          const data = {
-            receiving_user_id: receiving_user_id,
-            user_id: user_id
-          }
-          console.log(userInput)
-         const res = await fetch(baseUrl + `/api/users/remove/request`, {
-          method: "DELETE",
-          body: JSON.stringify(data),
-          headers: {
-          "content-type": "application/json",
-        },
-        })
-
-        const updatedData = await res.json();
-        console.log(updatedData);
-        const messageToSend = { type: "REQUEST_UPDATE", targetUser: updatedData };
-        sockets.forEach((recipient) => {
-          recipient.send(JSON.stringify(messageToSend));
-        });
-      } catch(e) {
-        console.error(e)
-      }
-    }
-
-    if (userInput.type === "ACCEPT_FRIEND_UPDATE") {
-      try {
-        const { user_id, receiving_user_id } = userInput;
-        const data = {
-          receiving_user_id: user_id,
-          user_id: receiving_user_id
-        }
-        console.log(userInput)
-        const res = await fetch(baseUrl + `/api/users/accept/request`, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-            "content-type": "application/json",
-          },
-          })
-
-      const updatedData = await res.json();
-      console.log(updatedData);
-      const messageToSend = { type: "FRIEND_UPDATE", targetUser: updatedData };
-      sockets.forEach((recipient) => {
-        recipient.send(JSON.stringify(messageToSend));
-      });
-    } catch(e) {
-      console.error(e)
-    }
-  }
-
-  if (userInput.type === "REMOVE_FRIEND_UPDATE") {
-    try {
-      const { user_id, receiving_user_id } = userInput;
-      const data = {
-        receiving_user_id: user_id,
-        user_id: receiving_user_id
-      }
-      console.log(userInput)
-      const res = await fetch(baseUrl + `/api/users/remove/friend`, {
-        method: "DELETE",
-        body: JSON.stringify(data),
-        headers: {
-        "content-type": "application/json",
-      },
-      })
-
-        const updatedData = await res.json();
-        console.log(updatedData);
-        const messageToSend = { type: "FRIEND_UPDATE", targetUser: updatedData };
-        sockets.forEach((recipient) => {
-          recipient.send(JSON.stringify(messageToSend));
-        });
-      } catch(e) {
-        console.error(e)
-      }
-    }
-
- 
-             
-  }) 
-  }
-
-    
+    });
   });
 });

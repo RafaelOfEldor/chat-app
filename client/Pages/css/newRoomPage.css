@@ -16,7 +16,7 @@
   text-align: center;
 }
 
-.create-new-room-form input{
+.create-new-room-form input {
   width: 400px;
   padding: 6px 12px;
   background: rgb(31, 32, 35);
@@ -30,7 +30,7 @@
   font-size: 1.2rem;
 }
 
-.create-new-room-form textarea{
+.create-new-room-form textarea {
   font-size: 1.2rem;
   width: 600px;
   padding: 6px 12px;
@@ -45,19 +45,19 @@
   resize: none;
 }
 
-.create-new-room-form input:focus{
+.create-new-room-form input:focus {
   outline: none;
   box-shadow: none;
   border-color: rgb(100, 153, 255);
 }
 
-.create-new-room-form textarea:focus{
+.create-new-room-form textarea:focus {
   outline: none;
   box-shadow: none;
   border-color: rgb(100, 153, 255);
 }
 
-.create-new-room-form button{
+.create-new-room-form button {
   text-decoration: none;
 
   width: auto;
@@ -72,15 +72,18 @@
   line-height: 45px;
   border-radius: 7px;
   /* background-color: #0070f3; */
-  background: rgba(0,118,255,0.7);
+  background: rgba(0, 118, 255, 0.7);
   color: white;
   font-weight: 400;
   font-size: 16px;
   box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
-  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.create-new-room-form select{
+.create-new-room-form select {
   text-decoration: none;
 
   width: auto;
@@ -100,15 +103,18 @@
   font-weight: 400;
   font-size: 16px;
   box-shadow: 0 4px 14px 0 rgba(14, 2, 29, 0.39);
-  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.create-new-room-form select:hover{
+.create-new-room-form select:hover {
   background-color: rgba(21, 3, 43, 0.7);
   box-shadow: 0 6px 20px rgb(14 2 29 / 23%);
 }
 
-.create-new-room-form button:hover{
+.create-new-room-form button:hover {
   background-color: #0070f3;
   box-shadow: 0 6px 20px rgb(0 118 255 / 23%);
 }

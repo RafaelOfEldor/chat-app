@@ -26,12 +26,12 @@ const FloatingMessage = () => {
             delay: Math.random() * 5,
           }}
           style={{
-            position: 'absolute',
+            position: "absolute",
             left: `${Math.random() * 50}vw`, // Limit to left half
-            top: `${Math.random() * 100}vh`,  // Cover full height
-            fontSize: '1.5rem',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
+            top: `${Math.random() * 100}vh`, // Cover full height
+            fontSize: "1.5rem",
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
           }}
         >
           {message}
@@ -70,8 +70,9 @@ const WelcomePage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          In our digital era, we can socialize amongst ourselves, by ourselves. 
-          Stay in touch and bear witness to gatherings in this dimension we call.. 
+          In our digital era, we can socialize amongst ourselves, by ourselves.
+          Stay in touch and bear witness to gatherings in this dimension we
+          call..
           <i className="highlight"> the cyberspace.</i>
         </motion.p>
         <motion.a

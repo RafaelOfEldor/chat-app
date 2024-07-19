@@ -5,9 +5,8 @@ import {
   ExpressUsersPutBio,
   ExpressUsersPutUsername,
 } from "../functions/ExpressFunctions.jsx";
-import "./css/loadingAndFiller.css"
-import "./css/profilePage.css"
-
+import "./css/loadingAndFiller.css";
+import "./css/profilePage.css";
 
 export default function ProfilePage() {
   const {
@@ -31,7 +30,7 @@ export default function ProfilePage() {
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
 
   async function handleEditBio(e) {
     e.preventDefault();
@@ -71,27 +70,48 @@ export default function ProfilePage() {
 
   return username ? (
     userInfo?.username ? (
-      <div style={{color: "white"}}>
+      <div style={{ color: "white" }}>
         <div className="profile-page header">
           <div>
-            <h1 style={{ fontSize: "3rem", fontWeight: "300" }}>{fullName} ({userInfo?.username})</h1>
-            <h3 style={{fontWeight: "300"}}>{mail}</h3>
+            <h1 style={{ fontSize: "3rem", fontWeight: "300" }}>
+              {fullName} ({userInfo?.username})
+            </h1>
+            <h3 style={{ fontWeight: "300" }}>{mail}</h3>
           </div>
         </div>
         <div className="profile-page intermediary-line">
           <h1>Profile Details</h1>
-          <h3 style={{fontWeight: "100", marginTop: "10px"}}>Update your profile information</h3>
-          <div style={{display: "flex", flexDirection: "column", alignItems: "center", width: "70vw", gap: "20px", marginTop: "20px", borderStyle: "solid", borderRadius: "10px",
-            borderWidth: "1px", color: "rgba(176, 176, 176, 0.84)"}}
+          <h3 style={{ fontWeight: "100", marginTop: "10px" }}>
+            Update your profile information
+          </h3>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "70vw",
+              gap: "20px",
+              marginTop: "20px",
+              borderStyle: "solid",
+              borderRadius: "10px",
+              borderWidth: "1px",
+              color: "rgba(176, 176, 176, 0.84)",
+            }}
           ></div>
         </div>
         <div className="profile-page info">
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "10px"}}>
-            <h2>
-              Username:
-            </h2>
-            <h3 style={{fontWeight: "100"}}>
-                {loadingUsername ? "Loading new username..." : userInfo?.username}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              textAlign: "center",
+              gap: "10px",
+            }}
+          >
+            <h2>Username:</h2>
+            <h3 style={{ fontWeight: "100" }}>
+              {loadingUsername ? "Loading new username..." : userInfo?.username}
             </h3>
             <div>
               <div className="list-element-div">
@@ -122,14 +142,30 @@ export default function ProfilePage() {
               <button> Submit Change </button>
             </form>
           )}
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "10px"}}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              textAlign: "center",
+              gap: "10px",
+            }}
+          >
             <h2>Full name: </h2>
-            <h3 style={{fontWeight: "100"}}>{fullName}</h3>
+            <h3 style={{ fontWeight: "100" }}>{fullName}</h3>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "50px"}}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              textAlign: "center",
+              gap: "50px",
+            }}
+          >
             <h2>Email: </h2>
-            <h3 style={{fontWeight: "100"}}>{mail}</h3>
+            <h3 style={{ fontWeight: "100" }}>{mail}</h3>
           </div>
 
           <div style={{ display: "flex" }}>
@@ -141,9 +177,19 @@ export default function ProfilePage() {
                 justifyContent: "center",
               }}
             >
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center", gap: "75px"}}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  textAlign: "center",
+                  gap: "75px",
+                }}
+              >
                 <h2>Bio: </h2>
-                <h3 style={{fontWeight: "100"}}>{loadingBio ? "Loading new bio..." : userInfo?.bio}</h3>
+                <h3 style={{ fontWeight: "100" }}>
+                  {loadingBio ? "Loading new bio..." : userInfo?.bio}
+                </h3>
               </div>
             </div>
             <div
@@ -189,11 +235,14 @@ export default function ProfilePage() {
       </div>
     )
   ) : (
-    <div style={{display: "flex", gap: "40px", color: "white"}}>
-    <h1>Please log in</h1>
-    <button onClick={() => navigate("/login")}
-    style={{width: "150px", height: "50px", fontSize: "1.3rem"}}
-      >Login</button>
-  </div>
+    <div style={{ display: "flex", gap: "40px", color: "white" }}>
+      <h1>Please log in</h1>
+      <button
+        onClick={() => navigate("/login")}
+        style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}
+      >
+        Login
+      </button>
+    </div>
   );
 }

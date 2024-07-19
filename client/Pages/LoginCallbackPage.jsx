@@ -1,12 +1,14 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import "./css/loadingAndFiller.css"
+import "./css/loadingAndFiller.css";
+import { useWebSocket } from "../context/WebSocketContext";
 
 export default function LoginCallbackPage(props) {
   const [debug, setDebug] = React.useState();
   const [error, setError] = React.useState();
   const navigate = useNavigate();
+  const [webSocket, setWebSocket] = useWebSocket();
   const {
     loadUser,
     microsoft_client_id,
@@ -58,7 +60,12 @@ export default function LoginCallbackPage(props) {
     if (!res.ok) {
       throw new Error("Something went wrong in callback " + res.statusText);
     }
-    await loadUser();
+    const loadedUserId = await loadUser();
+    const ws = new WebSocket(
+      window.location.origin.replace(/^http/, "ws") + `?userid=${loadedUserId}`,
+    );
+
+    setWebSocket(ws);
     navigate("/profile");
   }
 

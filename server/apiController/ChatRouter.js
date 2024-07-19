@@ -9,44 +9,77 @@ export function ChatRouter(mongoDatabase) {
 
   //Chat rooms
 
-  router.get("/log/:sendingUserId/:chatId", async (req, res) => {
+  router.get("/log/:chatId", async (req, res) => {
     try {
-      const { sendingUserId } = req.params;
       const chatId = parseInt(req.params.chatId);
-      const chats = [];
-      let i = 1;
-      do {
-        const chatExist = await mongoDatabase
-          .collection("chat-messages")
-          .findOne({
-            chat_room: chatId,
-            message_id: i,
-          });
 
-        if (chatExist) {
-          const chat = await mongoDatabase
-            .collection("chat-messages")
-            .find({
-              chat_room: chatId,
-              message_id: i,
-            })
-            .toArray();
-          chats.push(chat[0]);
-        } else {
-          break;
-        }
-        i++;
-      } while (true);
+      const chats = await mongoDatabase
+        .collection("chat-messages")
+        .find({ chat_room: chatId })
+        .sort({ message_id: 1 })
+        .toArray();
+
       if (chats.length > 0) {
-        // console.log(chats)
         res.json(chats);
       } else {
-        res.status(204);
-        res.end();
+        res.status(204).end();
       }
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ error: "Failed to fetch user" });
+    }
+  });
+
+  router.post("/checkview", async (req, res) => {
+    try {
+      const { user_id, rooms } = req.body;
+
+      // console.log("receiving body:",req.body);
+
+      // Prepare the response structure
+      const response = [];
+
+      // Process each room
+      for (const room of rooms) {
+        const { id, prevMessages } = room;
+
+        // Convert prevMessages to integers if they are in string format
+        if (prevMessages?.length > 0) {
+          const parsedMessageIds = prevMessages.map((id) => parseInt(id) + 1);
+
+          // Retrieve messages for the current room
+          const messages = await mongoDatabase
+            .collection("chat-messages")
+            .find({ chat_room: id, message_id: { $in: parsedMessageIds } })
+            .toArray();
+
+          // Check if user_id is in seenBy array for each message
+
+          if (messages?.length > 0) {
+            const roomResult = {
+              id,
+              messages:
+                messages.length &&
+                messages.map((message) => ({
+                  message_id: message.message_id,
+                  seenByUser: message.seenBy.includes(user_id),
+                })),
+            };
+            // console.log(messages);
+
+            // Add the result for the current room to the response
+            response.push(roomResult);
+          }
+        }
+      }
+      if (response?.length > 0) {
+        res.json(response);
+      } else {
+        res.sendStatus(204);
+      }
+    } catch (error) {
+      console.error("Error checking seenBy:", error);
+      res.status(500).json({ error: "Failed to check seenBy" });
     }
   });
 
@@ -58,6 +91,37 @@ export function ChatRouter(mongoDatabase) {
         .toArray();
       // console.log(rooms);
       res.send(rooms);
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+      res.status(500).json({ error: "Failed to fetch rooms" });
+    }
+  });
+
+  router.put("/updateroom", async (req, res) => {
+    try {
+      const { room_id, room_length } = req.body;
+      // console.log("receiving body:",req.body);
+      // console.log("yo?");
+      let i;
+      let a = [];
+      for (i = room_length - 1; i > room_length - 11 && i >= 0; i--) {
+        a.push(`${i}`);
+      }
+
+      // console.log(a);
+      const respone = await mongoDatabase
+        .collection("chat-rooms")
+        .updateOne(
+          { id: parseInt(room_id) },
+          { $set: { prevMessages: a } },
+          { returnDocument: true },
+        );
+      // console.log(rooms);
+      if (respone.ok) {
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(204);
+      }
     } catch (error) {
       console.error("Error fetching rooms:", error);
       res.status(500).json({ error: "Failed to fetch rooms" });
@@ -172,6 +236,36 @@ export function ChatRouter(mongoDatabase) {
     res.end();
   });
 
+  router.put("/updateview", async (req, res) => {
+    try {
+      const userInput = req.body;
+      const { joining_user, room_id } = userInput;
+      const userId = userInput.user_id; // Assuming the user ID is sent in the body
+
+      console.log("userinput", userInput);
+
+      const response = await mongoDatabase
+        .collection("chat-messages")
+        .updateMany(
+          {
+            chat_room: parseInt(room_id),
+          },
+          {
+            $addToSet: { seenBy: joining_user }, // Add the user ID to the seenBy array if it's not already there
+          },
+        );
+      if (response.ok) {
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(204);
+      }
+    } catch (error) {
+      console.error("Error updating view:", error);
+      res.status(500).json({ error: "Failed to update view" });
+    }
+    res.end();
+  });
+
   router.delete(
     "/deletemessage/:sendinguserid/:chatroom/:messageid",
     async (req, res) => {
@@ -196,7 +290,6 @@ export function ChatRouter(mongoDatabase) {
     },
   );
 
-
   // Direct messages
 
   router.get(
@@ -215,7 +308,7 @@ export function ChatRouter(mongoDatabase) {
               chat_id: 1,
               message_id: i,
             });
-  
+
           const chatExistMirror = await mongoDatabase
             .collection("direct-messages")
             .findOne({
@@ -255,7 +348,9 @@ export function ChatRouter(mongoDatabase) {
           // console.log(chats)
           res.json(chats);
         } else {
-          res.status(204).json({ message: "Currently no messages in this chat" });
+          res
+            .status(204)
+            .json({ message: "Currently no messages in this chat" });
         }
       } catch (error) {
         console.error("Error fetching user:", error);

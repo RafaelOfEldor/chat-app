@@ -80,7 +80,6 @@
 }
 
 .list-element-div > button {
-  
   /* display: inline-block;
   outline: 0;
   cursor: pointer;
@@ -110,12 +109,12 @@
   border: none;
   color: #fff;
   background-color: rgb(88, 101, 242);
-  transition: background-color .17s ease,color .17s ease;
-  
-  
+  transition:
+    background-color 0.17s ease,
+    color 0.17s ease;
 }
 
-.list-element-div > button:hover{
+.list-element-div > button:hover {
   background-color: rgb(71, 82, 196);
 }
 
@@ -127,7 +126,6 @@
   gap: 20px;
 }
 .show-edit-div > input {
-  
   padding: 6px 12px;
   background: rgb(31, 32, 35);
   border: 1px solid rgb(60, 63, 68);
@@ -137,18 +135,15 @@
   height: 46px;
   appearance: none;
   transition: border 0.15s ease 0s;
-  
-
 }
 
-.show-edit-div > input:focus{
+.show-edit-div > input:focus {
   outline: none;
   box-shadow: none;
   border-color: rgb(100, 153, 255);
 }
 
 .show-edit-div > textarea {
-  
   padding: 6px 12px;
   background: rgb(31, 32, 35);
   border: 1px solid rgb(60, 63, 68);
@@ -160,10 +155,9 @@
   appearance: none;
   transition: border 0.15s ease 0s;
   resize: none;
-
 }
 
-.show-edit-div > textarea:focus{
+.show-edit-div > textarea:focus {
   outline: none;
   box-shadow: none;
   border-color: rgb(100, 153, 255);
@@ -184,7 +178,7 @@
   font-size: 16px;
   box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
   transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease; */
-  
+
   display: inline-block;
   outline: none;
   cursor: pointer;
@@ -199,8 +193,9 @@
   border: none;
   color: #fff;
   background-color: rgb(88, 101, 242);
-  transition: background-color .17s ease,color .17s ease;
-  
+  transition:
+    background-color 0.17s ease,
+    color 0.17s ease;
 }
 .show-edit-div > button:hover {
   background-color: rgb(71, 82, 196);

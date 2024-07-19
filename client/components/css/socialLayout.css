@@ -1,5 +1,3 @@
-
-
 .social-layout-page {
   display: flex;
   flex-direction: column;
@@ -27,7 +25,7 @@
 
 .social-layout-navbar-div-link:hover {
   color: #009bcb;
-  scale: 1.2
+  scale: 1.2;
 }
 
 .active-social-layout-navbar-div-link {
@@ -37,7 +35,7 @@
   transition: 0.1s ease-in-out;
   text-underline-offset: 10px;
   color: #009bcb;
-  scale: 1.2
+  scale: 1.2;
 }
 
 .social-layout-navbar-div-link.requests {
@@ -62,25 +60,34 @@
   transition: 0.1s ease-in-out;
   text-underline-offset: 10px;
   color: #009bcb;
-  scale: 1.2
+  scale: 1.2;
 }
 
 .glowing-circle-social-layout {
   width: 10px;
   height: 10px;
-  margin-top: 5px; 
+  margin-top: 5px;
   margin-right: auto;
   background-color: cyan;
   border-radius: 50%;
-  box-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+  box-shadow:
+    0 0 10px cyan,
+    0 0 20px cyan,
+    0 0 30px cyan;
   animation: glow 1.5s infinite alternate;
 }
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+    box-shadow:
+      0 0 10px cyan,
+      0 0 20px cyan,
+      0 0 30px cyan;
   }
   to {
-    box-shadow: 0 0 20px cyan, 0 0 30px cyan, 0 0 40px cyan;
+    box-shadow:
+      0 0 20px cyan,
+      0 0 30px cyan,
+      0 0 40px cyan;
   }
 }

@@ -51,14 +51,16 @@ export function UsersRouter(mongoDatabase) {
     try {
       const user_ids = req.body.user_ids;
       if (!Array.isArray(user_ids)) {
-        return res.status(400).json({ error: "Invalid input, expected an array of user IDs" });
+        return res
+          .status(400)
+          .json({ error: "Invalid input, expected an array of user IDs" });
       }
-  
+
       const users = await mongoDatabase
         .collection("users")
         .find({ id: { $in: user_ids } })
         .toArray();
-  
+
       if (users.length > 0) {
         res.json(users);
       } else {
@@ -74,14 +76,16 @@ export function UsersRouter(mongoDatabase) {
     try {
       const user_ids = req.body.user_ids;
       if (!Array.isArray(user_ids)) {
-        return res.status(400).json({ error: "Invalid input, expected an array of user IDs" });
+        return res
+          .status(400)
+          .json({ error: "Invalid input, expected an array of user IDs" });
       }
-  
+
       const users = await mongoDatabase
         .collection("users")
         .find({ id: { $in: user_ids } })
         .toArray();
-  
+
       if (users.length > 0) {
         res.json(users);
       } else {
@@ -142,16 +146,16 @@ export function UsersRouter(mongoDatabase) {
     try {
       const { receiving_user_id, user_id } = req.body;
       // console.log(req.body);
-      await mongoDatabase.collection('users').findOneAndUpdate(
+      await mongoDatabase.collection("users").findOneAndUpdate(
         { id: receiving_user_id },
         { $push: { requests: user_id } },
-        { returnOriginal: false } // This option ensures that the updated document is returned
+        { returnOriginal: false }, // This option ensures that the updated document is returned
       );
 
-      const result =  await mongoDatabase.collection("users").findOne(
-        { id: receiving_user_id }
-      )
-    
+      const result = await mongoDatabase
+        .collection("users")
+        .findOne({ id: receiving_user_id });
+
       if (result) {
         res.json(result);
       } else {
@@ -168,40 +172,45 @@ export function UsersRouter(mongoDatabase) {
     try {
       const { receiving_user_id, user_id } = req.body;
       // console.log(req.body);
-      await mongoDatabase.collection("users").updateOne(
-        { id: receiving_user_id },
-        { $pull: { requests: user_id } },
-        { returnDocument: true }
-      ).then(result => {
-        return mongoDatabase.collection("users").updateOne(
-          { id: user_id },
-          { $push: { friends: receiving_user_id } },
-          { returnDocument: true }
-        );
-      }).then(result => {
-        return mongoDatabase.collection("users").updateOne(
+      await mongoDatabase
+        .collection("users")
+        .updateOne(
           { id: receiving_user_id },
-          { $push: { friends: user_id } },
-          { returnDocument: true }
-        );
-      }).catch(error => {
-        console.error("An error occurred:", error);
-      });
+          { $pull: { requests: user_id } },
+          { returnDocument: true },
+        )
+        .then((result) => {
+          return mongoDatabase
+            .collection("users")
+            .updateOne(
+              { id: user_id },
+              { $push: { friends: receiving_user_id } },
+              { returnDocument: true },
+            );
+        })
+        .then((result) => {
+          return mongoDatabase
+            .collection("users")
+            .updateOne(
+              { id: receiving_user_id },
+              { $push: { friends: user_id } },
+              { returnDocument: true },
+            );
+        })
+        .catch((error) => {
+          console.error("An error occurred:", error);
+        });
 
-      const result1 = await mongoDatabase.collection("users").findOne(
-        { id: receiving_user_id }
-      )
+      const result1 = await mongoDatabase
+        .collection("users")
+        .findOne({ id: receiving_user_id });
 
-      const result2 = await mongoDatabase.collection("users").findOne(
-        { id: user_id }
-      )
+      const result2 = await mongoDatabase
+        .collection("users")
+        .findOne({ id: user_id });
 
-      
       if (result1 && result2) {
-        const returnMessage = [
-          result1,
-          result2
-        ]
+        const returnMessage = [result1, result2];
         res.json(returnMessage);
       } else {
         res.sendStatus(404);
@@ -217,16 +226,18 @@ export function UsersRouter(mongoDatabase) {
     try {
       const { receiving_user_id, user_id } = req.body;
       // console.log(req.body);
-      await mongoDatabase.collection("users").findOneAndUpdate(
-        { id: receiving_user_id },
-        { $pull: { requests: user_id } },
-        { returnOriginal: false }
-      )
+      await mongoDatabase
+        .collection("users")
+        .findOneAndUpdate(
+          { id: receiving_user_id },
+          { $pull: { requests: user_id } },
+          { returnOriginal: false },
+        );
 
-      const result =  await mongoDatabase.collection("users").findOne(
-        { id: receiving_user_id }
-      )
-    
+      const result = await mongoDatabase
+        .collection("users")
+        .findOne({ id: receiving_user_id });
+
       if (result) {
         res.json(result);
       } else {
@@ -243,30 +254,32 @@ export function UsersRouter(mongoDatabase) {
     try {
       const { receiving_user_id, user_id } = req.body;
       // console.log(req.body);
-      await mongoDatabase.collection("users").updateOne(
-        { id: user_id },
-        { $pull: { friends: receiving_user_id } },
-        { returnDocument: true }
-      ).then(result => {
-        return mongoDatabase.collection("users").updateOne(
-          { id: receiving_user_id },
-          { $pull: { friends: user_id } },
-          { returnDocument: true }
-        );
-      })
+      await mongoDatabase
+        .collection("users")
+        .updateOne(
+          { id: user_id },
+          { $pull: { friends: receiving_user_id } },
+          { returnDocument: true },
+        )
+        .then((result) => {
+          return mongoDatabase
+            .collection("users")
+            .updateOne(
+              { id: receiving_user_id },
+              { $pull: { friends: user_id } },
+              { returnDocument: true },
+            );
+        });
 
-      const result1 = mongoDatabase.collection("users").findOne(
-        { id: user_id }
-      )
-      const result2 = mongoDatabase.collection("users").findOne(
-        { id: receiving_user_id }
-      )
+      const result1 = mongoDatabase
+        .collection("users")
+        .findOne({ id: user_id });
+      const result2 = mongoDatabase
+        .collection("users")
+        .findOne({ id: receiving_user_id });
 
       if (result1 && result2) {
-        const returnMessage = [
-          result1,
-          result2
-        ]
+        const returnMessage = [result1, result2];
         res.json(returnMessage);
       } else {
         res.sendStatus(404);
