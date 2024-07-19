@@ -34,26 +34,18 @@ export function ChatRouter(mongoDatabase) {
     try {
       const { user_id, rooms } = req.body;
 
-      // console.log("receiving body:",req.body);
-
-      // Prepare the response structure
       const response = [];
 
-      // Process each room
       for (const room of rooms) {
         const { id, prevMessages } = room;
 
-        // Convert prevMessages to integers if they are in string format
         if (prevMessages?.length > 0) {
           const parsedMessageIds = prevMessages.map((id) => parseInt(id) + 1);
 
-          // Retrieve messages for the current room
           const messages = await mongoDatabase
             .collection("chat-messages")
             .find({ chat_room: id, message_id: { $in: parsedMessageIds } })
             .toArray();
-
-          // Check if user_id is in seenBy array for each message
 
           if (messages?.length > 0) {
             const roomResult = {
@@ -65,9 +57,7 @@ export function ChatRouter(mongoDatabase) {
                   seenByUser: message.seenBy.includes(user_id),
                 })),
             };
-            // console.log(messages);
 
-            // Add the result for the current room to the response
             response.push(roomResult);
           }
         }
@@ -86,7 +76,6 @@ export function ChatRouter(mongoDatabase) {
   router.get("/rooms", async (req, res) => {
     try {
       const rooms = await mongoDatabase.collection("chat-rooms").find().toArray();
-      // console.log(rooms);
       res.send(rooms);
     } catch (error) {
       console.error("Error fetching rooms:", error);
@@ -97,19 +86,15 @@ export function ChatRouter(mongoDatabase) {
   router.put("/updateroom", async (req, res) => {
     try {
       const { room_id, room_length } = req.body;
-      // console.log("receiving body:",req.body);
-      // console.log("yo?");
       let i;
       let a = [];
       for (i = room_length - 1; i > room_length - 11 && i >= 0; i--) {
         a.push(`${i}`);
       }
 
-      // console.log(a);
       const respone = await mongoDatabase
         .collection("chat-rooms")
         .updateOne({ id: parseInt(room_id) }, { $set: { prevMessages: a } }, { returnDocument: true });
-      // console.log(rooms);
       if (respone.ok) {
         res.sendStatus(200);
       } else {
@@ -126,7 +111,6 @@ export function ChatRouter(mongoDatabase) {
       const { chatid } = req.params;
       const chatId = parseInt(chatid);
       const room = await mongoDatabase.collection("chat-rooms").find({ id: chatId }).toArray();
-      // console.log(room);
       res.send(room);
     } catch (error) {
       console.error("Error fetching rooms:", error);
@@ -211,7 +195,7 @@ export function ChatRouter(mongoDatabase) {
           chat_room: parseInt(userInput.chat_room),
           message_id: userInput.message_id,
         },
-        { $set: { message: userInput.message, edited: true } },
+        { $set: { message: userInput.message, edited: true, seenBy: userInput.seenBy } },
         { returnDocument: true },
       );
       res.sendStatus(200);
@@ -227,8 +211,6 @@ export function ChatRouter(mongoDatabase) {
       const userInput = req.body;
       const { joining_user, room_id } = userInput;
       const userId = userInput.user_id; // Assuming the user ID is sent in the body
-
-      console.log("userinput", userInput);
 
       const response = await mongoDatabase.collection("chat-messages").updateMany(
         {
@@ -252,7 +234,7 @@ export function ChatRouter(mongoDatabase) {
 
   router.delete("/deletemessage/:sendinguserid/:chatroom/:messageid", async (req, res) => {
     try {
-      const { sendinguserid, messageid } = req.params;
+      const { sendinguserid, messageid, seenBy } = req.params;
       const chatroom = parseInt(req.params.chatroom);
       await mongoDatabase.collection("chat-messages").updateOne(
         {
@@ -260,7 +242,7 @@ export function ChatRouter(mongoDatabase) {
           chat_room: chatroom,
           message_id: parseInt(messageid),
         },
-        { $set: { deleted: true } },
+        { $set: { deleted: true, seenBy: [sendinguserid] } },
         { returnDocument: true },
       );
       res.sendStatus(200);
@@ -320,7 +302,6 @@ export function ChatRouter(mongoDatabase) {
         i++;
       } while (true);
       if (chats.length > 0) {
-        // console.log(chats)
         res.json(chats);
       } else {
         res.status(204).json({ message: "Currently no messages in this chat" });

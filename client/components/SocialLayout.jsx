@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 import { Link, Routes, Route, Outlet, useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./css/socialLayout.css";
-import { useWebSocket } from "../context/WebSocketContext";
 
 export default function SocialLayout(props) {
   const {
@@ -18,33 +17,11 @@ export default function SocialLayout(props) {
     loadUser,
   } = useAuth();
   const navigate = useNavigate();
-  const [webSocket] = useWebSocket();
 
   React.useEffect(() => {
     loadUser();
     fetchUserInfo();
   }, []);
-
-  // useEffect(() => {
-  //   // Initialize WebSocket connection
-  //   if (webSocket) {
-  //     // Example of listening to WebSocket messages
-  //     webSocket.onmessage = (event) => {
-  //       const message = JSON.parse(event.data);
-  //       console.log(message);
-  //       // Handle WebSocket messages as needed
-  //       console.log("Received WebSocket message:", message);
-  //       if (message.type === "new-message") {
-  //         fetchRooms();
-  //       }
-  //     };
-
-  //     webSocket.onerror = (error) => {
-  //       console.error("WebSocket error:", error);
-  //     };
-  //   }
-  // }, [webSocket]);
-
   async function handleLogout(e) {
     e.preventDefault();
     const res = await fetch("/api/auth/login", {

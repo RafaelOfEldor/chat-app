@@ -52,11 +52,9 @@ export function Chat() {
       const receivingUser = data[0].users?.find((user) => user !== userId);
       await fetch(`/api/users/byid/${receivingUser}`).then((response) =>
         response.json().then((data) => {
-          // console.log(data)
           setDmTitle(data?.username);
         }),
       );
-      // console.log(receivingUser)
     }
   }
 
@@ -70,7 +68,6 @@ export function Chat() {
       setChatLoaded(true);
     } else {
       const data = await res.json();
-      console.log(data);
       setMessages(data);
       setChatLoaded(true);
     }
@@ -80,7 +77,6 @@ export function Chat() {
       user_id: userId,
       roomid: roomid,
     };
-    console.log(message);
     webSocket.send(JSON.stringify(message));
   }
 
@@ -97,9 +93,7 @@ export function Chat() {
     fetchAllUsers();
   }, []);
 
-  useEffect(() => {
-    // console.log(chatRoom)
-  }, [chatRoom]);
+  useEffect(() => {}, [chatRoom]);
 
   useEffect(() => {
     if (showEditMessage?.show) {
@@ -113,10 +107,7 @@ export function Chat() {
     //     `?roomid=${roomid}&userid=${userId}`
     // );
     if (webSocket) {
-      console.log("in there");
       const handleOpen = () => {
-        console.log("in here");
-        console.log("hmm");
         const joinEventData = {
           type: "SEND_MESSAGE",
           subtype: "join",
@@ -128,14 +119,10 @@ export function Chat() {
 
       const handleMessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log(data);
         if (["new-message", "deleted", "edited"].includes(data.type)) {
           handleReceiveMessage(data);
         } else if (data.type === "UPDATE_ROOM") {
-          // console.log(data);
           if (localStorage.getItem("userId") === data.message.id) {
-            console.log("here?");
-
             updateChatRooms(data);
           }
         }
@@ -154,16 +141,11 @@ export function Chat() {
   }, [roomid, userId, webSocket]);
 
   async function handleReceiveMessage(data) {
-    console.log("yo?");
     if (data?.type === "edited" || data?.type === "deleted") {
-      console.log("yo?");
       fetchLog();
     } else if (data.type === "new-message") {
-      console.log("yo?");
-      console.log(data.messages[data.messages.length - 1]);
       if (data?.messages[data?.messages?.length - 1]?.chat_room === parseInt(roomid)) {
         setMessages((prev) => [...prev, data.messages[data.messages.length - 1]]);
-        console.log(data.messages[data.messages.length - 1]);
       }
     }
     const updateElement = {
@@ -178,8 +160,6 @@ export function Chat() {
       },
     });
     if (logsRendered) {
-      console.log("yo?");
-      console.log(res);
       fetchLog();
     }
   }
@@ -218,7 +198,6 @@ export function Chat() {
         messageElement: dataElement,
         roomid: roomid,
       };
-      console.log(message);
       webSocket.send(JSON.stringify(message));
       setNewMessage("");
     }
@@ -233,6 +212,7 @@ export function Chat() {
       chat_room: parseInt(roomid),
       edited: true,
       deleted: false,
+      seenBy: [userId],
       message_id: messageId,
       message: e.target.updatedMessage.value,
       date: new Date().toString(),
@@ -248,6 +228,7 @@ export function Chat() {
 
   function handleDeleteMessage(e, messageId) {
     e.preventDefault();
+
     setShowEditMessage();
     const dataElement = {
       sending_user: userInfo?.username,
@@ -255,11 +236,11 @@ export function Chat() {
       chat_room: parseInt(roomid),
       edited: true,
       deleted: true,
+      seenBy: [userId],
       message_id: messageId,
       message: "",
       date: new Date().toString(),
     };
-
     const message = {
       type: "SEND_MESSAGE",
       user_id: userId,

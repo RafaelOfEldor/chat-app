@@ -17,15 +17,8 @@ export default function LoginCallbackPage(props) {
     let { access_token, state, code, error, error_description } = hashObject;
     const { token_endpoint } = await fetchJSON(microsoft_openid_config);
     const code_verifier = window.sessionStorage.getItem("code_verifier");
-    // console.log(hashObject)
-
-    // console.log(token_endpoint)
 
     if (code) {
-      // console.log(code)
-      // console.log(token_endpoint)
-      // console.log(microsoft_openid_config)
-      // console.log(code_verifier)
       const res = await fetch(token_endpoint, {
         method: "POST",
         body: new URLSearchParams({
@@ -37,7 +30,6 @@ export default function LoginCallbackPage(props) {
         }),
       });
       const json = await res.json();
-      // console.log(json);
       access_token = json.access_token;
     }
 

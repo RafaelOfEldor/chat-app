@@ -28,7 +28,6 @@ export function ChatRooms() {
   // const [chatRooms, setChatRooms] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [newSendMessage, setNewSendMessage] = useState();
-  const [allUsers, setAllUsers] = React.useState([]);
   const {
     username,
     setUsername,
@@ -36,12 +35,14 @@ export function ChatRooms() {
     userInfo,
     setWebSocket,
     chatRooms,
+    allUsers,
     userFriends,
     webSocket,
     usersChatRoomsLatestMessages,
     setChatRooms,
     fetchUserInfo,
     fetchRooms,
+    fetchAllUsers,
     setUsersChatrooms,
     loadUser,
   } = useAuth();
@@ -51,18 +52,10 @@ export function ChatRooms() {
   const [errorMessage, setErrorMessage] = React.useState();
   const navigate = useNavigate();
 
-  async function fetchAllUsers() {
-    fetch(`/api/users/get/allusers`).then((response) =>
-      response.json().then((data) => {
-        setAllUsers(data);
-        // console.log(data);
-      }),
-    );
-  }
-
   React.useEffect(() => {
     fetchAllUsers();
     fetchUserInfo();
+    fetchRooms();
   }, []);
 
   React.useEffect(() => {
@@ -71,14 +64,7 @@ export function ChatRooms() {
     }
   }, [newSendMessage]);
 
-  useEffect(() => {
-    // console.log(chatRooms);
-  }, [chatRooms]);
-
-  React.useEffect(() => {
-    fetchRooms();
-    fetchUserInfo();
-  }, []);
+  useEffect(() => {}, [chatRooms]);
 
   async function handleChat(e) {
     e.preventDefault();
@@ -174,58 +160,69 @@ export function ChatRooms() {
     }
   });
 
+  const userMap = React.useMemo(() => {
+    const map = {};
+    allUsers.forEach((user) => {
+      map[user.id] = user;
+    });
+    return map;
+  }, [allUsers]);
+
   const directMessagesElement = chatRooms.map((item, index) => {
-    console.log(item);
-    if (item?.type !== "dm") return;
-    if (item?.users?.length !== 2) return;
+    if (item?.type !== "dm") return null;
+    if (item?.users?.length !== 2) return null;
     if (item?.users?.includes(userId)) {
       const otherDmUser = item?.users?.find((user) => user !== userId);
-      const user = allUsers?.find((user) => user.id === otherDmUser);
-      return (
-        <Link
-          key={index}
-          to={`/chatrooms/room/${item.id}`}
-          state={{ prevUrl: location.pathname }}
-          className="chat-room-dm-link"
-        >
-          <div className="chat-room-dm-link-content">
-            <VscAccount style={{ scale: "2" }} />
-            <div>
-              <h4>{user?.username}</h4>
-              <i>{user?.email}</i>
+      const user = userMap[otherDmUser];
+
+      if (user) {
+        return (
+          <Link
+            key={index}
+            to={`/chatrooms/room/${item.id}`}
+            state={{ prevUrl: location.pathname }}
+            className="chat-room-dm-link"
+          >
+            <div className="chat-room-dm-link-content">
+              <VscAccount style={{ scale: "2" }} />
+              <div>
+                <h4>{user?.username}</h4>
+                <i>{user?.email}</i>
+              </div>
+              {usersChatRoomsLatestMessages[0]?.id === item?.id &&
+                usersChatRoomsLatestMessages?.filter((item) => item?.messages?.find((message) => !message?.seenByUser))
+                  ?.length > 0 && (
+                  <div className="glowing-circle-direct-messages">
+                    <h3>
+                      {usersChatRoomsLatestMessages
+                        ?.filter((item) => item?.messages?.filter((message) => !message?.seenByUser))[0]
+                        ?.messages?.filter((a) => !a.seenByUser).length > 9
+                        ? "9+"
+                        : usersChatRoomsLatestMessages
+                            ?.filter((item) => item?.messages?.filter((message) => !message?.seenByUser))[0]
+                            ?.messages?.filter((a) => !a.seenByUser).length}
+                    </h3>
+                  </div>
+                )}
             </div>
-            {usersChatRoomsLatestMessages[0]?.id === item?.id &&
-              usersChatRoomsLatestMessages?.filter((item) => item?.messages?.find((message) => !message?.seenByUser))
-                ?.length > 0 && (
-                <div className="glowing-circle-direct-messages">
-                  <h3>
-                    {usersChatRoomsLatestMessages
-                      ?.filter((item) => item?.messages?.filter((message) => !message?.seenByUser))[0]
-                      ?.messages?.filter((a) => !a.seenByUser).length > 9
-                      ? "9+"
-                      : usersChatRoomsLatestMessages
-                          ?.filter((item) => item?.messages?.filter((message) => !message?.seenByUser))[0]
-                          ?.messages?.filter((a) => !a.seenByUser).length}
-                  </h3>
-                </div>
-              )}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "99%",
-              gap: "20px",
-              borderStyle: "solid",
-              borderRadius: "10px",
-              borderWidth: "1px",
-              color: "rgba(69, 218, 190, 0.3)",
-            }}
-          ></div>
-        </Link>
-      );
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "99%",
+                gap: "20px",
+                borderStyle: "solid",
+                borderRadius: "10px",
+                borderWidth: "1px",
+                color: "rgba(69, 218, 190, 0.3)",
+              }}
+            ></div>
+          </Link>
+        );
+      }
     }
+    return null;
   });
   return chatRoomsElement.length > 0 ? (
     <div className="chat-rooms-page">

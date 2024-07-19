@@ -403,31 +403,34 @@ server.on("upgrade", (req, socket, head) => {
               },
             );
             if (res.ok) {
-              fetch(baseUrl + `/api/chats/log/${roomid}`)
-                .then((response) => {
-                  const contentType = response.headers.get("Content-Type");
+              try {
+                const response = await fetch(baseUrl + `/api/chats/log/${roomid}`);
+                const contentType = response.headers.get("Content-Type");
 
-                  if (contentType && contentType.includes("application/json")) {
-                    return response.json();
-                  } else {
-                    return null;
-                  }
-                })
-                .then((data) => {
-                  if (data !== null) {
-                    for (const recipient of interestedSockets) {
-                      recipient.send(JSON.stringify({ type: "deleted" }));
-                    }
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error fetching chat log:", error);
-                });
+                let data = null;
+                if (contentType && contentType.includes("application/json")) {
+                  data = await response.json();
+                }
 
-              // console.log(currentChat);
-              // console.log("in deleting part of socket");
-              // console.log(userInput.messageElement?);
-              // console.log("in deleting part of socket");
+                if (data !== null) {
+                  const roomElement = {
+                    room_id: roomid,
+                    room_length: data.length,
+                  };
+                  const roomRes = await fetch(baseUrl + "/api/chats/updateroom", {
+                    method: "PUT",
+                    body: JSON.stringify(roomElement),
+                    headers: {
+                      "content-type": "application/json",
+                    },
+                  });
+                  for (const recipient of interestedSockets) {
+                    recipient.send(JSON.stringify({ type: "deleted" }));
+                  }
+                }
+              } catch (error) {
+                console.error("Error fetching chat log:", error);
+              }
             }
           } else if (userInput.messageElement?.edited) {
             const res = await fetch(baseUrl + "/api/chats/sendmessage", {
@@ -438,31 +441,34 @@ server.on("upgrade", (req, socket, head) => {
               },
             });
             if (res.ok) {
-              fetch(baseUrl + `/api/chats/log/${roomid}`)
-                .then((response) => {
-                  const contentType = response.headers.get("Content-Type");
+              try {
+                const response = await fetch(baseUrl + `/api/chats/log/${roomid}`);
+                const contentType = response.headers.get("Content-Type");
 
-                  if (contentType && contentType.includes("application/json")) {
-                    return response.json();
-                  } else {
-                    return null;
-                  }
-                })
-                .then((data) => {
-                  if (data !== null) {
-                    for (const recipient of interestedSockets) {
-                      recipient.send(JSON.stringify({ type: "edited" }));
-                    }
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error fetching chat log:", error);
-                });
+                let data = null;
+                if (contentType && contentType.includes("application/json")) {
+                  data = await response.json();
+                }
 
-              // console.log(currentChat);
-              // console.log("in socket");
-              // console.log(userInput.messageElement);
-              // console.log("in socket");
+                if (data !== null) {
+                  const roomElement = {
+                    room_id: roomid,
+                    room_length: data.length,
+                  };
+                  const roomRes = await fetch(baseUrl + "/api/chats/updateroom", {
+                    method: "PUT",
+                    body: JSON.stringify(roomElement),
+                    headers: {
+                      "content-type": "application/json",
+                    },
+                  });
+                  for (const recipient of interestedSockets) {
+                    recipient.send(JSON.stringify({ type: "edited" }));
+                  }
+                }
+              } catch (error) {
+                console.error("Error fetching chat log:", error);
+              }
             }
           }
         } catch (error) {

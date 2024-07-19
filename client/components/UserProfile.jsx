@@ -23,12 +23,7 @@ export default function UserProfile() {
 
   React.useEffect(() => {
     fetchUserInfo();
-    console.log(location.state);
   }, []);
-
-  React.useEffect(() => {
-    console.log(userProfileInfo);
-  }, [userProfileInfo]);
 
   return username ? (
     userProfileInfo?.username ? (

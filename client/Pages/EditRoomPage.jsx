@@ -32,7 +32,6 @@ export function ChatRooms() {
   async function fetchRooms() {
     fetch(`/api/chats/rooms`).then((response) =>
       response.json().then((data) => {
-        // console.log(data);
         setChatRooms(data);
       }),
     );

@@ -103,7 +103,6 @@ export default function ViewFriendsPage() {
 
   async function removeFriend(receivingUserId) {
     if (webSocket) {
-      console.log(webSocket);
       const message = {
         type: "REMOVE_FRIEND_UPDATE",
         user_id: userId,
@@ -118,31 +117,6 @@ export default function ViewFriendsPage() {
     });
 
     await fetchUserInfo();
-
-    // const data = {
-    //   receiving_user_id: receivingUserId,
-    //   user_id: userId
-    // }
-
-    // const res = await fetch(`/api/users/remove/friend`, {
-    //   method: "DELETE",
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //   "content-type": "application/json",
-    // },
-    // })
-
-    // if (res.status === 204) {
-    //   setActionEvent({
-    //     type: "success",
-    //     message: "Friend successfully removed accepted!"
-    //   })
-    //   setUserFriends((prevRequests) =>
-    //     prevRequests.filter((friends) => friends.id !== receivingUserId)
-    //   );
-    // } else {
-    //   console.log("Error removing friend.")
-    // }
   }
 
   const handleSearchChange = (event) => {

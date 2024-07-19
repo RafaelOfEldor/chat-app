@@ -13,10 +13,8 @@ export function UsersRouter(mongoDatabase) {
       const wantedUsersEmail = req.params.useremail;
       const userExists = await mongoDatabase.collection("users").findOne({ email: wantedUsersEmail });
       if (userExists) {
-        // console.log("user exists");
         res.json(userExists);
       } else {
-        // console.log("user does not exist");
         res.sendStatus(404);
       }
     } catch (error) {
@@ -28,13 +26,10 @@ export function UsersRouter(mongoDatabase) {
   router.get("/byid/:userid", async (req, res) => {
     try {
       const wantedUsersId = req.params.userid;
-      // console.log(wantedUsersId);
       const userExists = await mongoDatabase.collection("users").findOne({ id: wantedUsersId });
       if (userExists) {
-        // console.log("user exists");
         res.json(userExists);
       } else {
-        // console.log("user does not exist");
         res.sendStatus(404);
       }
     } catch (error) {
@@ -91,7 +86,6 @@ export function UsersRouter(mongoDatabase) {
 
   router.delete("/login", (req, res) => {
     try {
-      // console.log(req.user);
       res.clearCookie("username");
       res.clearCookie("access_token");
       res.sendStatus(204);
@@ -118,7 +112,6 @@ export function UsersRouter(mongoDatabase) {
   router.put("/changebio", async (req, res) => {
     try {
       const { user_id, updated_bio } = req.body;
-      // console.log(req.body);
       await mongoDatabase.collection("users").updateOne(
         {
           id: user_id,
@@ -137,7 +130,6 @@ export function UsersRouter(mongoDatabase) {
   router.post("/send/request", async (req, res) => {
     try {
       const { receiving_user_id, user_id } = req.body;
-      // console.log(req.body);
       await mongoDatabase.collection("users").findOneAndUpdate(
         { id: receiving_user_id },
         { $push: { requests: user_id } },
@@ -161,7 +153,6 @@ export function UsersRouter(mongoDatabase) {
   router.post("/accept/request", async (req, res) => {
     try {
       const { receiving_user_id, user_id } = req.body;
-      // console.log(req.body);
       await mongoDatabase
         .collection("users")
         .updateOne({ id: receiving_user_id }, { $pull: { requests: user_id } }, { returnDocument: true })
@@ -199,7 +190,6 @@ export function UsersRouter(mongoDatabase) {
   router.delete("/remove/request", async (req, res) => {
     try {
       const { receiving_user_id, user_id } = req.body;
-      // console.log(req.body);
       await mongoDatabase
         .collection("users")
         .findOneAndUpdate({ id: receiving_user_id }, { $pull: { requests: user_id } }, { returnOriginal: false });
@@ -221,7 +211,6 @@ export function UsersRouter(mongoDatabase) {
   router.delete("/remove/friend", async (req, res) => {
     try {
       const { receiving_user_id, user_id } = req.body;
-      // console.log(req.body);
       await mongoDatabase
         .collection("users")
         .updateOne({ id: user_id }, { $pull: { friends: receiving_user_id } }, { returnDocument: true })
@@ -250,7 +239,6 @@ export function UsersRouter(mongoDatabase) {
   router.put("/changeusername", async (req, res) => {
     try {
       const { user_id, updated_username } = req.body;
-      // console.log(req.body);
       await mongoDatabase.collection("users").updateOne(
         {
           id: user_id,

@@ -82,23 +82,18 @@ export function AuthProvider({ children }) {
   async function fetchRooms() {
     fetch(`/api/chats/rooms`).then((response) =>
       response.json().then((data) => {
-        // console.log("all rooms: ", data);
         setChatRooms(data);
         setUsersChatRooms(data.filter((room) => room.users.includes(localStorage.getItem("userId"))));
-        // console.log("user rooms: ", data.filter(room => room.users.includes(localStorage.getItem("userId"))));
       }),
     );
   }
 
   async function updateChatRooms(data) {
-    // console.log(usersChatRooms);
-
     const dataElement = {
       user_id: localStorage.getItem("userId"),
       rooms: usersChatRooms,
     };
 
-    // console.log("data element", dataElement);
     const res = await fetch("/api/chats/checkview", {
       method: "POST",
       body: JSON.stringify(dataElement),
@@ -106,12 +101,10 @@ export function AuthProvider({ children }) {
         "content-type": "application/json",
       },
     });
-    // console.log(res);
     if (res.status === 204) {
       setUsersChatRoomsLatestMessages([]);
     } else {
       const returnData = await res.json();
-      console.log("latest messages: ", returnData);
       setUsersChatRoomsLatestMessages(returnData);
     }
   }
@@ -159,7 +152,6 @@ export function AuthProvider({ children }) {
 
     const data = await res.json();
     setUserFriends(data);
-    // console.log(data);
   }
 
   async function fetchAllRequests(requests) {
@@ -174,7 +166,6 @@ export function AuthProvider({ children }) {
 
     const data = await res.json();
     setUserRequests(data);
-    // console.log(data);
   }
 
   useEffect(() => {
@@ -200,13 +191,11 @@ export function AuthProvider({ children }) {
 
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
-        console.log(data);
-        // console.log("yoo");
+        // console.log(data);
         switch (data.type) {
           case "FRIEND_UPDATE":
             fetchUserInfo();
             fetchAllUsers();
-            // console.log(data.users);
             break;
           case "USER_INFO_UPDATE":
             fetchUserInfo();
@@ -221,18 +210,20 @@ export function AuthProvider({ children }) {
             setAllUsers(data.allUsers);
             break;
           case "CHAT_ROOMS_UPDATE":
-            console.log("here?");
             fetchRooms();
             break;
           case "UPDATE_ROOM":
-            // console.log(data);
             if (localStorage.getItem("userId") === data.message.id) {
-              console.log("here?");
               updateChatRooms(data);
             }
             break;
           case "new-message":
-            // console.log(data);
+            fetchRooms();
+            break;
+          case "deleted":
+            fetchRooms();
+            break;
+          case "edited":
             fetchRooms();
             break;
           default:

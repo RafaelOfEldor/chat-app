@@ -11,7 +11,6 @@ export default function HomePage(props) {
   React.useEffect(() => {
     loadUser();
     fetchUserInfo();
-    console.log(window.location.pathname);
   }, []);
 
   async function handleLogout(e) {
