@@ -5,15 +5,7 @@ import Sidebar from "../components/Sidebar";
 import "./css/HomePage.css";
 
 export default function HomePage(props) {
-  const {
-    username,
-    userInfo,
-    setUsername,
-    setUserId,
-    setWebSocket,
-    fetchUserInfo,
-    loadUser,
-  } = useAuth();
+  const { username, userInfo, setUsername, setUserId, setWebSocket, fetchUserInfo, loadUser } = useAuth();
   const navigate = useNavigate();
 
   React.useEffect(() => {

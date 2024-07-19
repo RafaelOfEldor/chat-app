@@ -1,25 +1,12 @@
 import React, { useContext, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  ExpressUsersPutBio,
-  ExpressUsersPutUsername,
-} from "../functions/ExpressFunctions.jsx";
+import { ExpressUsersPutBio, ExpressUsersPutUsername } from "../functions/ExpressFunctions.jsx";
 import "./css/loadingAndFiller.css";
 import "./css/profilePage.css";
 
 export default function ProfilePage() {
-  const {
-    username,
-    fullName,
-    userBio,
-    userId,
-    mail,
-    userInfo,
-    fetchUserInfo,
-    loadUser,
-    setUsername,
-  } = useAuth();
+  const { username, fullName, userBio, userId, mail, userInfo, fetchUserInfo, loadUser, setUsername } = useAuth();
   const [showEditBio, setShowEditBio] = React.useState(false);
   const [showEditUsername, setShowEditUsername] = React.useState(false);
   const [updatedBio, setUpdatedBio] = React.useState("");
@@ -81,9 +68,7 @@ export default function ProfilePage() {
         </div>
         <div className="profile-page intermediary-line">
           <h1>Profile Details</h1>
-          <h3 style={{ fontWeight: "100", marginTop: "10px" }}>
-            Update your profile information
-          </h3>
+          <h3 style={{ fontWeight: "100", marginTop: "10px" }}>Update your profile information</h3>
           <div
             style={{
               display: "flex",
@@ -110,9 +95,7 @@ export default function ProfilePage() {
             }}
           >
             <h2>Username:</h2>
-            <h3 style={{ fontWeight: "100" }}>
-              {loadingUsername ? "Loading new username..." : userInfo?.username}
-            </h3>
+            <h3 style={{ fontWeight: "100" }}>{loadingUsername ? "Loading new username..." : userInfo?.username}</h3>
             <div>
               <div className="list-element-div">
                 <div
@@ -187,9 +170,7 @@ export default function ProfilePage() {
                 }}
               >
                 <h2>Bio: </h2>
-                <h3 style={{ fontWeight: "100" }}>
-                  {loadingBio ? "Loading new bio..." : userInfo?.bio}
-                </h3>
+                <h3 style={{ fontWeight: "100" }}>{loadingBio ? "Loading new bio..." : userInfo?.bio}</h3>
               </div>
             </div>
             <div
@@ -237,10 +218,7 @@ export default function ProfilePage() {
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>
       <h1>Please log in</h1>
-      <button
-        onClick={() => navigate("/login")}
-        style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}
-      >
+      <button onClick={() => navigate("/login")} style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}>
         Login
       </button>
     </div>

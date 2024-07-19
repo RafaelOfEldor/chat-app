@@ -2,16 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { ExpressUsersPut } from "../functions/ExpressFunctions.jsx";
-import {
-  FiUser,
-  FiUserPlus,
-  FiCheck,
-  FiUserMinus,
-  FiUserX,
-  FiUserCheck,
-  FiSearch,
-  FiSend,
-} from "react-icons/fi";
+import { FiUser, FiUserPlus, FiCheck, FiUserMinus, FiUserX, FiUserCheck, FiSearch, FiSend } from "react-icons/fi";
 import { VscAccount, VscSend } from "react-icons/vsc";
 import "./css/viewUsersPage.css";
 import "./css/loadingAndFiller.css";
@@ -261,10 +252,7 @@ export default function ViewUsersPage() {
     // }
   }
 
-  async function handleDirectMessageChat(
-    receivingUserId,
-    receivingUserUsername,
-  ) {
+  async function handleDirectMessageChat(receivingUserId, receivingUserUsername) {
     const res = await fetch(`/api/chats/rooms`);
 
     if (res.ok) {
@@ -272,10 +260,7 @@ export default function ViewUsersPage() {
       let roomId;
       const isDm = data.find((room) => {
         if (room.users.length === 2) {
-          if (
-            room.users.includes(userId) &&
-            room.users.includes(receivingUserId)
-          ) {
+          if (room.users.includes(userId) && room.users.includes(receivingUserId)) {
             roomId = room.id;
             return true;
           }
@@ -342,12 +327,8 @@ export default function ViewUsersPage() {
           {item?.id === userId ? (
             <div className="user-element">
               <VscAccount style={{ scale: "1.5", marginLeft: "10px" }} />
-              <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>
-                {item.username}
-              </h4>
-              <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>
-                {item.email}
-              </i>
+              <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>{item.username}</h4>
+              <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>{item.email}</i>
               <button
                 className="view-profile-button"
                 style={{
@@ -368,12 +349,8 @@ export default function ViewUsersPage() {
           ) : (
             <div className="user-element">
               <VscAccount style={{ scale: "1.5", marginLeft: "10px" }} />
-              <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>
-                {item.username}
-              </h4>
-              <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>
-                {item.email}
-              </i>
+              <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>{item.username}</h4>
+              <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>{item.email}</i>
               {userInfo?.friends?.find((a) => a === item?.id) && (
                 <i
                   style={{
@@ -403,9 +380,7 @@ export default function ViewUsersPage() {
               </button>
               <button
                 className="send-message-button"
-                onClick={() =>
-                  handleDirectMessageChat(item?.id, item?.username)
-                }
+                onClick={() => handleDirectMessageChat(item?.id, item?.username)}
                 style={{ display: "flex", alignItems: "center", gap: "5px" }}
               >
                 Message
@@ -416,11 +391,7 @@ export default function ViewUsersPage() {
               item?.requests?.find((a) => a === userId) ||
               item?.friends?.find((a) => a === userId) ? (
                 userInfo?.friends?.find((a) => a === item?.id) ? (
-                  <FiUserMinus
-                    style={{ color: "red" }}
-                    className="add-user"
-                    onClick={() => removeFriend(item?.id)}
-                  />
+                  <FiUserMinus style={{ color: "red" }} className="add-user" onClick={() => removeFriend(item?.id)} />
                 ) : userInfo?.requests?.find((a) => a === item?.id) ? (
                   <FiUserCheck
                     className="add-user"
@@ -435,10 +406,7 @@ export default function ViewUsersPage() {
                   />
                 )
               ) : (
-                <FiUserPlus
-                  className="add-user"
-                  onClick={() => sendFriendRequest(item?.id)}
-                />
+                <FiUserPlus className="add-user" onClick={() => sendFriendRequest(item?.id)} />
               )}
             </div>
           )}
@@ -487,12 +455,8 @@ export default function ViewUsersPage() {
           {item?.id === userId ? (
             <div className="user-element">
               <VscAccount style={{ scale: "1.5", marginLeft: "10px" }} />
-              <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>
-                {item.username}
-              </h4>
-              <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>
-                {item.email}
-              </i>
+              <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>{item.username}</h4>
+              <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>{item.email}</i>
               <button
                 className="view-profile-button"
                 style={{
@@ -509,12 +473,8 @@ export default function ViewUsersPage() {
           ) : (
             <div className="user-element">
               <VscAccount style={{ scale: "1.5", marginLeft: "10px" }} />
-              <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>
-                {item.username}
-              </h4>
-              <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>
-                {item.email}
-              </i>
+              <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>{item.username}</h4>
+              <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>{item.email}</i>
               <button
                 className="view-profile-button"
                 style={{
@@ -533,9 +493,7 @@ export default function ViewUsersPage() {
               </button>
               <button
                 className="send-message-button"
-                onClick={() =>
-                  handleDirectMessageChat(item?.id, item?.username)
-                }
+                onClick={() => handleDirectMessageChat(item?.id, item?.username)}
                 style={{ display: "flex", alignItems: "center", gap: "5px" }}
               >
                 Message
@@ -546,11 +504,7 @@ export default function ViewUsersPage() {
               item?.requests?.find((a) => a === userId) ||
               item?.friends?.find((a) => a === userId) ? (
                 userInfo?.friends?.find((a) => a === item?.id) ? (
-                  <FiUserMinus
-                    style={{ color: "red" }}
-                    className="add-user"
-                    onClick={() => removeFriend(item?.id)}
-                  />
+                  <FiUserMinus style={{ color: "red" }} className="add-user" onClick={() => removeFriend(item?.id)} />
                 ) : userInfo?.requests?.find((a) => a === item?.id) ? (
                   <FiUserCheck
                     className="add-user"
@@ -565,10 +519,7 @@ export default function ViewUsersPage() {
                   />
                 )
               ) : (
-                <FiUserPlus
-                  className="add-user"
-                  onClick={() => sendFriendRequest(item?.id)}
-                />
+                <FiUserPlus className="add-user" onClick={() => sendFriendRequest(item?.id)} />
               )}
             </div>
           )}
@@ -598,23 +549,14 @@ export default function ViewUsersPage() {
             <h1>Users</h1>
             <div className="search-wrapper">
               <FiSearch />
-              <input
-                type="search"
-                placeholder="Search users..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
+              <input type="search" placeholder="Search users..." value={searchQuery} onChange={handleSearchChange} />
             </div>
           </div>
         </div>
         <div className="select-user-profiles-list">
           {searchQuery === "" ? userProfileElement : searchedUserProfileElement}
         </div>
-        {actionEvent && (
-          <div className={`popup-notification ${actionEvent.type}`}>
-            {actionEvent.message}
-          </div>
-        )}
+        {actionEvent && <div className={`popup-notification ${actionEvent.type}`}>{actionEvent.message}</div>}
       </div>
     ) : (
       <div className="loading-results-layout-div">
@@ -624,10 +566,7 @@ export default function ViewUsersPage() {
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>
       <h1>Please log in</h1>
-      <button
-        onClick={() => navigate("/login")}
-        style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}
-      >
+      <button onClick={() => navigate("/login")} style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}>
         Login
       </button>
     </div>

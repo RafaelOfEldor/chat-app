@@ -29,9 +29,7 @@ export default function LoginWithActiveDirectoryButton() {
       state,
       // domain_hint: "egms.no",
     };
-    setAuthorizationUrl(
-      discoveryDoc.authorization_endpoint + "?" + new URLSearchParams(params),
-    );
+    setAuthorizationUrl(discoveryDoc.authorization_endpoint + "?" + new URLSearchParams(params));
   }
   React.useEffect(() => {
     loadAuthorizationUrl();
@@ -48,8 +46,7 @@ export default function LoginWithActiveDirectoryButton() {
 
 function randomString(length) {
   let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
@@ -60,10 +57,7 @@ function randomString(length) {
 }
 
 export async function sha256(string) {
-  const binaryHash = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder("utf-8").encode(string),
-  );
+  const binaryHash = await crypto.subtle.digest("SHA-256", new TextEncoder("utf-8").encode(string));
   return btoa(String.fromCharCode.apply(null, new Uint8Array(binaryHash)))
     .split("=")[0]
     .replace(/\+/g, "-")

@@ -1,16 +1,10 @@
 import React, { useContext, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "../Pages/css/loadingAndFiller.css";
 
 export default function UserProfile() {
-  const { username, fullName, userBio, userId, mail, loadUser, setUsername } =
-    useAuth();
+  const { username, fullName, userBio, userId, mail, loadUser, setUsername } = useAuth();
   const [showEdit, setShowEdit] = React.useState(false);
   const [userProfileInfo, setUserProfileInfo] = React.useState([]);
   const inputRef = useRef(null);
@@ -41,9 +35,7 @@ export default function UserProfile() {
       <div style={{ color: "white" }}>
         <div className="profile-page header">
           <div>
-            <h1 style={{ fontSize: "3rem", fontWeight: "300" }}>
-              {userProfileInfo?.username}
-            </h1>
+            <h1 style={{ fontSize: "3rem", fontWeight: "300" }}>{userProfileInfo?.username}</h1>
             <h3 style={{ fontWeight: "300" }}>{userProfileInfo?.email}</h3>
           </div>
         </div>
@@ -166,10 +158,7 @@ export default function UserProfile() {
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>
       <h1>Please log in</h1>
-      <button
-        onClick={() => navigate("/login")}
-        style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}
-      >
+      <button onClick={() => navigate("/login")} style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}>
         Login
       </button>
     </div>

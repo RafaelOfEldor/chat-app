@@ -24,9 +24,7 @@ export default function LoginWithOpenidButton() {
       prompt: "consent",
       state,
     };
-    setAuthorizationUrl(
-      discoveryDoc.authorization_endpoint + "?" + new URLSearchParams(params),
-    );
+    setAuthorizationUrl(discoveryDoc.authorization_endpoint + "?" + new URLSearchParams(params));
   }
   React.useEffect(() => {
     loadAuthorizationUrl();
@@ -43,8 +41,7 @@ export default function LoginWithOpenidButton() {
 
 function randomString(length) {
   let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {

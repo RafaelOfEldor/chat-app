@@ -28,10 +28,7 @@ beforeAll(async () => {
     username: "validUserTwo",
     bio: "",
   };
-  const userExists = await mongoConnection
-    .db("Test")
-    .collection("users")
-    .findOne({ id: "1234" });
+  const userExists = await mongoConnection.db("Test").collection("users").findOne({ id: "1234" });
   if (!userExists) {
     await mongoConnection.db("Test").collection("users").insertOne(userOne);
     await mongoConnection.db("Test").collection("users").insertOne(userTwo);
@@ -68,9 +65,7 @@ describe("Chat rooms functionality", () => {
     expect(res.body.map((m) => m.created_by)).toContain("validUserOne");
     expect(res.body.map((m) => m.created_by_id)).toContain("1234");
     expect(res.body.map((m) => m.id)).toContain(1);
-    expect(res.body.map((m) => m.description)).toContain(
-      "For testing purposes",
-    );
+    expect(res.body.map((m) => m.description)).toContain("For testing purposes");
   });
 
   it("a user cannot create a chatroom with a title that already exists", async () => {
@@ -93,15 +88,11 @@ describe("Chat rooms functionality", () => {
     };
     await request(app).put("/rooms/newroom").send(userInput).expect(204);
     const res = await request(app).get("/rooms").expect(200);
-    expect(res.body.map((m) => m.title)).toContain(
-      "Updated room title from test suite!",
-    );
+    expect(res.body.map((m) => m.title)).toContain("Updated room title from test suite!");
     expect(res.body.map((m) => m.created_by)).toContain("validUserOne");
     expect(res.body.map((m) => m.created_by_id)).toContain("1234");
     expect(res.body.map((m) => m.id)).toContain(1);
-    expect(res.body.map((m) => m.description)).toContain(
-      "For updated testing purposes",
-    );
+    expect(res.body.map((m) => m.description)).toContain("For updated testing purposes");
   });
 
   it("a user cannot edit their title to an existing one", async () => {
@@ -111,10 +102,7 @@ describe("Chat rooms functionality", () => {
       room_id: 1,
       created_by_id: "1234",
     };
-    const res = await request(app)
-      .put("/rooms/newroom")
-      .send(userInput)
-      .expect(406);
+    const res = await request(app).put("/rooms/newroom").send(userInput).expect(406);
   });
 
   it("a user cannot edit someone elses chatroom", async () => {
@@ -124,10 +112,7 @@ describe("Chat rooms functionality", () => {
       room_id: 2,
       created_by_id: "1234",
     };
-    const res = await request(app)
-      .put("/rooms/newroom")
-      .send(userInput)
-      .expect(401);
+    const res = await request(app).put("/rooms/newroom").send(userInput).expect(401);
   });
 });
 
@@ -170,9 +155,7 @@ describe("Chat functionality", () => {
       date: new Date().toString(),
     };
     await request(app).put("/sendmessage").send(userInput);
-    const res = await request(app).get(
-      `/log/${userInput.sending_user_id}/${userInput.chat_room}`,
-    );
+    const res = await request(app).get(`/log/${userInput.sending_user_id}/${userInput.chat_room}`);
     expect(res.body.map((m) => m.message)).toContain("Hello World! Updated!");
     expect(res.body.map((m) => m.edited)).toContain(true);
     expect(res.body.map((m) => m.sending_user)).toContain("validUserOne");
@@ -195,9 +178,7 @@ describe("Chat functionality", () => {
     await request(app).delete(
       `/deletemessage/${userInput.sending_user_id}/${userInput.chat_room}/${userInput.message_id}`,
     );
-    const res = await request(app).get(
-      `/log/${userInput.sending_user_id}/${userInput.chat_room}`,
-    );
+    const res = await request(app).get(`/log/${userInput.sending_user_id}/${userInput.chat_room}`);
     expect(res.body.map((m) => m.deleted)).toContain(true);
     expect(res.body.map((m) => m.sending_user)).toContain("validUserOne");
     expect(res.body.map((m) => m.chat_room)).toContain(1);
@@ -235,10 +216,7 @@ describe("User profile functionality", () => {
       user_id: "1234",
       updated_username: "validUserOne",
     };
-    await request(app)
-      .put("/changeusername")
-      .send(revertChangesInput)
-      .expect(204);
+    await request(app).put("/changeusername").send(revertChangesInput).expect(204);
   });
 
   it("a user can change their bio", async () => {

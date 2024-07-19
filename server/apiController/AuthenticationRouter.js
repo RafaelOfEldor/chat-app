@@ -20,9 +20,7 @@ export function AuthenticationRouter(mongoDatabase) {
           requests: [],
           active_chats: [],
         };
-        const userExists = await mongoDatabase
-          .collection("users")
-          .findOne({ id: req.user.sub });
+        const userExists = await mongoDatabase.collection("users").findOne({ id: req.user.sub });
         if (!userExists) {
           await mongoDatabase.collection("users").insertOne(user);
         }

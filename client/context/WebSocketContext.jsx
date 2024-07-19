@@ -7,8 +7,7 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     const ws = new WebSocket(
-      window.location.origin.replace(/^http/, "ws") +
-        `?userid=${localStorage.getItem("userId")}`,
+      window.location.origin.replace(/^http/, "ws") + `?userid=${localStorage.getItem("userId")}`,
     );
     setWebSocket(ws);
 
@@ -29,11 +28,7 @@ export const WebSocketProvider = ({ children }) => {
     };
   }, []);
 
-  return (
-    <WebSocketContext.Provider value={[webSocket, setWebSocket]}>
-      {children}
-    </WebSocketContext.Provider>
-  );
+  return <WebSocketContext.Provider value={[webSocket, setWebSocket]}>{children}</WebSocketContext.Provider>;
 };
 
 export const useWebSocket = () => {

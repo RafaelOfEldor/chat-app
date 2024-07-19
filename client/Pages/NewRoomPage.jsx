@@ -6,18 +6,14 @@ import { ExpressChatroomPost } from "../functions/ExpressFunctions.jsx";
 import "./css/newRoomPage.css";
 
 export default function ChatRoomsPage() {
-  const { username, userId, setUsername, setWebSocket, webSocket, loadUser } =
-    useAuth();
+  const { username, userId, setUsername, setWebSocket, webSocket, loadUser } = useAuth();
 
   return username ? (
     <ChatRooms />
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>
       <h1>Please log in</h1>
-      <button
-        onClick={() => navigate("/login")}
-        style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}
-      >
+      <button onClick={() => navigate("/login")} style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}>
         Login
       </button>
     </div>
@@ -28,16 +24,7 @@ export function ChatRooms() {
   // return username ? <ChatApplication /> : <h1>Please log in</h1>;
   const [chatRooms, setChatRooms] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
-  const {
-    username,
-    setUsername,
-    userInfo,
-    userId,
-    setWebSocket,
-    webSocket,
-    fetchUserInfo,
-    loadUser,
-  } = useAuth();
+  const { username, setUsername, userInfo, userId, setWebSocket, webSocket, fetchUserInfo, loadUser } = useAuth();
   const [errorMessage, setErrorMessage] = React.useState();
   const navigate = useNavigate();
 

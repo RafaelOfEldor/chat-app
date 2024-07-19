@@ -42,8 +42,7 @@ const openIdGoogleUrl = process.env.OPENID_GOOGLE_URL;
 export function AuthProvider({ children }) {
   const [chatRooms, setChatRooms] = useState([]);
   const [usersChatRooms, setUsersChatRooms] = useState([]);
-  const [usersChatRoomsLatestMessages, setUsersChatRoomsLatestMessages] =
-    useState([]);
+  const [usersChatRoomsLatestMessages, setUsersChatRoomsLatestMessages] = useState([]);
   const [username, setUsername] = useState();
   const [fullName, setFullName] = useState();
   const [userId, setUserId] = useState();
@@ -75,9 +74,7 @@ export function AuthProvider({ children }) {
   }
 
   async function fetchUserInfo() {
-    const response = await fetch(
-      `/api/users/byid/${localStorage.getItem("userId")}`,
-    );
+    const response = await fetch(`/api/users/byid/${localStorage.getItem("userId")}`);
     const data = await response.json();
     setUserInfo(data);
   }
@@ -87,11 +84,7 @@ export function AuthProvider({ children }) {
       response.json().then((data) => {
         // console.log("all rooms: ", data);
         setChatRooms(data);
-        setUsersChatRooms(
-          data.filter((room) =>
-            room.users.includes(localStorage.getItem("userId")),
-          ),
-        );
+        setUsersChatRooms(data.filter((room) => room.users.includes(localStorage.getItem("userId"))));
         // console.log("user rooms: ", data.filter(room => room.users.includes(localStorage.getItem("userId"))));
       }),
     );

@@ -32,8 +32,7 @@ export default function LoginPage(props) {
   ) : (
     <div
       style={{
-        background:
-          "linear-gradient(135deg, rgba(78, 84, 200, 1), rgba(143, 148, 251, 1))",
+        background: "linear-gradient(135deg, rgba(78, 84, 200, 1), rgba(143, 148, 251, 1))",
         width: "100vw",
         height: "100vh",
       }}

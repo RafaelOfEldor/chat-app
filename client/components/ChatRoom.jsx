@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import {
-  useSearchParams,
-  useParams,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { useSearchParams, useParams, useNavigate, useLocation } from "react-router-dom";
 import { FiEdit3, FiTrash2, FiXCircle } from "react-icons/fi";
 import "./css/chatpage.css";
 import { useWebSocket } from "../context/WebSocketContext";
@@ -20,10 +15,7 @@ export default function ChatRoom() {
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>
       <h1>Please log in</h1>
-      <button
-        onClick={() => navigate("/login")}
-        style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}
-      >
+      <button onClick={() => navigate("/login")} style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}>
         Login
       </button>
     </div>
@@ -36,14 +28,7 @@ export function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const [chatLoaded, setChatLoaded] = useState(false);
   const [newSendMessage, setNewSendMessage] = useState();
-  const {
-    userInfo,
-    userId,
-    allUsers,
-    fetchAllUsers,
-    updateChatRooms,
-    fetchUserInfo,
-  } = useAuth();
+  const { userInfo, userId, allUsers, fetchAllUsers, updateChatRooms, fetchUserInfo } = useAuth();
   const [chatRoom, setChatRoom] = useState();
   const [dmTitle, setDmTitle] = useState("");
   const [logsRendered, setLogsRendered] = useState(false);
@@ -59,10 +44,7 @@ export function Chat() {
     const response = await fetch(`/api/chats/room/${roomid}`);
     const data = await response.json();
     setChatRoom(data[0]);
-    if (
-      !data[0].isPublic &&
-      !data[0].users.includes(localStorage.getItem("userId"))
-    ) {
+    if (!data[0].isPublic && !data[0].users.includes(localStorage.getItem("userId"))) {
       navigate(location.state.prevUrl);
       return;
     }
@@ -179,14 +161,8 @@ export function Chat() {
     } else if (data.type === "new-message") {
       console.log("yo?");
       console.log(data.messages[data.messages.length - 1]);
-      if (
-        data?.messages[data?.messages?.length - 1]?.chat_room ===
-        parseInt(roomid)
-      ) {
-        setMessages((prev) => [
-          ...prev,
-          data.messages[data.messages.length - 1],
-        ]);
+      if (data?.messages[data?.messages?.length - 1]?.chat_room === parseInt(roomid)) {
+        setMessages((prev) => [...prev, data.messages[data.messages.length - 1]]);
         console.log(data.messages[data.messages.length - 1]);
       }
     }
@@ -419,36 +395,20 @@ export function Chat() {
               </div>
               <div className="message content self">
                 <div style={{ display: "flex", gap: "20px" }}>
-                  {showEditMessage?.show &&
-                  showEditMessage?.id === item?.message_id ? (
-                    <form
-                      onSubmit={(e) => handleEditMessage(e, item?.message_id)}
-                    >
-                      <input
-                        name="updatedMessage"
-                        className="edit-message-input"
-                        ref={inputRef}
-                      />
+                  {showEditMessage?.show && showEditMessage?.id === item?.message_id ? (
+                    <form onSubmit={(e) => handleEditMessage(e, item?.message_id)}>
+                      <input name="updatedMessage" className="edit-message-input" ref={inputRef} />
                       <button>submit</button>
                     </form>
                   ) : (
                     <h4 style={{ fontWeight: "100", whiteSpace: "pre-wrap" }}>
-                      {!item?.deleted ? (
-                        item?.message
-                      ) : (
-                        <i style={{ color: "red" }}>
-                          message was deleted by user
-                        </i>
-                      )}
+                      {!item?.deleted ? item?.message : <i style={{ color: "red" }}>message was deleted by user</i>}
                     </h4>
                   )}
                 </div>
               </div>
               {!item?.deleted && item?.edited ? (
-                <i style={{ fontWeight: "100", marginRight: "auto" }}>
-                  {" "}
-                  edited
-                </i>
+                <i style={{ fontWeight: "100", marginRight: "auto" }}> edited</i>
               ) : null}
               {userId === item?.sending_user_id && (
                 <div
@@ -459,8 +419,7 @@ export function Chat() {
                     marginTop: "10px",
                   }}
                 >
-                  {showEditMessage?.show &&
-                  showEditMessage?.id === item?.message_id ? (
+                  {showEditMessage?.show && showEditMessage?.id === item?.message_id ? (
                     <FiXCircle
                       onClick={() =>
                         setShowEditMessage((prev) => ({
@@ -481,10 +440,7 @@ export function Chat() {
                       className="edit-button"
                     />
                   )}
-                  <FiTrash2
-                    onClick={(e) => handleDeleteMessage(e, item?.message_id)}
-                    className="delete-button"
-                  />
+                  <FiTrash2 onClick={(e) => handleDeleteMessage(e, item?.message_id)} className="delete-button" />
                 </div>
               )}
             </div>
@@ -539,23 +495,14 @@ export function Chat() {
               </div>
               <div className="message content other">
                 <div style={{ display: "flex", gap: "20px" }}>
-                  {showEditMessage?.show &&
-                  showEditMessage?.id === item?.message_id ? (
-                    <form
-                      onSubmit={(e) => handleEditMessage(e, item?.message_id)}
-                    >
+                  {showEditMessage?.show && showEditMessage?.id === item?.message_id ? (
+                    <form onSubmit={(e) => handleEditMessage(e, item?.message_id)}>
                       <input name="updatedMessage" />
                       <button>submit</button>
                     </form>
                   ) : (
                     <h4 style={{ fontWeight: "100" }}>
-                      {!item?.deleted ? (
-                        item?.message
-                      ) : (
-                        <i style={{ color: "red" }}>
-                          message was deleted by user
-                        </i>
-                      )}
+                      {!item?.deleted ? item?.message : <i style={{ color: "red" }}>message was deleted by user</i>}
                     </h4>
                   )}
 
@@ -571,20 +518,12 @@ export function Chat() {
                       >
                         Edit message
                       </button>
-                      <button
-                        onClick={(e) =>
-                          handleDeleteMessage(e, item?.message_id)
-                        }
-                      >
-                        Delete message
-                      </button>
+                      <button onClick={(e) => handleDeleteMessage(e, item?.message_id)}>Delete message</button>
                     </div>
                   )}
                 </div>
               </div>
-              {!item?.deleted && item?.edited ? (
-                <i style={{ fontWeight: "100", marginLeft: "20px" }}> edited</i>
-              ) : null}
+              {!item?.deleted && item?.edited ? <i style={{ fontWeight: "100", marginLeft: "20px" }}> edited</i> : null}
             </div>
           )}
         </div>
@@ -641,10 +580,7 @@ export function Chat() {
             onKeyDown={handleKeyDown}
             className="send-message-input"
           />
-          <button
-            style={{ color: "white" }}
-            disabled={newMessage.trim() === ""}
-          >
+          <button style={{ color: "white" }} disabled={newMessage.trim() === ""}>
             Send message {"->"}
           </button>
         </form>

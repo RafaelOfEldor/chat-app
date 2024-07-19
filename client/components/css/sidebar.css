@@ -241,9 +241,7 @@
   position: absolute;
   z-index: 1;
   top: 50%; /* Positioning the tooltip relative to its parent */
-  left: calc(
-    100% + 10px
-  ); /* Adjust the distance to the right of the parent element */
+  left: calc(100% + 10px); /* Adjust the distance to the right of the parent element */
   transform: translateY(-50%);
 }
 

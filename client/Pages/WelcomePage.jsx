@@ -70,9 +70,8 @@ const WelcomePage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          In our digital era, we can socialize amongst ourselves, by ourselves.
-          Stay in touch and bear witness to gatherings in this dimension we
-          call..
+          In our digital era, we can socialize amongst ourselves, by ourselves. Stay in touch and bear witness to
+          gatherings in this dimension we call..
           <i className="highlight"> the cyberspace.</i>
         </motion.p>
         <motion.a

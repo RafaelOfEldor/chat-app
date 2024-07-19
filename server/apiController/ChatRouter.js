@@ -85,10 +85,7 @@ export function ChatRouter(mongoDatabase) {
 
   router.get("/rooms", async (req, res) => {
     try {
-      const rooms = await mongoDatabase
-        .collection("chat-rooms")
-        .find()
-        .toArray();
+      const rooms = await mongoDatabase.collection("chat-rooms").find().toArray();
       // console.log(rooms);
       res.send(rooms);
     } catch (error) {
@@ -111,11 +108,7 @@ export function ChatRouter(mongoDatabase) {
       // console.log(a);
       const respone = await mongoDatabase
         .collection("chat-rooms")
-        .updateOne(
-          { id: parseInt(room_id) },
-          { $set: { prevMessages: a } },
-          { returnDocument: true },
-        );
+        .updateOne({ id: parseInt(room_id) }, { $set: { prevMessages: a } }, { returnDocument: true });
       // console.log(rooms);
       if (respone.ok) {
         res.sendStatus(200);
@@ -132,10 +125,7 @@ export function ChatRouter(mongoDatabase) {
     try {
       const { chatid } = req.params;
       const chatId = parseInt(chatid);
-      const room = await mongoDatabase
-        .collection("chat-rooms")
-        .find({ id: chatId })
-        .toArray();
+      const room = await mongoDatabase.collection("chat-rooms").find({ id: chatId }).toArray();
       // console.log(room);
       res.send(room);
     } catch (error) {
@@ -153,9 +143,7 @@ export function ChatRouter(mongoDatabase) {
         id: userInput.id,
         created_by: userInput.created_by,
       };
-      const roomExist = await mongoDatabase
-        .collection("chat-rooms")
-        .findOne({ title: data.title });
+      const roomExist = await mongoDatabase.collection("chat-rooms").findOne({ title: data.title });
       if (!roomExist) {
         await mongoDatabase.collection("chat-rooms").insertOne(userInput);
         res.sendStatus(204);
@@ -173,9 +161,7 @@ export function ChatRouter(mongoDatabase) {
     try {
       const { room_id, created_by_id, new_title, new_description } = req.body;
       const roomId = parseInt(room_id);
-      const roomExist = await mongoDatabase
-        .collection("chat-rooms")
-        .findOne({ title: new_title });
+      const roomExist = await mongoDatabase.collection("chat-rooms").findOne({ title: new_title });
 
       if (!roomExist) {
         const correctUser = await mongoDatabase
@@ -244,16 +230,14 @@ export function ChatRouter(mongoDatabase) {
 
       console.log("userinput", userInput);
 
-      const response = await mongoDatabase
-        .collection("chat-messages")
-        .updateMany(
-          {
-            chat_room: parseInt(room_id),
-          },
-          {
-            $addToSet: { seenBy: joining_user }, // Add the user ID to the seenBy array if it's not already there
-          },
-        );
+      const response = await mongoDatabase.collection("chat-messages").updateMany(
+        {
+          chat_room: parseInt(room_id),
+        },
+        {
+          $addToSet: { seenBy: joining_user }, // Add the user ID to the seenBy array if it's not already there
+        },
+      );
       if (response.ok) {
         res.sendStatus(200);
       } else {
@@ -266,98 +250,86 @@ export function ChatRouter(mongoDatabase) {
     res.end();
   });
 
-  router.delete(
-    "/deletemessage/:sendinguserid/:chatroom/:messageid",
-    async (req, res) => {
-      try {
-        const { sendinguserid, messageid } = req.params;
-        const chatroom = parseInt(req.params.chatroom);
-        await mongoDatabase.collection("chat-messages").updateOne(
-          {
-            sending_user_id: sendinguserid,
-            chat_room: chatroom,
-            message_id: parseInt(messageid),
-          },
-          { $set: { deleted: true } },
-          { returnDocument: true },
-        );
-        res.sendStatus(200);
-      } catch (error) {
-        console.error("Error login in:", error);
-        res.status(500).json({ error: "Failed to create goal" });
-      }
-      res.end();
-    },
-  );
+  router.delete("/deletemessage/:sendinguserid/:chatroom/:messageid", async (req, res) => {
+    try {
+      const { sendinguserid, messageid } = req.params;
+      const chatroom = parseInt(req.params.chatroom);
+      await mongoDatabase.collection("chat-messages").updateOne(
+        {
+          sending_user_id: sendinguserid,
+          chat_room: chatroom,
+          message_id: parseInt(messageid),
+        },
+        { $set: { deleted: true } },
+        { returnDocument: true },
+      );
+      res.sendStatus(200);
+    } catch (error) {
+      console.error("Error login in:", error);
+      res.status(500).json({ error: "Failed to create goal" });
+    }
+    res.end();
+  });
 
   // Direct messages
 
-  router.get(
-    "/log/:sendingUserId/:recievingUserId/:chatId",
-    async (req, res) => {
-      try {
-        const { sendingUserId, recievingUserId, chatId } = req.params;
-        const chats = [];
-        let i = 1;
-        do {
-          const chatExist = await mongoDatabase
+  router.get("/log/:sendingUserId/:recievingUserId/:chatId", async (req, res) => {
+    try {
+      const { sendingUserId, recievingUserId, chatId } = req.params;
+      const chats = [];
+      let i = 1;
+      do {
+        const chatExist = await mongoDatabase.collection("direct-messages").findOne({
+          sending_user_id: sendingUserId.toString(),
+          receiving_user_id: recievingUserId.toString(),
+          chat_id: 1,
+          message_id: i,
+        });
+
+        const chatExistMirror = await mongoDatabase.collection("direct-messages").findOne({
+          sending_user_id: recievingUserId.toString(),
+          receiving_user_id: sendingUserId.toString(),
+          chat_id: 1,
+          message_id: i,
+        });
+        if (chatExist) {
+          const chat = await mongoDatabase
             .collection("direct-messages")
-            .findOne({
+            .find({
               sending_user_id: sendingUserId.toString(),
               receiving_user_id: recievingUserId.toString(),
               chat_id: 1,
               message_id: i,
-            });
-
-          const chatExistMirror = await mongoDatabase
+            })
+            .toArray();
+          chats.push(chat[0]);
+        } else if (chatExistMirror) {
+          const chat = await mongoDatabase
             .collection("direct-messages")
-            .findOne({
+            .find({
               sending_user_id: recievingUserId.toString(),
               receiving_user_id: sendingUserId.toString(),
               chat_id: 1,
               message_id: i,
-            });
-          if (chatExist) {
-            const chat = await mongoDatabase
-              .collection("direct-messages")
-              .find({
-                sending_user_id: sendingUserId.toString(),
-                receiving_user_id: recievingUserId.toString(),
-                chat_id: 1,
-                message_id: i,
-              })
-              .toArray();
-            chats.push(chat[0]);
-          } else if (chatExistMirror) {
-            const chat = await mongoDatabase
-              .collection("direct-messages")
-              .find({
-                sending_user_id: recievingUserId.toString(),
-                receiving_user_id: sendingUserId.toString(),
-                chat_id: 1,
-                message_id: i,
-              })
-              .toArray();
-            chats.push(chat[0]);
-          } else {
-            break;
-          }
-          i++;
-        } while (true);
-        if (chats.length > 0) {
-          // console.log(chats)
-          res.json(chats);
+            })
+            .toArray();
+          chats.push(chat[0]);
         } else {
-          res
-            .status(204)
-            .json({ message: "Currently no messages in this chat" });
+          break;
         }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        res.status(500).json({ error: "Failed to fetch user" });
+        i++;
+      } while (true);
+      if (chats.length > 0) {
+        // console.log(chats)
+        res.json(chats);
+      } else {
+        res.status(204).json({ message: "Currently no messages in this chat" });
       }
-    },
-  );
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ error: "Failed to fetch user" });
+    }
+  });
 
   router.post("/send/directmessage", async (req, res) => {
     try {
@@ -391,29 +363,26 @@ export function ChatRouter(mongoDatabase) {
     res.end();
   });
 
-  router.delete(
-    "/delete/directmessage/:sendinguserid/:receivinguserid/:messageid",
-    async (req, res) => {
-      try {
-        const { sendinguserid, receivignuserid, messageid } = req.params;
-        const chatroom = parseInt(req.params.chatroom);
-        await mongoDatabase.collection("direct-messages").updateOne(
-          {
-            sending_user_id: sendinguserid,
-            receiving_user_id: receivignuserid,
-            message_id: parseInt(messageid),
-          },
-          { $set: { deleted: true } },
-          { returnDocument: true },
-        );
-        res.sendStatus(200);
-      } catch (error) {
-        console.error("Error login in:", error);
-        res.status(500).json({ error: "Failed to create goal" });
-      }
-      res.end();
-    },
-  );
+  router.delete("/delete/directmessage/:sendinguserid/:receivinguserid/:messageid", async (req, res) => {
+    try {
+      const { sendinguserid, receivignuserid, messageid } = req.params;
+      const chatroom = parseInt(req.params.chatroom);
+      await mongoDatabase.collection("direct-messages").updateOne(
+        {
+          sending_user_id: sendinguserid,
+          receiving_user_id: receivignuserid,
+          message_id: parseInt(messageid),
+        },
+        { $set: { deleted: true } },
+        { returnDocument: true },
+      );
+      res.sendStatus(200);
+    } catch (error) {
+      console.error("Error login in:", error);
+      res.status(500).json({ error: "Failed to create goal" });
+    }
+    res.end();
+  });
 
   return router;
 }

@@ -1,12 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import {
-  Link,
-  Routes,
-  Route,
-  Outlet,
-  useNavigate,
-  NavLink,
-} from "react-router-dom";
+import { Link, Routes, Route, Outlet, useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./css/socialLayout.css";
 import { useWebSocket } from "../context/WebSocketContext";
@@ -72,9 +65,7 @@ export default function SocialLayout(props) {
         <NavLink
           to="/social/viewusers"
           className={({ isActive }) =>
-            isActive
-              ? `active-social-layout-navbar-div-link users`
-              : `social-layout-navbar-div-link users`
+            isActive ? `active-social-layout-navbar-div-link users` : `social-layout-navbar-div-link users`
           }
         >
           All users
@@ -82,9 +73,7 @@ export default function SocialLayout(props) {
         <NavLink
           to="/social/friends"
           className={({ isActive }) =>
-            isActive
-              ? `active-social-layout-navbar-div-link friends`
-              : `social-layout-navbar-div-link friends`
+            isActive ? `active-social-layout-navbar-div-link friends` : `social-layout-navbar-div-link friends`
           }
         >
           Friends
@@ -92,15 +81,10 @@ export default function SocialLayout(props) {
         <NavLink
           to="/social/requests"
           className={({ isActive }) =>
-            isActive
-              ? `active-social-layout-navbar-div-link requests`
-              : `social-layout-navbar-div-link requests`
+            isActive ? `active-social-layout-navbar-div-link requests` : `social-layout-navbar-div-link requests`
           }
         >
-          Requests{" "}
-          {userRequests?.length > 0 && (
-            <div className="glowing-circle-social-layout"></div>
-          )}
+          Requests {userRequests?.length > 0 && <div className="glowing-circle-social-layout"></div>}
         </NavLink>
       </div>
       <Outlet />
@@ -108,10 +92,7 @@ export default function SocialLayout(props) {
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>
       <h1>Please log in</h1>
-      <button
-        onClick={() => navigate("/login")}
-        style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}
-      >
+      <button onClick={() => navigate("/login")} style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}>
         Login
       </button>
     </div>

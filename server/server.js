@@ -43,12 +43,8 @@ app.use(async (req, res, next) => {
       });
       if (user) {
         const { given_name, family_name, email, picture } = user;
-        const username = `${
-          given_name?.charAt(0).toUpperCase() + given_name?.slice(1)
-        }`;
-        const fullName = `${
-          given_name?.charAt(0).toUpperCase() + given_name?.slice(1)
-        } ${family_name?.charAt(0).toUpperCase() + family_name?.slice(1)}`;
+        const username = `${given_name?.charAt(0).toUpperCase() + given_name?.slice(1)}`;
+        const fullName = `${given_name?.charAt(0).toUpperCase() + given_name?.slice(1)} ${family_name?.charAt(0).toUpperCase() + family_name?.slice(1)}`;
         const mail = `${email}`;
         const photo = `${picture}`;
         req.user = { ...user, username, fullName, mail, photo };
@@ -64,13 +60,8 @@ app.use(async (req, res, next) => {
       });
       if (user) {
         const { given_name, family_name, email, picture } = user;
-        const username = `${
-          given_name?.charAt(0).toUpperCase() +
-          given_name?.slice(1).split(" ")[0]
-        }`;
-        const fullName = `${
-          given_name?.charAt(0).toUpperCase() + given_name?.slice(1)
-        } ${family_name?.charAt(0).toUpperCase() + family_name?.slice(1)}`;
+        const username = `${given_name?.charAt(0).toUpperCase() + given_name?.slice(1).split(" ")[0]}`;
+        const fullName = `${given_name?.charAt(0).toUpperCase() + given_name?.slice(1)} ${family_name?.charAt(0).toUpperCase() + family_name?.slice(1)}`;
         const mail = `${email}`;
         const photo = `${picture}`;
         req.user = { ...user, username, fullName, mail, photo };
@@ -82,18 +73,9 @@ app.use(async (req, res, next) => {
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
 mongoClient.connect().then(async () => {
-  app.use(
-    "/api/auth",
-    AuthenticationRouter(mongoClient.db("chat-application-database")),
-  );
-  app.use(
-    "/api/users",
-    UsersRouter(mongoClient.db("chat-application-database")),
-  );
-  app.use(
-    "/api/chats",
-    ChatRouter(mongoClient.db("chat-application-database")),
-  );
+  app.use("/api/auth", AuthenticationRouter(mongoClient.db("chat-application-database")));
+  app.use("/api/users", UsersRouter(mongoClient.db("chat-application-database")));
+  app.use("/api/chats", ChatRouter(mongoClient.db("chat-application-database")));
 });
 
 app.use(express.static("../client/dist"));
@@ -145,9 +127,7 @@ server.on("upgrade", (req, socket, head) => {
           },
         });
 
-        const res = await fetch(
-          baseUrl + `/api/chats/room/${userInput.roomid}`,
-        );
+        const res = await fetch(baseUrl + `/api/chats/room/${userInput.roomid}`);
         const room = await res.json();
         if (res.status === 200 || res.status === 204) {
           const returnMessage = {
@@ -309,9 +289,7 @@ server.on("upgrade", (req, socket, head) => {
             });
 
             for (const recipient of interestedSockets) {
-              recipient.send(
-                JSON.stringify({ type: "user-joined", userId: socket.userId }),
-              );
+              recipient.send(JSON.stringify({ type: "user-joined", userId: socket.userId }));
             }
 
             console.log("yo");
@@ -352,15 +330,10 @@ server.on("upgrade", (req, socket, head) => {
             });
           }
 
-          if (
-            !userInput.messageElement?.edited &&
-            !userInput.messageElement?.deleted
-          ) {
+          if (!userInput.messageElement?.edited && !userInput.messageElement?.deleted) {
             // console.log(interestedSockets)
             // console.log("userinput:", userInput);
-            fetch(
-              baseUrl + `/api/chats/log/${userInput.messageElement?.chat_id}`,
-            )
+            fetch(baseUrl + `/api/chats/log/${userInput.messageElement?.chat_id}`)
               .then((response) => {
                 const contentType = response.headers.get("Content-Type");
 
@@ -396,9 +369,7 @@ server.on("upgrade", (req, socket, head) => {
               },
             });
 
-            const chatLogsRes = await fetch(
-              baseUrl + `/api/chats/log/${roomid}`,
-            );
+            const chatLogsRes = await fetch(baseUrl + `/api/chats/log/${roomid}`);
             if (chatLogsRes.status === 204) {
               // console.log(chatLogsRes);
             } else {

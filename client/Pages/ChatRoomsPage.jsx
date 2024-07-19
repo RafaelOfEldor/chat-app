@@ -7,8 +7,7 @@ import "./css/chatRoomsPage.css";
 import "./css/loadingAndFiller.css";
 
 export default function ChatRoomsPage() {
-  const { username, userId, setUsername, setWebSocket, webSocket, loadUser } =
-    useAuth();
+  const { username, userId, setUsername, setWebSocket, webSocket, loadUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,10 +16,7 @@ export default function ChatRoomsPage() {
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>
       <h1>Please log in</h1>
-      <button
-        onClick={() => navigate("/login")}
-        style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}
-      >
+      <button onClick={() => navigate("/login")} style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}>
         Login
       </button>
     </div>
@@ -88,21 +84,19 @@ export function ChatRooms() {
     e.preventDefault();
     try {
       setLogsRendered(false);
-      await fetch(`api/users/${e.target.addMessage.value.toLowerCase()}`).then(
-        (res) => {
-          if (!res.ok) {
-            console.log("error");
-            setErrorMessage("User was not found :/");
-          } else if (res.ok) {
-            setErrorMessage();
-            console.log("success");
-            res.json().then((data) => {
-              setReceivingUser(data);
-            }),
-              setInitiateChat(true);
-          }
-        },
-      );
+      await fetch(`api/users/${e.target.addMessage.value.toLowerCase()}`).then((res) => {
+        if (!res.ok) {
+          console.log("error");
+          setErrorMessage("User was not found :/");
+        } else if (res.ok) {
+          setErrorMessage();
+          console.log("success");
+          res.json().then((data) => {
+            setReceivingUser(data);
+          }),
+            setInitiateChat(true);
+        }
+      });
     } catch (error) {
       console.error(error);
     }
@@ -126,9 +120,7 @@ export function ChatRooms() {
               state={{ prevUrl: location.pathname }}
               className="chat-room-card link"
             >
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: "5px" }}
-              >
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                 <h2 className="chatroom-card-title">{item.title}</h2>
                 <h4 style={{ minHeight: "20px" }}>
                   {item.description !== "" ? (
@@ -142,10 +134,7 @@ export function ChatRooms() {
                     <i style={{ fontWeight: "100" }}>no description</i>
                   )}
                 </h4>
-                <h4
-                  className="red"
-                  style={{ fontWeight: "100", letterSpacing: "1" }}
-                >
+                <h4 className="red" style={{ fontWeight: "100", letterSpacing: "1" }}>
                   Created by:
                   {userId === item.created_by_id ? (
                     <i style={{ color: "cyan" }}> You</i>
@@ -172,16 +161,10 @@ export function ChatRooms() {
                 justifyContent: "center",
               }}
             >
-              <Link
-                to={`/newroom/editroom?roomid=${item.id}`}
-                className="chat-room-card-editlink"
-              >
+              <Link to={`/newroom/editroom?roomid=${item.id}`} className="chat-room-card-editlink">
                 Edit
               </Link>
-              <button
-                style={{ width: "50%" }}
-                className="chat-room-card-delete-button"
-              >
+              <button style={{ width: "50%" }} className="chat-room-card-delete-button">
                 Delete
               </button>
             </div>
@@ -212,25 +195,16 @@ export function ChatRooms() {
               <i>{user?.email}</i>
             </div>
             {usersChatRoomsLatestMessages[0]?.id === item?.id &&
-              usersChatRoomsLatestMessages?.filter((item) =>
-                item?.messages?.find((message) => !message?.seenByUser),
-              )?.length > 0 && (
+              usersChatRoomsLatestMessages?.filter((item) => item?.messages?.find((message) => !message?.seenByUser))
+                ?.length > 0 && (
                 <div className="glowing-circle-direct-messages">
                   <h3>
                     {usersChatRoomsLatestMessages
-                      ?.filter((item) =>
-                        item?.messages?.filter(
-                          (message) => !message?.seenByUser,
-                        ),
-                      )[0]
+                      ?.filter((item) => item?.messages?.filter((message) => !message?.seenByUser))[0]
                       ?.messages?.filter((a) => !a.seenByUser).length > 9
                       ? "9+"
                       : usersChatRoomsLatestMessages
-                          ?.filter((item) =>
-                            item?.messages?.filter(
-                              (message) => !message?.seenByUser,
-                            ),
-                          )[0]
+                          ?.filter((item) => item?.messages?.filter((message) => !message?.seenByUser))[0]
                           ?.messages?.filter((a) => !a.seenByUser).length}
                   </h3>
                 </div>
@@ -285,9 +259,7 @@ export function ChatRooms() {
           {directMessagesElement?.length > 0 ? (
             directMessagesElement
           ) : (
-            <i style={{ marginTop: "10px" }}>
-              You currently have no direct messages.
-            </i>
+            <i style={{ marginTop: "10px" }}>You currently have no direct messages.</i>
           )}
         </div>
       </div>
