@@ -29,7 +29,7 @@ export function Chat() {
   const [chatLoaded, setChatLoaded] = useState(false);
   const [newSendMessage, setNewSendMessage] = useState();
   const { userInfo, userId, allUsers, fetchAllUsers, updateChatRooms, fetchUserInfo } = useAuth();
-  const [chatRoom, setChatRoom] = useState();
+  const [chatRoom, setChatRoom] = useState(null);
   const [dmTitle, setDmTitle] = useState("");
   const [logsRendered, setLogsRendered] = useState(false);
   const [showEditMessage, setShowEditMessage] = useState();
@@ -43,11 +43,14 @@ export function Chat() {
   async function fetchRoom() {
     const response = await fetch(`/api/chats/room/${roomid}`);
     const data = await response.json();
-    setChatRoom(data[0]);
+
     if (!data[0].isPublic && !data[0].users.includes(localStorage.getItem("userId"))) {
-      navigate(location.state.prevUrl);
+      navigate("/chatrooms");
       return;
     }
+
+    setChatRoom(data[0]);
+
     if (data[0].type === "dm") {
       const receivingUser = data[0].users?.find((user) => user !== userId);
       await fetch(`/api/users/byid/${receivingUser}`).then((response) =>
@@ -512,7 +515,7 @@ export function Chat() {
     );
   });
 
-  return chatLoaded ? (
+  return chatLoaded && chatRoom ? (
     <div className="chat-page" style={{ textAlign: "center" }}>
       <div style={{ textAlign: "start", backgroundColor: "grey" }}>
         <div style={{ display: "flex", alignItems: "center" }}>

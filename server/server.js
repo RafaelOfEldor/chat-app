@@ -112,7 +112,6 @@ server.on("upgrade", (req, socket, head) => {
     socket.on("message", async (message) => {
       const userInput = JSON.parse(message.toString());
       if (userInput.type === "UPDATE_ROOM") {
-        // console.log("userinput", userInput);
         const { user_id } = userInput;
         const dataElement = {
           joining_user: user_id,
@@ -151,7 +150,6 @@ server.on("upgrade", (req, socket, head) => {
             receiving_user_id: receiving_user_id,
             user_id: user_id,
           };
-          // console.log(userInput)
           const res = await fetch(baseUrl + `/api/users/send/request`, {
             method: "POST",
             body: JSON.stringify(data),
@@ -160,7 +158,6 @@ server.on("upgrade", (req, socket, head) => {
             },
           });
           const updatedData = await res.json();
-          console.log(updatedData);
           const messageToSend = {
             type: "REQUEST_UPDATE",
             targetUser: updatedData,
@@ -180,7 +177,6 @@ server.on("upgrade", (req, socket, head) => {
             receiving_user_id: user_id,
             user_id: receiving_user_id,
           };
-          console.log(userInput);
           const res = await fetch(baseUrl + `/api/users/remove/request`, {
             method: "DELETE",
             body: JSON.stringify(data),
@@ -189,7 +185,6 @@ server.on("upgrade", (req, socket, head) => {
             },
           });
           const updatedData = await res.json();
-          console.log(updatedData);
           const messageToSend = {
             type: "REQUEST_UPDATE",
             targetUser: updatedData,
@@ -208,7 +203,6 @@ server.on("upgrade", (req, socket, head) => {
             receiving_user_id: user_id,
             user_id: receiving_user_id,
           };
-          console.log(userInput);
           const res = await fetch(baseUrl + `/api/users/accept/request`, {
             method: "POST",
             body: JSON.stringify(data),
@@ -217,7 +211,6 @@ server.on("upgrade", (req, socket, head) => {
             },
           });
           const updatedData = await res.json();
-          console.log(updatedData);
           const messageToSend = {
             type: "FRIEND_UPDATE",
             targetUser: updatedData,
@@ -236,7 +229,6 @@ server.on("upgrade", (req, socket, head) => {
             receiving_user_id: user_id,
             user_id: receiving_user_id,
           };
-          console.log(userInput);
           const res = await fetch(baseUrl + `/api/users/remove/friend`, {
             method: "DELETE",
             body: JSON.stringify(data),
@@ -245,7 +237,6 @@ server.on("upgrade", (req, socket, head) => {
             },
           });
           const updatedData = await res.json();
-          console.log(updatedData);
           const messageToSend = {
             type: "FRIEND_UPDATE",
             targetUser: updatedData,
@@ -259,21 +250,8 @@ server.on("upgrade", (req, socket, head) => {
       }
       if (userInput.type === "SEND_MESSAGE") {
         try {
-          // console.log("userinput:", userInput);
-          // console.log("userinput chatroom: " + userInput.chat_room);
-          // console.log("socket chatroom: " + socket.chatRoomId);
-          // console.log("socket userid: " + socket.userId);
-          // console.log("param chatroom: " + roomId);
-          // console.log("param userid: " + userId);
           const { user_id, roomid } = userInput;
           socket.chatRoomId = roomid;
-          // socket.userId = userId;
-
-          // console.log(user_id);
-          // console.log(roomid);
-          // roomId = userInput?.roomid;
-
-          // userId = userInput?.user_id;
           if (userInput.subtype === "join") {
             const { joining_user, chat_room } = userInput;
 
@@ -282,8 +260,6 @@ server.on("upgrade", (req, socket, head) => {
               room_id: chat_room,
             };
 
-            // console.log(`Socket joined chatroom: ${socket.chatRoomId}`);
-            // console.log(userInput.messageElement.chat_room)
             interestedSockets = sockets.filter((clientSocket) => {
               return clientSocket.chatRoomId === chat_room;
             });
@@ -292,7 +268,6 @@ server.on("upgrade", (req, socket, head) => {
               recipient.send(JSON.stringify({ type: "user-joined", userId: socket.userId }));
             }
 
-            console.log("yo");
             const res = await fetch(baseUrl + "/api/chats/updateview", {
               method: "PUT",
               body: JSON.stringify(dataElement),
@@ -313,26 +288,21 @@ server.on("upgrade", (req, socket, head) => {
               recipient.send(JSON.stringify(messageToSend));
             });
 
-            // console.log(res.status);
-
             return;
           } else {
-            // console.log(roomid);
             const res = await fetch(baseUrl + `/api/chats/room/${roomid}`);
-            // console.log("rees",res);
             const data = await res.json();
-            // console.log("data:", data);
 
             interestedSockets = sockets.filter((clientSocket) => {
-              console.log(clientSocket?.userId);
-              console.log(data[0]?.users);
-              return data[0]?.users?.includes(clientSocket.userId);
+              if (data[0].isPublic) {
+                return clientSocket.chatRoomId === roomid;
+              } else {
+                return data[0]?.users?.includes(clientSocket.userId);
+              }
             });
           }
 
           if (!userInput.messageElement?.edited && !userInput.messageElement?.deleted) {
-            // console.log(interestedSockets)
-            // console.log("userinput:", userInput);
             fetch(baseUrl + `/api/chats/log/${userInput.messageElement?.chat_id}`)
               .then((response) => {
                 const contentType = response.headers.get("Content-Type");
@@ -351,7 +321,6 @@ server.on("upgrade", (req, socket, head) => {
               .catch((error) => {
                 console.error("Error fetching chat log:", error);
               });
-            // console.log(userInput.messageElement?);
             currentChat.push(userInput.messageElement);
 
             const messageType = "new-message";
@@ -359,8 +328,6 @@ server.on("upgrade", (req, socket, head) => {
               type: messageType,
               messages: currentChat,
             };
-            // console.log(currentChat);
-            // console.log(userInput.messageElement?);
             await fetch(baseUrl + "/api/chats/sendmessage", {
               method: "POST",
               body: JSON.stringify(userInput.messageElement),
@@ -371,10 +338,8 @@ server.on("upgrade", (req, socket, head) => {
 
             const chatLogsRes = await fetch(baseUrl + `/api/chats/log/${roomid}`);
             if (chatLogsRes.status === 204) {
-              // console.log(chatLogsRes);
             } else {
               const data = await chatLogsRes.json();
-              // console.log("data:", data);
               const roomElement = {
                 room_id: roomid,
                 room_length: data.length,
@@ -388,10 +353,7 @@ server.on("upgrade", (req, socket, head) => {
               });
             }
 
-            // console.log(messageArrayWithType);
-
             for (const recipient of interestedSockets) {
-              console.log(recipient?.userId);
               recipient.send(JSON.stringify(messageArrayWithType));
             }
           } else if (userInput.messageElement?.deleted) {
