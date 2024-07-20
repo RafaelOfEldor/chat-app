@@ -35,6 +35,7 @@ export function ChatRouter(mongoDatabase) {
       const { user_id, rooms } = req.body;
 
       const response = [];
+      // console.log(rooms);
 
       for (const room of rooms) {
         const { id, prevMessages } = room;
@@ -63,6 +64,7 @@ export function ChatRouter(mongoDatabase) {
         }
       }
       if (response?.length > 0) {
+        // console.log(response);
         res.json(response);
       } else {
         res.sendStatus(204);
@@ -86,6 +88,9 @@ export function ChatRouter(mongoDatabase) {
   router.put("/updateroom", async (req, res) => {
     try {
       const { room_id, room_length } = req.body;
+
+      console.log("room id", room_id);
+      console.log("room length", room_length);
       let i;
       let a = [];
       for (i = room_length - 1; i > room_length - 11 && i >= 0; i--) {

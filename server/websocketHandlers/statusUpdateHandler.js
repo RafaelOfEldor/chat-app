@@ -22,7 +22,7 @@ export async function handleStatusUpdate(socket, userInput, sockets) {
       console.log("user not found");
     } else {
       console.log("found user!");
-      console.log(res);
+      // console.log(res);
       const updatedUser = await res.json();
       const returnMessage = {
         type: "FRIEND_UPDATE",

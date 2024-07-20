@@ -53,6 +53,7 @@ export function ChatRooms() {
       users: [userId],
       created_by: userInfo?.username,
       created_by_id: userId,
+      prevMessages: [],
     };
     const res = await fetch("/api/chats/rooms/newroom", {
       method: "POST",

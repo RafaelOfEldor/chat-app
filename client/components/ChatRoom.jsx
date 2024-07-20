@@ -111,6 +111,7 @@ export function Chat() {
     // );
     if (webSocket) {
       const handleOpen = () => {
+        console.log("yo");
         const joinEventData = {
           type: "SEND_MESSAGE",
           subtype: "join",
@@ -126,9 +127,7 @@ export function Chat() {
         if (["new-message", "deleted", "edited"].includes(data.type)) {
           handleReceiveMessage(data);
         } else if (data.type === "UPDATE_ROOM") {
-          if (localStorage.getItem("userId") === data.message.id) {
-            updateChatRooms(data);
-          }
+          updateChatRooms(data);
         }
       };
 

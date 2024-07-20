@@ -84,10 +84,24 @@ export function ChatRooms() {
   }
 
   const chatRoomsElement = chatRooms.map((item, index) => {
+    console.log("usersChatRoomsLatestMessages", usersChatRoomsLatestMessages);
+    const roomMessages = usersChatRoomsLatestMessages.find((chat) => chat.id === item?.id);
+    let amountOfMessages = null;
+    if (roomMessages) {
+      amountOfMessages = roomMessages?.messages?.filter((message) => !message?.seenByUser).length;
+      console.log("yurr");
+      console.log("amount", amountOfMessages);
+    }
+    console.log("room messages", roomMessages);
     if (item?.type === "dm") return;
     if (item?.isPublic || item?.users.find((a) => a === userId)) {
       return (
         <div key={index} className="chat-room-card full-element">
+          {amountOfMessages !== null && amountOfMessages > 0 && (
+            <div className="glowing-circle-room-messages">
+              <h3>{amountOfMessages > 9 ? "9+" : amountOfMessages}</h3>
+            </div>
+          )}
           <div className="chat-room-card div">
             <Link
               to={`/chatrooms/room/${item.id}`}
@@ -166,6 +180,13 @@ export function ChatRooms() {
     if (item?.users?.includes(userId)) {
       const otherDmUser = item?.users?.find((user) => user !== userId);
       const user = userMap[otherDmUser];
+      const roomMessages = usersChatRoomsLatestMessages.find((chat) => chat.id === item?.id);
+      let amountOfMessages = null;
+      if (roomMessages) {
+        amountOfMessages = roomMessages?.messages?.filter((message) => !message?.seenByUser).length;
+        console.log("yurr");
+        console.log("amount", amountOfMessages);
+      }
 
       if (user) {
         return (
@@ -181,21 +202,11 @@ export function ChatRooms() {
                 <h4>{user?.username}</h4>
                 <i>{user?.email}</i>
               </div>
-              {usersChatRoomsLatestMessages[0]?.id === item?.id &&
-                usersChatRoomsLatestMessages?.filter((item) => item?.messages?.find((message) => !message?.seenByUser))
-                  ?.length > 0 && (
-                  <div className="glowing-circle-direct-messages">
-                    <h3>
-                      {usersChatRoomsLatestMessages
-                        ?.filter((item) => item?.messages?.filter((message) => !message?.seenByUser))[0]
-                        ?.messages?.filter((a) => !a.seenByUser).length > 9
-                        ? "9+"
-                        : usersChatRoomsLatestMessages
-                            ?.filter((item) => item?.messages?.filter((message) => !message?.seenByUser))[0]
-                            ?.messages?.filter((a) => !a.seenByUser).length}
-                    </h3>
-                  </div>
-                )}
+              {amountOfMessages !== null && amountOfMessages > 0 && (
+                <div className="glowing-circle-direct-messages">
+                  <h3>{amountOfMessages > 9 ? "9+" : amountOfMessages}</h3>
+                </div>
+              )}
             </div>
             <div
               style={{

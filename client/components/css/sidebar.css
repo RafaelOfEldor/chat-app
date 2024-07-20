@@ -422,6 +422,31 @@
   color: white;
 }
 
+.glowing-circle-room-messages {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  translate: 450% -50%;
+
+  width: 40px;
+  height: 40px;
+  margin-right: auto;
+  background-color: rgba(48, 49, 137, 0.8);
+  border-radius: 50%;
+  box-shadow:
+    0 0 10px cyan,
+    0 0 20px cyan,
+    0 0 30px rgba(11, 11, 73, 0.8);
+  animation: glow 1.5s infinite alternate;
+  z-index: 100;
+}
+
+.glowing-circle-room-messages h3 {
+  color: white;
+}
+
 @keyframes glow {
   from {
     box-shadow:

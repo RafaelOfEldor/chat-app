@@ -31,7 +31,6 @@ export async function handleSendMessage(socket, userInput, sockets) {
       for (const recipient of interestedSockets) {
         recipient.send(JSON.stringify({ type: "user-joined", userId: socket.userId }));
       }
-
       const res = await fetch(baseUrl + "/api/chats/updateview", {
         method: "PUT",
         body: JSON.stringify(dataElement),
@@ -47,11 +46,6 @@ export async function handleSendMessage(socket, userInput, sockets) {
       for (const recipient of interestedSockets) {
         recipient.send(JSON.stringify(messageToSend));
       }
-
-      sockets.forEach((recipient) => {
-        recipient.send(JSON.stringify(messageToSend));
-      });
-
       return;
     } else {
       const res = await fetch(baseUrl + `/api/chats/room/${roomid}`);
@@ -81,7 +75,22 @@ export async function handleSendMessage(socket, userInput, sockets) {
         messages: currentChat,
       };
 
-      const interestedSockets = sockets.filter((clientSocket) => clientSocket.chatRoomId === roomid);
+      const chatLogsRes = await fetch(baseUrl + `/api/chats/log/${roomid}`);
+      if (chatLogsRes.status === 204) {
+      } else {
+        const data = await chatLogsRes.json();
+        const roomElement = {
+          room_id: roomid,
+          room_length: data.length,
+        };
+        const roomRes = await fetch(baseUrl + "/api/chats/updateroom", {
+          method: "PUT",
+          body: JSON.stringify(roomElement),
+          headers: {
+            "content-type": "application/json",
+          },
+        });
+      }
 
       for (const recipient of interestedSockets) {
         recipient.send(JSON.stringify(messageArrayWithType));
@@ -108,7 +117,6 @@ export async function handleSendMessage(socket, userInput, sockets) {
         headers: { "Content-Type": "application/json" },
       });
 
-      const interestedSockets = sockets.filter((clientSocket) => clientSocket.chatRoomId === roomid);
       for (const recipient of interestedSockets) {
         recipient.send(JSON.stringify({ type: "deleted" }));
       }
@@ -133,7 +141,6 @@ export async function handleSendMessage(socket, userInput, sockets) {
         headers: { "Content-Type": "application/json" },
       });
 
-      const interestedSockets = sockets.filter((clientSocket) => clientSocket.chatRoomId === roomid);
       for (const recipient of interestedSockets) {
         recipient.send(JSON.stringify({ type: "edited" }));
       }
