@@ -176,18 +176,22 @@ export function ChatRouter(mongoDatabase) {
       const userInput = req.body;
       const { room_id } = userInput;
 
-      // Find and delete the room with the given room_id
       const chatRoom = await mongoDatabase.collection("chat-rooms").findOneAndDelete({ id: parseInt(room_id) });
 
-      // If no room was found, return a 404 error
       if (chatRoom === null) {
         return res.status(404).json({ error: "Room not found" });
       }
 
-      // Delete all messages with chat_room matching the room_id
       const messages = await mongoDatabase.collection("chat-messages").deleteMany({ chat_room: parseInt(room_id) });
 
-      // Send back the deleted room data
+      const roomsToReorder = await mongoDatabase
+        .collection("chat-rooms")
+        .find({ id: { $gt: room_id } })
+        .toArray();
+
+      for (const room of roomsToReorder) {
+        await mongoDatabase.collection("chat-rooms").updateOne({ id: room.id }, { $set: { id: room.id - 1 } });
+      }
       res.status(200).json({ deletedRoom: chatRoom });
     } catch (error) {
       console.error("Error removing room:", error);
