@@ -6,6 +6,8 @@ import { handleAcceptFriendUpdate } from "./websocketHandlers/acceptFriendUpdate
 import { handleRemoveFriendUpdate } from "./websocketHandlers/removeFriendUpdateHandler.js";
 import { handleSendMessage } from "./websocketHandlers/sendMessageHandler.js";
 import { handleStatusUpdate } from "./websocketHandlers/statusUpdateHandler.js";
+import { handleInviteUser } from "./websocketHandlers/inviteUserHandler.js";
+import { handleDeleteRoom } from "./websocketHandlers/deleteRoomHandler.js";
 
 let currentChat = [];
 const sockets = [];
@@ -27,7 +29,6 @@ export function setupWebSocketServer(server) {
     socket.userId = userId;
 
     if (userId != "null") {
-      console.log(userId);
       const requestBody = {
         user_id: userId,
         status: "online",
@@ -38,7 +39,6 @@ export function setupWebSocketServer(server) {
     }
 
     socket.on("message", (message) => {
-      console.log("from websocketServer.js", socket.userId);
       const userInput = JSON.parse(message.toString());
       switch (userInput.type) {
         case "UPDATE_ROOM":
@@ -65,6 +65,15 @@ export function setupWebSocketServer(server) {
           console.log("SEND_MESSAGE");
           handleSendMessage(socket, userInput, sockets);
           break;
+        case "INVITE_USER":
+          console.log("INVITE_USER");
+          handleInviteUser(socket, userInput, sockets);
+          break;
+        case "DELETE_ROOM":
+          console.log("DELETE_ROOM");
+          handleDeleteRoom(socket, userInput, sockets);
+          break;
+
         default:
           console.error("Unknown message type:", userInput.type);
       }

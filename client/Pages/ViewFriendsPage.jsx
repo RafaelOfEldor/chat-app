@@ -4,6 +4,7 @@ import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { ExpressUsersPut } from "../functions/ExpressFunctions.jsx";
 import { FiUser, FiUserPlus, FiUserMinus, FiSearch, FiSend } from "react-icons/fi";
 import { VscAccount, VscSend } from "react-icons/vsc";
+import InvitePopup from "../components/InvitePopup";
 import "./css/viewUsersPage.css";
 import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext.jsx";
@@ -14,6 +15,7 @@ export default function ViewFriendsPage() {
     fullName,
     userBio,
     userFriends,
+    usersChatRooms,
     userId,
     userInfo,
     mail,
@@ -24,11 +26,14 @@ export default function ViewFriendsPage() {
     setUsername,
   } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
+  const [isPopupVisible, setPopupVisible] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [updatedBio, setUpdatedBio] = useState("");
   const [allUsers, setAllUsers] = useState([]);
   const [isHovering, setIsHovering] = useState();
   const [actionEvent, setActionEvent] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isRoomsAvailable, setIsRoomsAvailable] = useState(false);
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
@@ -40,6 +45,31 @@ export default function ViewFriendsPage() {
     loadUser();
     console.log(userFriends);
   }, []);
+
+  const handleClosePopup = () => {
+    setPopupVisible(false);
+  };
+
+  const handleInviteClick = (currentUser) => {
+    const roomsAvailable = usersChatRooms.filter((room) => room.type !== "dm").length > 0;
+
+    setCurrentUser(currentUser);
+    setIsRoomsAvailable(roomsAvailable);
+
+    setPopupVisible(true);
+
+    if (!roomsAvailable) {
+      setTimeout(() => {
+        setPopupVisible(false);
+      }, 5000);
+    }
+    console.log(roomsAvailable);
+  };
+
+  const handleInvite = (selectedUsers) => {
+    console.log("Inviting users:", selectedUsers);
+    // Add your invitation logic here
+  };
 
   useEffect(() => {}, [userInfo]);
 
@@ -171,6 +201,18 @@ export default function ViewFriendsPage() {
                 className="view-profile-button"
                 style={{
                   marginLeft: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                }}
+                onClick={() => handleInviteClick(item)}
+              >
+                Invite
+              </button>
+
+              <button
+                className="view-profile-button"
+                style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "5px",
@@ -325,6 +367,15 @@ export default function ViewFriendsPage() {
           )
         ) : (
           <i> You currently don't have any friends...</i>
+        )}
+        {isPopupVisible && (
+          <InvitePopup
+            currentUser={currentUser}
+            usersChatRooms={usersChatRooms.filter((item) => item.type !== "dm")}
+            onClose={handleClosePopup}
+            onInvite={handleInvite}
+            isRoomsAvailable={isRoomsAvailable}
+          />
         )}
       </div>
       {/* <Link to="/profile" className="exit-profile-select-button">

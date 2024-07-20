@@ -141,6 +141,55 @@ export function ChatRouter(mongoDatabase) {
     }
   });
 
+  router.post("/invite/updateroom", async (req, res) => {
+    try {
+      const userInput = req.body;
+      const { user_id, rooms } = userInput;
+
+      // Find all rooms with the given IDs
+      const chatRooms = await mongoDatabase
+        .collection("chat-rooms")
+        .find({ id: { $in: rooms } })
+        .toArray();
+
+      // Update each room to add the user_id to the users array if it's not already there
+      for (const room of chatRooms) {
+        if (!room.users.includes(user_id)) {
+          await mongoDatabase.collection("chat-rooms").updateOne({ id: room.id }, { $addToSet: { users: user_id } });
+        }
+      }
+
+      res.sendStatus(204);
+    } catch (error) {
+      console.error("Error updating rooms:", error);
+      res.status(500).json({ error: "Failed to update rooms" });
+    }
+  });
+
+  router.delete("/remove/room", async (req, res) => {
+    try {
+      const userInput = req.body;
+      const { room_id } = userInput;
+
+      // Find and delete the room with the given room_id
+      const chatRoom = await mongoDatabase.collection("chat-rooms").findOneAndDelete({ id: parseInt(room_id) });
+
+      // If no room was found, return a 404 error
+      if (chatRoom === null) {
+        return res.status(404).json({ error: "Room not found" });
+      }
+
+      // Delete all messages with chat_room matching the room_id
+      const messages = await mongoDatabase.collection("chat-messages").deleteMany({ chat_room: parseInt(room_id) });
+
+      // Send back the deleted room data
+      res.status(200).json({ deletedRoom: chatRoom });
+    } catch (error) {
+      console.error("Error removing room:", error);
+      res.status(500).json({ error: "Failed to remove room" });
+    }
+  });
+
   router.put("/rooms/newroom", async (req, res) => {
     try {
       const { room_id, created_by_id, new_title, new_description } = req.body;
@@ -310,59 +359,6 @@ export function ChatRouter(mongoDatabase) {
       console.error("Error fetching user:", error);
       res.status(500).json({ error: "Failed to fetch user" });
     }
-  });
-
-  router.post("/send/directmessage", async (req, res) => {
-    try {
-      const userInput = req.body;
-      await mongoDatabase.collection("direct-messages").insertOne(userInput);
-      res.sendStatus(204);
-    } catch (error) {
-      console.error("Error login in:", error);
-      res.status(500).json({ error: "Failed to create goal" });
-    }
-    res.end();
-  });
-
-  router.put("/send/directmessage", async (req, res) => {
-    try {
-      const userInput = req.body;
-      await mongoDatabase.collection("direct-messages").updateOne(
-        {
-          sending_user_id: userInput.sending_user_id,
-          receiving_user_id: userInput.receiving_user_id,
-          message_id: userInput.message_id,
-        },
-        { $set: { message: userInput.message, edited: true } },
-        { returnDocument: true },
-      );
-      res.sendStatus(200);
-    } catch (error) {
-      console.error("Error login in:", error);
-      res.status(500).json({ error: "Failed to create goal" });
-    }
-    res.end();
-  });
-
-  router.delete("/delete/directmessage/:sendinguserid/:receivinguserid/:messageid", async (req, res) => {
-    try {
-      const { sendinguserid, receivignuserid, messageid } = req.params;
-      const chatroom = parseInt(req.params.chatroom);
-      await mongoDatabase.collection("direct-messages").updateOne(
-        {
-          sending_user_id: sendinguserid,
-          receiving_user_id: receivignuserid,
-          message_id: parseInt(messageid),
-        },
-        { $set: { deleted: true } },
-        { returnDocument: true },
-      );
-      res.sendStatus(200);
-    } catch (error) {
-      console.error("Error login in:", error);
-      res.status(500).json({ error: "Failed to create goal" });
-    }
-    res.end();
   });
 
   return router;

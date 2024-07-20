@@ -12,8 +12,6 @@ let interestedSockets;
 export async function handleSendMessage(socket, userInput, sockets) {
   const { roomid, messageElement } = userInput;
 
-  console.log("from sendMessageHandler.js", userInput.user_id);
-
   try {
     const { user_id, roomid } = userInput;
     socket.chatRoomId = roomid;
@@ -69,17 +67,13 @@ export async function handleSendMessage(socket, userInput, sockets) {
     }
 
     if (!messageElement.edited && !messageElement.deleted) {
-      console.log("from sendMessageHandler.js", userInput.user_id);
       await fetch(`${baseUrl}/api/chats/sendmessage`, {
         method: "POST",
         body: JSON.stringify(messageElement),
         headers: { "Content-Type": "application/json" },
       });
-      console.log("from sendMessageHandler.js", userInput.user_id);
       const response = await fetch(`${baseUrl}/api/chats/log/${roomid}`);
-      console.log("from sendMessageHandler.js", userInput.user_id);
       const chatLogs = await response.json();
-      console.log("from sendMessageHandler.js", userInput.user_id);
       currentChat = chatLogs;
 
       const messageArrayWithType = {
@@ -88,15 +82,8 @@ export async function handleSendMessage(socket, userInput, sockets) {
       };
 
       const interestedSockets = sockets.filter((clientSocket) => clientSocket.chatRoomId === roomid);
-      sockets.map((clientSocket) => console.log("unfiltered clientsocket userid", clientSocket.userId));
-      console.log("from sendMessageHandler.js", userInput.user_id);
-
-      for (const socket of sockets) {
-        console.log("socket userid from sendMessageHandler.js", socket.userId);
-      }
 
       for (const recipient of interestedSockets) {
-        console.log("from sendMessageHandler.js", recipient.userId);
         recipient.send(JSON.stringify(messageArrayWithType));
       }
     } else if (messageElement.deleted) {

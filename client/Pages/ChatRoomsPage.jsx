@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { VscAccount, VscSend } from "react-icons/vsc";
 import "./css/chatRoomsPage.css";
 import "./css/loadingAndFiller.css";
+import { useWebSocket } from "../context/WebSocketContext";
 
 export default function ChatRoomsPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } = useAuth();
@@ -33,11 +34,9 @@ export function ChatRooms() {
     setUsername,
     userId,
     userInfo,
-    setWebSocket,
     chatRooms,
     allUsers,
     userFriends,
-    webSocket,
     usersChatRoomsLatestMessages,
     setChatRooms,
     fetchUserInfo,
@@ -51,6 +50,7 @@ export function ChatRooms() {
   const [logsRendered, setLogsRendered] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState();
   const navigate = useNavigate();
+  const [webSocket] = useWebSocket();
 
   React.useEffect(() => {
     fetchAllUsers();
@@ -66,33 +66,21 @@ export function ChatRooms() {
 
   useEffect(() => {}, [chatRooms]);
 
-  async function handleChat(e) {
-    e.preventDefault();
-    try {
-      setLogsRendered(false);
-      await fetch(`api/users/${e.target.addMessage.value.toLowerCase()}`).then((res) => {
-        if (!res.ok) {
-          console.log("error");
-          setErrorMessage("User was not found :/");
-        } else if (res.ok) {
-          setErrorMessage();
-          console.log("success");
-          res.json().then((data) => {
-            setReceivingUser(data);
-          }),
-            setInitiateChat(true);
-        }
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  async function handleDeleteRoom(id) {
+    if (webSocket) {
+      try {
+        const message = {
+          type: "DELETE_ROOM",
+          room_id: id,
+        };
 
-  function handleLeave(e) {
-    e.preventDefault();
-    setReceivingUser([]);
-    setInitiateChat(false);
-    setLogsRendered(false);
+        console.log("data", message);
+
+        webSocket.send(JSON.stringify(message));
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 
   const chatRoomsElement = chatRooms.map((item, index) => {
@@ -150,7 +138,11 @@ export function ChatRooms() {
               <Link to={`/newroom/editroom?roomid=${item.id}`} className="chat-room-card-editlink">
                 Edit
               </Link>
-              <button style={{ width: "50%" }} className="chat-room-card-delete-button">
+              <button
+                style={{ width: "50%" }}
+                className="chat-room-card-delete-button"
+                onClick={() => handleDeleteRoom(item.id)}
+              >
                 Delete
               </button>
             </div>

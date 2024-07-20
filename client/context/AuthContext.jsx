@@ -85,6 +85,7 @@ export function AuthProvider({ children }) {
   async function fetchRooms() {
     fetch(`/api/chats/rooms`).then((response) =>
       response.json().then((data) => {
+        console.log("chat rooms", data);
         setChatRooms(data);
         setUsersChatRooms(data.filter((room) => room.users.includes(localStorage.getItem("userId"))));
       }),

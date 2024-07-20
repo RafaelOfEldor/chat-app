@@ -22,7 +22,8 @@ export async function handleRemoveRequestUpdate(socket, userInput, sockets) {
       type: "REQUEST_UPDATE",
       targetUser: updatedData,
     };
-    sockets.forEach((recipient) => {
+    const interestedSockets = sockets.filter((item) => item.userId === receiving_user_id || item.userId === user_id);
+    interestedSockets.forEach((recipient) => {
       recipient.send(JSON.stringify(messageToSend));
     });
   } catch (error) {

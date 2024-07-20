@@ -49,7 +49,7 @@ export function ChatRooms() {
       id: chatRooms?.length + 1,
       type: "general",
       seenBy: [],
-      isPublic: true,
+      isPublic: isPublic,
       users: [userId],
       created_by: userInfo?.username,
       created_by_id: userId,
