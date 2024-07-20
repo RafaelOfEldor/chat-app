@@ -70,6 +70,9 @@ export function AuthProvider({ children }) {
       return user.sub;
     } else {
       localStorage.clear();
+      if (webSocket) {
+        webSocket.close()
+      }
     }
   }
 
@@ -191,7 +194,7 @@ export function AuthProvider({ children }) {
 
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
-        // console.log(data);
+        console.log(data);
         switch (data.type) {
           case "FRIEND_UPDATE":
             fetchUserInfo();

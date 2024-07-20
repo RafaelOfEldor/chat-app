@@ -122,6 +122,7 @@ export function Chat() {
 
       const handleMessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log(data);
         if (["new-message", "deleted", "edited"].includes(data.type)) {
           handleReceiveMessage(data);
         } else if (data.type === "UPDATE_ROOM") {
