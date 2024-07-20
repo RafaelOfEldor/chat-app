@@ -19,7 +19,7 @@ export function AuthenticationRouter(mongoDatabase) {
           friends: [],
           requests: [],
           active_chats: [],
-          status: "online"
+          status: "online",
         };
         const userExists = await mongoDatabase.collection("users").findOne({ id: req.user.sub });
         if (!userExists) {

@@ -1,13 +1,13 @@
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
 
 const baseUrl = process.env.REACT_APP_ENVIRONMENT_BASE_URL;
 
 let currentChat = [];
-let interestedSockets;;
+let interestedSockets;
 
 export async function handleSendMessage(socket, userInput, sockets) {
   const { roomid, messageElement } = userInput;
@@ -71,9 +71,9 @@ export async function handleSendMessage(socket, userInput, sockets) {
     if (!messageElement.edited && !messageElement.deleted) {
       console.log("from sendMessageHandler.js", userInput.user_id);
       await fetch(`${baseUrl}/api/chats/sendmessage`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(messageElement),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       });
       console.log("from sendMessageHandler.js", userInput.user_id);
       const response = await fetch(`${baseUrl}/api/chats/log/${roomid}`);
@@ -83,7 +83,7 @@ export async function handleSendMessage(socket, userInput, sockets) {
       currentChat = chatLogs;
 
       const messageArrayWithType = {
-        type: 'new-message',
+        type: "new-message",
         messages: currentChat,
       };
 
@@ -92,18 +92,20 @@ export async function handleSendMessage(socket, userInput, sockets) {
       console.log("from sendMessageHandler.js", userInput.user_id);
 
       for (const socket of sockets) {
-
         console.log("socket userid from sendMessageHandler.js", socket.userId);
       }
-      
+
       for (const recipient of interestedSockets) {
         console.log("from sendMessageHandler.js", recipient.userId);
         recipient.send(JSON.stringify(messageArrayWithType));
       }
     } else if (messageElement.deleted) {
-      await fetch(`${baseUrl}/api/chats/deletemessage/${messageElement.sending_user_id}/${roomid}/${messageElement.message_id}`, {
-        method: 'DELETE',
-      });
+      await fetch(
+        `${baseUrl}/api/chats/deletemessage/${messageElement.sending_user_id}/${roomid}/${messageElement.message_id}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       const response = await fetch(`${baseUrl}/api/chats/log/${roomid}`);
       const chatLog = await response.json();
@@ -114,20 +116,20 @@ export async function handleSendMessage(socket, userInput, sockets) {
       };
 
       await fetch(`${baseUrl}/api/chats/updateroom`, {
-        method: 'PUT',
+        method: "PUT",
         body: JSON.stringify(roomElement),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       });
 
       const interestedSockets = sockets.filter((clientSocket) => clientSocket.chatRoomId === roomid);
       for (const recipient of interestedSockets) {
-        recipient.send(JSON.stringify({ type: 'deleted' }));
+        recipient.send(JSON.stringify({ type: "deleted" }));
       }
     } else if (messageElement.edited) {
       await fetch(`${baseUrl}/api/chats/sendmessage`, {
-        method: 'PUT',
+        method: "PUT",
         body: JSON.stringify(messageElement),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       });
 
       const response = await fetch(`${baseUrl}/api/chats/log/${roomid}`);
@@ -139,17 +141,17 @@ export async function handleSendMessage(socket, userInput, sockets) {
       };
 
       await fetch(`${baseUrl}/api/chats/updateroom`, {
-        method: 'PUT',
+        method: "PUT",
         body: JSON.stringify(roomElement),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       });
 
       const interestedSockets = sockets.filter((clientSocket) => clientSocket.chatRoomId === roomid);
       for (const recipient of interestedSockets) {
-        recipient.send(JSON.stringify({ type: 'edited' }));
+        recipient.send(JSON.stringify({ type: "edited" }));
       }
     }
   } catch (error) {
-    console.error('Error handling message:', error);
+    console.error("Error handling message:", error);
   }
 }

@@ -1,11 +1,11 @@
-import { WebSocketServer } from 'ws';
-import { handleUpdateRoom } from './websocketHandlers/updateRoomHandler.js';
-import { handleSendRequestUpdate } from './websocketHandlers/sendRequestUpdateHandler.js';
-import { handleRemoveRequestUpdate } from './websocketHandlers/removeRequestUpdateHandler.js';
-import { handleAcceptFriendUpdate } from './websocketHandlers/acceptFriendUpdateHandler.js';
-import { handleRemoveFriendUpdate } from './websocketHandlers/removeFriendUpdateHandler.js';
-import { handleSendMessage } from './websocketHandlers/sendMessageHandler.js';
-import { handleStatusUpdate } from './websocketHandlers/statusUpdateHandler.js';
+import { WebSocketServer } from "ws";
+import { handleUpdateRoom } from "./websocketHandlers/updateRoomHandler.js";
+import { handleSendRequestUpdate } from "./websocketHandlers/sendRequestUpdateHandler.js";
+import { handleRemoveRequestUpdate } from "./websocketHandlers/removeRequestUpdateHandler.js";
+import { handleAcceptFriendUpdate } from "./websocketHandlers/acceptFriendUpdateHandler.js";
+import { handleRemoveFriendUpdate } from "./websocketHandlers/removeFriendUpdateHandler.js";
+import { handleSendMessage } from "./websocketHandlers/sendMessageHandler.js";
+import { handleStatusUpdate } from "./websocketHandlers/statusUpdateHandler.js";
 
 let currentChat = [];
 const sockets = [];
@@ -13,69 +13,69 @@ const sockets = [];
 export function setupWebSocketServer(server) {
   const webSocketServer = new WebSocketServer({ noServer: true });
 
-  server.on('upgrade', (req, socket, head) => {
+  server.on("upgrade", (req, socket, head) => {
     webSocketServer.handleUpgrade(req, socket, head, (ws) => {
-      webSocketServer.emit('connection', ws, req);
+      webSocketServer.emit("connection", ws, req);
     });
   });
 
-  webSocketServer.on('connection', (socket, req) => {
+  webSocketServer.on("connection", (socket, req) => {
     sockets.push(socket);
 
-    const urlParams = new URLSearchParams(req.url.split('?')[1]);
-    const userId = urlParams.get('userid') || null;
+    const urlParams = new URLSearchParams(req.url.split("?")[1]);
+    const userId = urlParams.get("userid") || null;
     socket.userId = userId;
 
     if (userId != "null") {
       console.log(userId);
       const requestBody = {
         user_id: userId,
-        status: "online"
-      }
+        status: "online",
+      };
       handleStatusUpdate(socket, requestBody, sockets);
     } else {
-      console.log('User connected with no userId');
+      console.log("User connected with no userId");
     }
 
-    socket.on('message', (message) => {
+    socket.on("message", (message) => {
       console.log("from websocketServer.js", socket.userId);
       const userInput = JSON.parse(message.toString());
       switch (userInput.type) {
-        case 'UPDATE_ROOM':
+        case "UPDATE_ROOM":
           console.log("UPDATE_ROOM");
           handleUpdateRoom(socket, userInput, sockets);
           break;
-        case 'SEND_REQUEST_UPDATE':
+        case "SEND_REQUEST_UPDATE":
           console.log("SEND_REQUEST_UPDATE");
           handleSendRequestUpdate(socket, userInput, sockets);
           break;
-        case 'REMOVE_REQUEST_UPDATE':
+        case "REMOVE_REQUEST_UPDATE":
           console.log("REMOVE_REQUEST_UPDATE");
           handleRemoveRequestUpdate(socket, userInput, sockets);
           break;
-        case 'ACCEPT_FRIEND_UPDATE':
+        case "ACCEPT_FRIEND_UPDATE":
           console.log("ACCEPT_FRIEND_UPDATE");
           handleAcceptFriendUpdate(socket, userInput, sockets);
           break;
-        case 'REMOVE_FRIEND_UPDATE':
+        case "REMOVE_FRIEND_UPDATE":
           console.log("REMOVE_FRIEND_UPDATE");
           handleRemoveFriendUpdate(socket, userInput, sockets);
           break;
-        case 'SEND_MESSAGE':
+        case "SEND_MESSAGE":
           console.log("SEND_MESSAGE");
           handleSendMessage(socket, userInput, sockets);
           break;
         default:
-          console.error('Unknown message type:', userInput.type);
+          console.error("Unknown message type:", userInput.type);
       }
     });
 
-    socket.on('close', () => {
-      console.log(`User disconnected: ${socket.userId || 'Unknown userId'}`);
+    socket.on("close", () => {
+      console.log(`User disconnected: ${socket.userId || "Unknown userId"}`);
       const requestBody = {
         user_id: userId,
-        status: "offline"
-      }
+        status: "offline",
+      };
       handleStatusUpdate(socket, requestBody, sockets);
       const index = sockets.indexOf(socket);
       if (index > -1) {

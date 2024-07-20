@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+import fetch from "node-fetch";
+import dotenv from "dotenv";
 
 dotenv.config();
 const baseUrl = process.env.REACT_APP_ENVIRONMENT_BASE_URL;
@@ -13,19 +13,19 @@ export async function handleAcceptFriendUpdate(socket, userInput, sockets) {
 
   try {
     const res = await fetch(`${baseUrl}/api/users/accept/request`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     });
     const updatedData = await res.json();
     const messageToSend = {
-      type: 'FRIEND_UPDATE',
+      type: "FRIEND_UPDATE",
       targetUser: updatedData,
     };
     sockets.forEach((recipient) => {
       recipient.send(JSON.stringify(messageToSend));
     });
   } catch (error) {
-    console.error('Error accepting friend update:', error);
+    console.error("Error accepting friend update:", error);
   }
 }

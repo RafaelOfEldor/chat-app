@@ -254,27 +254,25 @@ export function UsersRouter(mongoDatabase) {
     res.end();
   });
 
-  router.put('/updatestatus', async (req, res) => {
+  router.put("/updatestatus", async (req, res) => {
     try {
       const { user_id, status } = req.body;
-      
+
       if (!user_id || !status) {
-        return res.status(400).json({ error: 'User ID and status are required' });
+        return res.status(400).json({ error: "User ID and status are required" });
       }
-  
-      const result = await mongoDatabase.collection('users').findOneAndUpdate(
-        { id: user_id },
-        { $set: { status: status } },
-        { returnOriginal: false }
-      );
+
+      const result = await mongoDatabase
+        .collection("users")
+        .findOneAndUpdate({ id: user_id }, { $set: { status: status } }, { returnOriginal: false });
       console.log("result", result);
       if (result === null) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
       res.status(200).json(result);
     } catch (error) {
-      console.error('Error updating user status:', error);
-      res.status(500).json({ error: 'Failed to update user status' });
+      console.error("Error updating user status:", error);
+      res.status(500).json({ error: "Failed to update user status" });
     }
   });
 

@@ -1,7 +1,7 @@
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 import express from "express";
 import * as path from "path";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -54,8 +54,8 @@ export async function userMiddleware(req, res, next) {
 }
 
 export function serveClientApp(req, res, next) {
-  if (req.method === 'GET' && !req.path.startsWith('/api')) {
-    res.sendFile(path.resolve('../client/dist/index.html'));
+  if (req.method === "GET" && !req.path.startsWith("/api")) {
+    res.sendFile(path.resolve("../client/dist/index.html"));
   } else {
     next();
   }

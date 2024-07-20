@@ -71,7 +71,7 @@ export function AuthProvider({ children }) {
     } else {
       localStorage.clear();
       if (webSocket) {
-        webSocket.close()
+        webSocket.close();
       }
     }
   }

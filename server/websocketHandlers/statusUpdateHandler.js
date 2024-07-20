@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+import fetch from "node-fetch";
+import dotenv from "dotenv";
 
 dotenv.config();
 const baseUrl = process.env.REACT_APP_ENVIRONMENT_BASE_URL;
@@ -12,10 +12,10 @@ export async function handleStatusUpdate(socket, userInput, sockets) {
       status: status,
     };
     const res = await fetch(`${baseUrl}/api/users/updatestatus`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     if (!res.ok) {
@@ -28,7 +28,7 @@ export async function handleStatusUpdate(socket, userInput, sockets) {
       const returnMessage = {
         type: "FRIEND_UPDATE",
         message: updatedUser,
-      }
+      };
 
       const interestedSockets = sockets.filter((clientSocket) => updatedUser?.friends?.includes(clientSocket.userId));
       for (const recipient of interestedSockets) {
@@ -36,6 +36,6 @@ export async function handleStatusUpdate(socket, userInput, sockets) {
       }
     }
   } catch (error) {
-    console.error('Error removing friend update:', error);
+    console.error("Error removing friend update:", error);
   }
 }

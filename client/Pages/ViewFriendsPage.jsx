@@ -166,7 +166,7 @@ export default function ViewFriendsPage() {
               <VscAccount style={{ scale: "1.5", marginLeft: "10px" }} />
               <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>{item.username}</h4>
               <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>{item.email}</i>
-              {item?.status === "online" && <i style={{color: "cyan"}}>online</i>}
+              {item?.status === "online" && <i style={{ color: "cyan" }}>online</i>}
               <button
                 className="view-profile-button"
                 style={{
@@ -241,7 +241,7 @@ export default function ViewFriendsPage() {
               <VscAccount style={{ scale: "1.5", marginLeft: "10px" }} />
               <h4 style={{ fontSize: "1.2rem", fontWeight: "300" }}>{item.username}</h4>
               <i style={{ fontSize: "0.9rem", fontWeight: "300" }}>{item.email}</i>
-              {item?.status === "online" && <i style={{color: "cyan"}}>online</i>}
+              {item?.status === "online" && <i style={{ color: "cyan" }}>online</i>}
               <button
                 className="view-profile-button"
                 style={{
