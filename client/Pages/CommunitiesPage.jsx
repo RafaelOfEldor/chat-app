@@ -21,7 +21,6 @@ export default function CommunitiesPage() {
 }
 
 export function ChatRooms() {
-  // return username ? <ChatApplication /> : <h1>Please log in</h1>;
   const [chatRooms, setChatRooms] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [newSendMessage, setNewSendMessage] = useState();
@@ -57,11 +56,11 @@ export function ChatRooms() {
       setLogsRendered(false);
       await fetch(`api/users/${e.target.addMessage.value.toLowerCase()}`).then((res) => {
         if (!res.ok) {
-          console.log("error");
+          // console.log("error");
           setErrorMessage("User was not found :/");
         } else if (res.ok) {
           setErrorMessage();
-          console.log("success");
+          // console.log("success");
           res.json().then((data) => {
             setReceivingUser(data);
           }),

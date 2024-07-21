@@ -7,7 +7,6 @@ const baseUrl = process.env.REACT_APP_ENVIRONMENT_BASE_URL;
 export async function handleUpdateRoom(socket, userInput, sockets) {
   const { user_id, roomid } = userInput;
 
-  console.log("user input", userInput);
   const dataElement = {
     joining_user: user_id,
     room_id: roomid,
@@ -28,7 +27,6 @@ export async function handleUpdateRoom(socket, userInput, sockets) {
         message: { id: user_id },
       };
 
-      console.log(room);
       const interestedSockets = sockets.filter((clientSocket) => room[0]?.users?.includes(clientSocket.userId));
       for (const recipient of interestedSockets) {
         recipient.send(JSON.stringify(returnMessage));

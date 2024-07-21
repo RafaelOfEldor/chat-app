@@ -65,8 +65,6 @@ export function ChatRooms() {
   async function fetchThisRoom() {
     const roomRes = await fetch(`/api/chats/room/${roomId}`);
     const room = await roomRes.json();
-    console.log("room", room);
-    console.log("user friends", userFriends);
     setSelectedItems(userFriends.filter((user) => room[0]?.users?.includes(user.id)));
     setIsPublic(room.isPublic);
   }
@@ -106,7 +104,6 @@ export function ChatRooms() {
         setErrorMessage("You are unauthorized to edit this room.");
       }
     } else {
-      console.log(room);
       const webSocketMessage = {
         type: "CHAT_ROOMS_UPDATE",
         user_id: userId,

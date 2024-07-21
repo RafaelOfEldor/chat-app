@@ -6,7 +6,6 @@ import LoginWithActiveDirectoryButton from "../functions/LoginWithActiveDirector
 import "./css/loginPage.css";
 
 export default function LoginPage(props) {
-  // const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const navigate = useNavigate();
 

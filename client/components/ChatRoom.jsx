@@ -84,11 +84,10 @@ export function Chat() {
   }
 
   useEffect(() => {
-    // Scroll to the bottom of the chatroom
     if (chatroomRef.current) {
       chatroomRef.current.scrollTop = chatroomRef.current.scrollHeight;
     }
-  }, [messages]); // Run this effect when messages change
+  }, [messages]);
 
   useEffect(() => {
     fetchRoom();
@@ -105,13 +104,8 @@ export function Chat() {
   }, [showEditMessage]);
 
   useEffect(() => {
-    // const webSocket = new WebSocket(
-    //   window.location.origin.replace(/^http/, "ws") +
-    //     `?roomid=${roomid}&userid=${userId}`
-    // );
     if (webSocket) {
       const handleOpen = () => {
-        console.log("yo");
         const joinEventData = {
           type: "SEND_MESSAGE",
           subtype: "join",
@@ -123,7 +117,6 @@ export function Chat() {
 
       const handleMessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log(data);
         if (["new-message", "deleted", "edited"].includes(data.type)) {
           handleReceiveMessage(data);
         } else if (data.type === "UPDATE_ROOM") {
@@ -138,8 +131,6 @@ export function Chat() {
         webSocket.removeEventListener("open", handleOpen);
         webSocket.removeEventListener("message", handleMessage);
       };
-
-      // setWebSocket(webSocket);
     }
   }, [roomid, userId, webSocket]);
 
@@ -263,30 +254,26 @@ export function Chat() {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       if (e.shiftKey) {
-        return; // Allow newline with Shift + Enter
+        return;
       } else {
-        e.preventDefault(); // Prevent default new line
+        e.preventDefault();
         if (newMessage.trim() !== "") {
           handleSubmit(e);
-          setNewMessage(""); // Reset textarea after submission
+          setNewMessage("");
         } else {
-          setNewMessage(""); // Reset textarea if only whitespace
+          setNewMessage("");
         }
       }
     }
   };
 
   function formatDateString(dateString) {
-    // Trim the input date string to remove any leading or trailing whitespace
     dateString = dateString.trim();
 
-    // Split the input date string into day, month, and year
     const [day, month, year] = dateString.split(".").map(Number);
 
-    // Create a new Date object
-    const date = new Date(year, month - 1, day); // Note: month is zero-based
+    const date = new Date(year, month - 1, day);
 
-    // Array of month names
     const monthNames = [
       "January",
       "February",
@@ -301,8 +288,6 @@ export function Chat() {
       "November",
       "December",
     ];
-
-    // Format the result as "Month Day, Year"
     return `${monthNames[month - 1]} ${day}, ${year}`;
   }
 
@@ -485,7 +470,7 @@ export function Chat() {
                       <button>submit</button>
                     </form>
                   ) : (
-                    <h4 style={{ fontWeight: "100" }}>
+                    <h4 style={{ fontWeight: "100", whiteSpace: "pre-wrap" }}>
                       {!item?.deleted ? item?.message : <i style={{ color: "red" }}>message was deleted by user</i>}
                     </h4>
                   )}

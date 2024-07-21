@@ -80,21 +80,6 @@
 }
 
 .list-element-div > button {
-  /* display: inline-block;
-  outline: 0;
-  cursor: pointer;
-  border: none;
-  padding: 0 56px;
-  height: 45px;
-  line-height: 45px;
-  border-radius: 7px;
-  background-color: #0070f3;
-  color: white;
-  font-weight: 400;
-  font-size: 16px;
-  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
-  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease; */
-
   display: inline-block;
   outline: none;
   cursor: pointer;
@@ -164,21 +149,6 @@
 }
 
 .show-edit-div > button {
-  /* display: inline-block;
-  outline: 0;
-  cursor: pointer;
-  border: none;
-  padding: 0 56px;
-  height: 45px;
-  
-  border-radius: 7px;
-  background-color: #0070f3;
-  color: white;
-  font-weight: 400;
-  font-size: 16px;
-  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
-  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease; */
-
   display: inline-block;
   outline: none;
   cursor: pointer;

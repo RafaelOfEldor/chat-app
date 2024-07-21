@@ -36,42 +36,42 @@ export function setupWebSocketServer(server) {
       };
       handleStatusUpdate(socket, requestBody, sockets);
     } else {
-      console.log("User connected with no userId");
+      // console.log("User connected with no userId");
     }
 
     socket.on("message", (message) => {
       const userInput = JSON.parse(message.toString());
       switch (userInput.type) {
         case "UPDATE_ROOM":
-          console.log("UPDATE_ROOM");
+          // console.log("UPDATE_ROOM");
           handleUpdateRoom(socket, userInput, sockets);
           break;
         case "SEND_REQUEST_UPDATE":
-          console.log("SEND_REQUEST_UPDATE");
+          // console.log("SEND_REQUEST_UPDATE");
           handleSendRequestUpdate(socket, userInput, sockets);
           break;
         case "REMOVE_REQUEST_UPDATE":
-          console.log("REMOVE_REQUEST_UPDATE");
+          // console.log("REMOVE_REQUEST_UPDATE");
           handleRemoveRequestUpdate(socket, userInput, sockets);
           break;
         case "ACCEPT_FRIEND_UPDATE":
-          console.log("ACCEPT_FRIEND_UPDATE");
+          // console.log("ACCEPT_FRIEND_UPDATE");
           handleAcceptFriendUpdate(socket, userInput, sockets);
           break;
         case "REMOVE_FRIEND_UPDATE":
-          console.log("REMOVE_FRIEND_UPDATE");
+          // console.log("REMOVE_FRIEND_UPDATE");
           handleRemoveFriendUpdate(socket, userInput, sockets);
           break;
         case "SEND_MESSAGE":
-          console.log("SEND_MESSAGE");
+          // console.log("SEND_MESSAGE");
           handleSendMessage(socket, userInput, sockets);
           break;
         case "INVITE_USER":
-          console.log("INVITE_USER");
+          // console.log("INVITE_USER");
           handleInviteUser(socket, userInput, sockets);
           break;
         case "DELETE_ROOM":
-          console.log("DELETE_ROOM");
+          // console.log("DELETE_ROOM");
           handleDeleteRoom(socket, userInput, sockets);
           break;
         case "CHAT_ROOMS_UPDATE":
@@ -85,7 +85,7 @@ export function setupWebSocketServer(server) {
     });
 
     socket.on("close", () => {
-      console.log(`User disconnected: ${socket.userId || "Unknown userId"}`);
+      // console.log(`User disconnected: ${socket.userId || "Unknown userId"}`);
       const requestBody = {
         user_id: userId,
         status: "offline",

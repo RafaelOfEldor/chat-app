@@ -27,8 +27,8 @@ const FloatingMessage = () => {
           }}
           style={{
             position: "absolute",
-            left: `${Math.random() * 50}vw`, // Limit to left half
-            top: `${Math.random() * 100}vh`, // Cover full height
+            left: `${Math.random() * 50}vw`,
+            top: `${Math.random() * 100}vh`,
             fontSize: "1.5rem",
             whiteSpace: "nowrap",
             pointerEvents: "none",

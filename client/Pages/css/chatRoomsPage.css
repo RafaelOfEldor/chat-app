@@ -12,35 +12,31 @@
   flex-wrap: wrap;
   gap: 30px 30px;
   margin-left: 30px;
-  min-height: 85%;
-  /* flex-grow: 1; */
-  /* justify-content: center; */
-  /* justify-content: center; */
-  /* padding-bottom: 50px; */
+  min-height: 79.8006%;
+  padding-bottom: 50px;
 }
 
 .chat-rooms-list-container::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
+  width: 12px;
 }
 
 .chat-rooms-list-container::-webkit-scrollbar-track {
-  background: rgb(51, 56, 68); /* Track color */
-  border-radius: 10px; /* Rounded corners */
+  background: rgb(51, 56, 68);
+  border-radius: 10px;
 }
 
 .chat-rooms-list-container::-webkit-scrollbar-thumb {
-  background: rgb(85, 99, 133); /* Thumb color */
-  border-radius: 10px; /* Rounded corners */
+  background: rgb(85, 99, 133);
+  border-radius: 10px;
 }
 
 .chat-rooms-list-container::-webkit-scrollbar-thumb:hover {
-  background: rgb(100, 153, 255); /* Thumb color on hover */
+  background: rgb(100, 153, 255);
 }
 
 .chat-room-card.full-element {
   height: auto;
   max-height: 148px;
-  /* min-width: 200px; */
   width: auto;
   max-width: 200px;
   min-width: 200px;
@@ -50,7 +46,7 @@
   display: flex;
   flex-direction: column;
   border: 2px solid transparent;
-  border-radius: 10px; /* Rounded corners */
+  border-radius: 10px;
   min-width: 100%;
 
   max-height: 100%;
@@ -62,11 +58,11 @@
   align-items: center;
   text-align: center;
   background: #070e13;
-  position: relative; /* For positioning elements */
-  overflow: hidden; /* Prevent overflow from pseudo-element */
+  position: relative;
+  overflow: hidden;
   border-image-slice: 1;
   border-image-width: 3px;
-  animation: rotate-border 20s linear infinite; /* Rotate animation */
+  animation: rotate-border 20s linear infinite;
   cursor: pointer;
 }
 
@@ -110,7 +106,6 @@
   text-decoration: none;
   margin: 0;
   border: none;
-  /* border-radius: 8px; */
   cursor: pointer;
 }
 
@@ -131,7 +126,6 @@
   font-size: 1.2rem;
   text-decoration: none;
   margin: 0;
-  /* border-radius: 8px; */
   padding: 5px;
 }
 
@@ -145,7 +139,7 @@
 }
 
 .chat-room-card h4 {
-  margin: 5px 0; /* Adjust margin */
+  margin: 5px 0;
   color: white;
 }
 
@@ -154,26 +148,20 @@
 }
 
 .chat-room-card p {
-  margin: 0; /* Remove default margin */
+  margin: 0;
 }
 
 .chat-rooms-list-container {
   position: relative;
   text-align: start;
   width: 100%;
-  height: auto; /* Adjust to fit your layout */
-  /* min-height: 90vh; */
+  height: auto;
   overflow: auto;
-  /* margin-left: 20px; */
-  /* padding-left: 20px; */
-  /* margin-top: 10px; */
 }
 
 .new-room-button-div {
   position: sticky;
   bottom: 0;
-  /* top: 100%; */
-  /* margin-top: 100px; */
   min-height: 100px;
   background: linear-gradient(
     90deg,
@@ -183,16 +171,14 @@
     rgba(39, 44, 106, 1) 75%,
     rgba(29, 33, 92, 1) 100%
   );
-  width: 100%; /* Set to full width of parent */
+  width: 100%;
   display: flex;
-  justify-content: center; /* Center the button horizontally */
+  justify-content: center;
   align-items: center;
 }
 
 .new-room-button {
   text-decoration: none;
-  /* top: 90vh; */
-  /* left: 40.5vw; */
   width: 170px;
   height: 50px;
   align-items: center;
@@ -204,7 +190,6 @@
   padding: 0 56px;
   line-height: 45px;
   border-radius: 7px;
-  /* background-color: #0070f3; */
   background: rgba(0, 118, 255, 0.7);
   color: white;
   font-weight: 400;
@@ -521,31 +506,29 @@
   overflow-y: auto;
   text-align: center;
   align-items: center;
-  /* border-left: 2px solid black;  */
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
 
 .direct-messages-sidebar::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
+  width: 12px;
 }
 
 .direct-messages-sidebar::-webkit-scrollbar-track {
-  background: rgb(51, 56, 68); /* Track color */
-  border-radius: 10px; /* Rounded corners */
+  background: rgb(51, 56, 68);
+  border-radius: 10px;
 }
 
 .direct-messages-sidebar::-webkit-scrollbar-thumb {
-  background: rgb(85, 99, 133); /* Thumb color */
-  border-radius: 10px; /* Rounded corners */
+  background: rgb(85, 99, 133);
+  border-radius: 10px;
 }
 
 .direct-messages-sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgb(100, 153, 255); /* Thumb color on hover */
+  background: rgb(100, 153, 255);
 }
 
 .chat-room-dm-link {
-  /* margin-right: auto; */
   display: flex;
   width: 100%;
   flex-direction: column;

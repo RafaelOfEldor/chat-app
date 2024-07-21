@@ -7,7 +7,6 @@ const baseUrl = process.env.REACT_APP_ENVIRONMENT_BASE_URL;
 export async function handleCreateNewRoom(socket, userInput, sockets) {
   const { user_id, roomid, old_users } = userInput;
 
-  console.log("user input", userInput);
   const dataElement = {
     joining_user: user_id,
     room_id: roomid,

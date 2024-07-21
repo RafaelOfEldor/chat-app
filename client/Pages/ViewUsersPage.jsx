@@ -29,7 +29,6 @@ export default function ViewUsersPage() {
   } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
   const [updatedBio, setUpdatedBio] = useState("");
-  // const [allUsers, setAllUsers] = useState([]);
   const [isHovering, setIsHovering] = useState();
   const [searchQuery, setSearchQuery] = useState("");
   const [actionEvent, setActionEvent] = useState(null);

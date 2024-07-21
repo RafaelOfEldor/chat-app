@@ -2,14 +2,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   width: 100vw;
   float: right;
   color: white;
 }
 
 .chatroom-list {
-  flex: 1; /* Take the remaining height after the header and input form */
+  flex: 1;
   display: flex;
   flex-direction: column;
 
@@ -17,23 +17,22 @@
   padding: 10px;
 }
 
-/* WebKit Scrollbar Styles */
 .chatroom-list::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
+  width: 12px;
 }
 
 .chatroom-list::-webkit-scrollbar-track {
-  background: rgb(31, 32, 35); /* Track color */
-  border-radius: 10px; /* Rounded corners */
+  background: rgb(31, 32, 35);
+  border-radius: 10px;
 }
 
 .chatroom-list::-webkit-scrollbar-thumb {
-  background: rgb(60, 63, 68); /* Thumb color */
-  border-radius: 10px; /* Rounded corners */
+  background: rgb(60, 63, 68);
+  border-radius: 10px;
 }
 
 .chatroom-list::-webkit-scrollbar-thumb:hover {
-  background: rgb(100, 153, 255); /* Thumb color on hover */
+  background: rgb(100, 153, 255);
 }
 
 .chat-message {
@@ -61,7 +60,7 @@
 .send-message-input {
   width: 90%;
   height: auto;
-  min-height: 50px; /* Adjust this value as needed */
+  min-height: 50px;
   padding: 6px 12px;
   background: rgb(31, 32, 35);
   border: 1px solid rgb(60, 63, 68);

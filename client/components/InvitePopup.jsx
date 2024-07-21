@@ -19,7 +19,6 @@ const InvitePopup = ({ usersChatRooms, onClose, onInvite, currentUser, isRoomsAv
   }, [isRoomsAvailable]);
 
   const handleCheckboxChange = (userId) => {
-    console.log("selected rooms", selectedRooms);
     setselectedRooms((prevSelected) =>
       prevSelected.includes(userId) ? prevSelected.filter((id) => id !== userId) : [...prevSelected, userId],
     );

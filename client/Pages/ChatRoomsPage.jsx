@@ -6,7 +6,7 @@ import { VscAccount, VscSend } from "react-icons/vsc";
 import "./css/chatRoomsPage.css";
 import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext";
-import ChatRoomInfoPopup from "../components/ChatRoomInfoPopup"; // Import the ChatRoomInfoPopup component
+import ChatRoomInfoPopup from "../components/ChatRoomInfoPopup";
 
 export default function ChatRoomsPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } = useAuth();
@@ -51,7 +51,6 @@ export function ChatRooms() {
   const navigate = useNavigate();
   const [webSocket] = useWebSocket();
 
-  // State for managing the ChatRoomInfoPopup visibility and content
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [popupInfo, setPopupInfo] = useState("");
 
@@ -76,8 +75,6 @@ export function ChatRooms() {
           type: "DELETE_ROOM",
           room_id: id,
         };
-
-        console.log("data", message);
 
         webSocket.send(JSON.stringify(message));
       } catch (error) {
@@ -111,7 +108,7 @@ export function ChatRooms() {
               <h3>{amountOfMessages > 9 ? "9+" : amountOfMessages}</h3>
             </div>
           )}
-          <div className="chatroom-info-circle" onClick={() => handleInfoClick(item.description)}>
+          <div className="chatroom-info-circle" onClick={() => handleInfoClick(item)}>
             <h3>i</h3>
           </div>
           <div className="chat-room-card div">
@@ -266,7 +263,7 @@ export function ChatRooms() {
           )}
         </div>
       </div>
-      {isPopupVisible && <ChatRoomInfoPopup info={popupInfo} onClose={handleClosePopup} />}
+      {isPopupVisible && <ChatRoomInfoPopup info={popupInfo} allUsers={allUsers} onClose={handleClosePopup} />}
     </div>
   ) : chatRooms ? (
     <div className="loading-results-layout-div">

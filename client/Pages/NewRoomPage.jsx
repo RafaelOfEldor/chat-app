@@ -69,7 +69,6 @@ export function ChatRooms() {
       usersToInvite.push(user.id);
     }
     usersToInvite.push(userId);
-    console.log(usersToInvite);
     const data = {
       title: e.target.title.value,
       description: e.target.description.value,
@@ -138,7 +137,6 @@ export function ChatRooms() {
   };
 
   const handleBlur = (e) => {
-    // Add a delay to allow item click before hiding the results
     setTimeout(() => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(document.activeElement)) {
         setShowResults(false);

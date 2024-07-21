@@ -86,7 +86,6 @@ export function AuthProvider({ children }) {
   async function fetchRooms() {
     fetch(`/api/chats/rooms`).then((response) =>
       response.json().then((data) => {
-        console.log("chat rooms", data);
         setChatRooms(data);
         setUsersChatRooms(data.filter((room) => room.users.includes(localStorage.getItem("userId"))));
       }),
@@ -134,7 +133,6 @@ export function AuthProvider({ children }) {
         type: "UPDATE_USERID",
         user_id: localStorage.getItem("userID"),
       };
-      console.log(message);
       webSocket.send(JSON.stringify(message));
     }
   }
@@ -190,13 +188,13 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (webSocket) {
       webSocket.onopen = () => {
-        console.log("WebSocket connection established");
-        console.log(webSocket);
+        // console.log("WebSocket connection established");
+        // console.log(webSocket);
       };
 
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
-        console.log(data);
+        // console.log(data);
         switch (data.type) {
           case "FRIEND_UPDATE":
             fetchUserInfo();
@@ -232,16 +230,16 @@ export function AuthProvider({ children }) {
             fetchRooms();
             break;
           default:
-            console.log("Unknown message type:", data.type);
+          // console.log("Unknown message type:", data.type);
         }
       };
 
       webSocket.onclose = () => {
-        console.log("WebSocket connection closed");
+        // console.log("WebSocket connection closed");
       };
 
       webSocket.onerror = (error) => {
-        console.error("WebSocket error:", error);
+        // console.error("WebSocket error:", error);
       };
     }
   }, [webSocket]);

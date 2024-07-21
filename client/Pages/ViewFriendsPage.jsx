@@ -43,7 +43,6 @@ export default function ViewFriendsPage() {
   useEffect(() => {
     fetchUserInfo();
     loadUser();
-    console.log(userFriends);
   }, []);
 
   const handleClosePopup = () => {
@@ -63,13 +62,9 @@ export default function ViewFriendsPage() {
         setPopupVisible(false);
       }, 5000);
     }
-    console.log(roomsAvailable);
   };
 
-  const handleInvite = (selectedUsers) => {
-    console.log("Inviting users:", selectedUsers);
-    // Add your invitation logic here
-  };
+  const handleInvite = (selectedUsers) => {};
 
   useEffect(() => {}, [userInfo]);
 
@@ -378,9 +373,6 @@ export default function ViewFriendsPage() {
           />
         )}
       </div>
-      {/* <Link to="/profile" className="exit-profile-select-button">
-          <h2>Back to my profile</h2>
-        </Link> */}
     </div>
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>

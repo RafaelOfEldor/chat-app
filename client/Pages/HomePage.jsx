@@ -31,24 +31,7 @@ export default function HomePage(props) {
     <div>
       <main>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          {username ? (
-            window.location.pathname !== "/" ? (
-              <Sidebar />
-            ) : (
-              <div></div>
-            )
-          ) : (
-            <div>
-              {/* <Link to="login" className="navbar-link">
-                    <button>Login</button>
-                  </Link>
-                  {username && (
-                  <form onSubmit={handleLogout}>
-                    <button className="logout-button">Logout</button>
-                  </form>
-                  )} */}
-            </div>
-          )}
+          {username ? window.location.pathname !== "/" ? <Sidebar /> : <div></div> : <div></div>}
           <Outlet />
         </div>
       </main>

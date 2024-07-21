@@ -7,23 +7,22 @@
   overflow-y: auto;
 }
 
-/* WebKit Scrollbar Styles */
 .view-users-page::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
+  width: 12px;
 }
 
 .view-users-page::-webkit-scrollbar-track {
-  background: rgb(31, 32, 35); /* Track color */
-  border-radius: 10px; /* Rounded corners */
+  background: rgb(31, 32, 35);
+  border-radius: 10px;
 }
 
 .view-users-page::-webkit-scrollbar-thumb {
-  background: rgb(60, 63, 68); /* Thumb color */
-  border-radius: 10px; /* Rounded corners */
+  background: rgb(60, 63, 68);
+  border-radius: 10px;
 }
 
 .view-users-page::-webkit-scrollbar-thumb:hover {
-  background: rgb(100, 153, 255); /* Thumb color on hover */
+  background: rgb(100, 153, 255);
 }
 
 .select-user-profile-card.nohover {
@@ -197,10 +196,8 @@
   text-decoration: none;
   margin-top: 30vh;
   margin-left: 35vw;
-
   border-style: solid;
   border-width: 0.15rem;
-  /* background-color:rgba(207, 135, 107, 0.3); */
   color: red;
 }
 
@@ -220,7 +217,6 @@
   margin-left: 45vw;
   border-style: solid;
   border-width: 0.15rem;
-  /* background-color:rgba(207, 135, 107, 0.3); */
   color: red;
 }
 

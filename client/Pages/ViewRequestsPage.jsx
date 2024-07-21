@@ -350,9 +350,6 @@ export default function ViewRequestsPage() {
           <i>You currently don't have any incoming friend requests...</i>
         )}
       </div>
-      {/* <Link to="/profile" className="exit-profile-select-button">
-          <h2>Back to my profile</h2>
-        </Link> */}
     </div>
   ) : (
     <div style={{ display: "flex", gap: "40px", color: "white" }}>

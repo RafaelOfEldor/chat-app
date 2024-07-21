@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   border: 2px solid transparent;
-  border-radius: 10px; /* Rounded corners */
+  border-radius: 10px;
   min-width: 260px;
   min-height: 248px;
   max-height: 100%;
@@ -39,11 +39,11 @@
   align-items: center;
   text-align: center;
   background: #070e13;
-  position: relative; /* For positioning elements */
-  overflow: hidden; /* Prevent overflow from pseudo-element */
+  position: relative;
+  overflow: hidden;
   border-image-slice: 1;
   border-image-width: 3px;
-  animation: rotate-border 20s linear infinite; /* Rotate animation */
+  animation: rotate-border 20s linear infinite;
   cursor: pointer;
 }
 
@@ -87,7 +87,6 @@
   text-decoration: none;
   margin: 0;
   border: none;
-  /* border-radius: 8px; */
   cursor: pointer;
 }
 
@@ -108,7 +107,6 @@
   font-size: 1.2rem;
   text-decoration: none;
   margin: 0;
-  /* border-radius: 8px; */
   padding: 5px;
 }
 
@@ -122,7 +120,7 @@
 }
 
 .community-room-card h4 {
-  margin: 5px 0; /* Adjust margin */
+  margin: 5px 0;
   color: white;
 }
 
@@ -131,7 +129,7 @@
 }
 
 .community-room-card p {
-  margin: 0; /* Remove default margin */
+  margin: 0;
 }
 
 @keyframes rotate-border {
@@ -415,7 +413,6 @@
 }
 
 .community-room-dm-link {
-  /* margin-right: auto; */
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -460,7 +457,6 @@
   padding: 0 56px;
   line-height: 45px;
   border-radius: 7px;
-  /* background-color: #0070f3; */
   background: rgba(0, 118, 255, 0.7);
   color: white;
   font-weight: 400;
