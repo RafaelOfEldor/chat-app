@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
-import "./css/HomePage.css";
+import "./css/homePage.css";
 
 export default function HomePage(props) {
   const { username, fetchUserInfo, loadUser } = useAuth();
