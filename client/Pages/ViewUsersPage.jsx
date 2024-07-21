@@ -1,39 +1,17 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
-import { ExpressUsersPut } from "../functions/ExpressFunctions.jsx";
-import { FiUser, FiUserPlus, FiCheck, FiUserMinus, FiUserX, FiUserCheck, FiSearch, FiSend } from "react-icons/fi";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FiUserPlus, FiUserMinus, FiUserX, FiUserCheck, FiSearch } from "react-icons/fi";
 import { VscAccount, VscSend } from "react-icons/vsc";
 import "./css/viewUsersPage.css";
 import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext.jsx";
 
 export default function ViewUsersPage() {
-  const {
-    username,
-    fullName,
-    userInfo,
-    userFriends,
-    allUsers,
-    userRequests,
-    userBio,
-    userId,
-    mail,
-    loadUser,
-    fetchUserInfo,
-    fetchAllUsers,
-    setUserFriends,
-    setAllUsers,
-    setUserRequests,
-    setUsername,
-  } = useAuth();
-  const [showEdit, setShowEdit] = useState(false);
-  const [updatedBio, setUpdatedBio] = useState("");
-  const [isHovering, setIsHovering] = useState();
+  const { username, userInfo, allUsers, userId, loadUser, fetchUserInfo, fetchAllUsers } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [actionEvent, setActionEvent] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const inputRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();

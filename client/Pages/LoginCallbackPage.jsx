@@ -1,12 +1,12 @@
-import React, { useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext";
 
 export default function LoginCallbackPage(props) {
-  const [debug, setDebug] = React.useState();
-  const [error, setError] = React.useState();
+  const [debug, setDebug] = useState();
+  const [error, setError] = useState();
   const navigate = useNavigate();
   const [webSocket, setWebSocket] = useWebSocket();
   const { loadUser } = useAuth();
@@ -62,7 +62,7 @@ export default function LoginCallbackPage(props) {
     return await res.json();
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleCallback();
   }, [window.location.hash]);
   return (

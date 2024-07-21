@@ -1,5 +1,4 @@
 import fetch from "node-fetch";
-import express from "express";
 import * as path from "path";
 import dotenv from "dotenv";
 

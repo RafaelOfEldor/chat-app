@@ -31,7 +31,7 @@ export default function ChatRoomsPage() {
 
 export function ChatRooms() {
   const [isPublic, setIsPublic] = useState(true);
-  const { userId, userInfo, userFriends, chatRooms, fetchUserInfo, fetchRooms } = useAuth();
+  const { userId, userInfo, userFriends, fetchUserInfo, fetchRooms } = useAuth();
   const [errorMessage, setErrorMessage] = useState();
   const [searchResults, setSearchResults] = useState([
     "Item 1",

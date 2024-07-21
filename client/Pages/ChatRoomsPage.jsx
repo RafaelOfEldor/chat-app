@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import ReactDOM from "react-dom/client";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { VscAccount, VscSend } from "react-icons/vsc";
+import { VscAccount } from "react-icons/vsc";
 import "./css/chatRoomsPage.css";
 import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext";

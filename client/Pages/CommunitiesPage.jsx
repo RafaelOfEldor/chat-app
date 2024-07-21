@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import ReactDOM from "react-dom/client";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import "./css/communitiesPage.css";
 import "./css/loadingAndFiller.css";
 
 export default function CommunitiesPage() {
-  const { username, userId, setUsername, setWebSocket, webSocket, loadUser } = useAuth();
+  const { username, userId } = useAuth();
 
   return username ? (
     <ChatRooms />
@@ -22,14 +21,8 @@ export default function CommunitiesPage() {
 
 export function ChatRooms() {
   const [chatRooms, setChatRooms] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
   const [newSendMessage, setNewSendMessage] = useState();
-  const { username, setUsername, userId, userInfo, setWebSocket, webSocket, fetchUserInfo, loadUser } = useAuth();
-  const [receivingUser, setReceivingUser] = React.useState([]);
-  const [initiateChat, setInitiateChat] = React.useState(false);
-  const [logsRendered, setLogsRendered] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState();
-  const navigate = useNavigate();
+  const { userId, userInfo, webSocket, fetchUserInfo } = useAuth();
 
   async function fetchRooms() {
     fetch(`/api/chats/rooms`).then((response) =>
@@ -39,13 +32,13 @@ export function ChatRooms() {
     );
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (newSendMessage?.receiving_user) {
       webSocket.send(JSON.stringify(newSendMessage));
     }
   }, [newSendMessage]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchRooms();
     fetchUserInfo();
   }, []);

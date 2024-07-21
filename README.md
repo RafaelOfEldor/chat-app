@@ -24,7 +24,8 @@ Clone the repo or download it.
 
 in the server folder add a .env file and fill in these with your own:
 
-file:  "chat-app/server/.env"
+file: "chat-app/server/.env"
+
 ```
 MONGODB_URL=[your_mongodb_uri]
 SECRET_COOKIE=[your_secret_cookie]
@@ -34,7 +35,6 @@ MICROSOFT_DISCOVERY_URL=[your_microsoft_discovery_url]
 GOOGLE_CLIENT_ID=[your_google_client_id]
 MICROSOFT_CLIENT_ID=[your_microsoft_client_id]
 ```
-
 
 In the root directory, download dependencies with:
 

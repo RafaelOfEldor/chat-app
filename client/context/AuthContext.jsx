@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useWebSocket } from "./WebSocketContext";
-import dotenv from "dotenv";
-dotenv.config({ path: `${__dirname}/../.env` });
 
 const AuthContext = React.createContext({
   username: undefined,

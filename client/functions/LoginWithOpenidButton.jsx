@@ -1,7 +1,4 @@
 import React from "react";
-import dotenv from "dotenv";
-import { useAuth } from "../context/AuthContext";
-dotenv.config({ path: `${__dirname}/../.env` });
 
 export default function LoginWithOpenidButton() {
   const [authorizationUrl, setAuthorizationUrl] = React.useState();

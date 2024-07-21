@@ -1,32 +1,14 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
-import { ExpressUsersPut } from "../functions/ExpressFunctions.jsx";
-import { FiUser, FiUserPlus, FiSearch, FiUserCheck, FiUserX, FiSend } from "react-icons/fi";
+import { FiSearch, FiUserCheck, FiUserX, FiSend } from "react-icons/fi";
 import { VscAccount, VscSend } from "react-icons/vsc";
 import "./css/viewUsersPage.css";
 import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext.jsx";
 
 export default function ViewRequestsPage() {
-  const {
-    username,
-    fullName,
-    userBio,
-    userId,
-    userRequests,
-    userInfo,
-    mail,
-    loadUser,
-    fetchUserInfo,
-    setUserRequests,
-    fetchAllRequests,
-    setUsername,
-  } = useAuth();
-  const [showEdit, setShowEdit] = useState(false);
-  const [updatedBio, setUpdatedBio] = useState("");
-  const [allUsers, setAllUsers] = useState([]);
-  const [isHovering, setIsHovering] = useState();
+  const { username, userId, userRequests, userInfo, loadUser, fetchUserInfo } = useAuth();
   const [actionEvent, setActionEvent] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef(null);

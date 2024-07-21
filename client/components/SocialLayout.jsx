@@ -1,21 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { Link, Routes, Route, Outlet, useNavigate, NavLink } from "react-router-dom";
+import { Outlet, useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./css/socialLayout.css";
 
 export default function SocialLayout(props) {
-  const {
-    username,
-    userInfo,
-    setUsername,
-    setUserId,
-    setWebSocket,
-    userFriends,
-    userRequests,
-    fetchUserInfo,
-    fetchRooms,
-    loadUser,
-  } = useAuth();
+  const { username, setUsername, setUserId, userRequests, fetchUserInfo, loadUser } = useAuth();
   const navigate = useNavigate();
 
   React.useEffect(() => {

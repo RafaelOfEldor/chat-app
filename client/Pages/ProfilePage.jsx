@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ExpressUsersPutBio, ExpressUsersPutUsername } from "../functions/ExpressFunctions.jsx";
@@ -7,13 +7,13 @@ import "./css/profilePage.css";
 
 export default function ProfilePage() {
   const { username, fullName, userBio, userId, mail, userInfo, fetchUserInfo, loadUser, setUsername } = useAuth();
-  const [showEditBio, setShowEditBio] = React.useState(false);
-  const [showEditUsername, setShowEditUsername] = React.useState(false);
-  const [updatedBio, setUpdatedBio] = React.useState("");
-  const [updatedUsername, setUpdatedUsername] = React.useState("");
-  const [editedCounter, setEditedCounter] = React.useState(1);
-  const [loadingUsername, setLoadingUsername] = React.useState(false);
-  const [loadingBio, setLoadingBio] = React.useState(false);
+  const [showEditBio, setShowEditBio] = useState(false);
+  const [showEditUsername, setShowEditUsername] = useState(false);
+  const [updatedBio, setUpdatedBio] = useState("");
+  const [updatedUsername, setUpdatedUsername] = useState("");
+  const [editedCounter, setEditedCounter] = useState(1);
+  const [loadingUsername, setLoadingUsername] = useState(false);
+  const [loadingBio, setLoadingBio] = useState(false);
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ export default function ProfilePage() {
     setUpdatedUsername(e.target.value);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchUserInfo();
   }, [userId, editedCounter]);
 

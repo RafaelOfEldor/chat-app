@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoginWithOpenidButton from "../functions/LoginWithOpenidButton";
 import LoginWithActiveDirectoryButton from "../functions/LoginWithActiveDirectoryButton";
 import "./css/loginPage.css";
 
 export default function LoginPage(props) {
-  const [password, setPassword] = React.useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const { loadUser, username } = useAuth();

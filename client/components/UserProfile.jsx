@@ -1,13 +1,11 @@
-import React, { useContext, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "../Pages/css/loadingAndFiller.css";
 
 export default function UserProfile() {
-  const { username, fullName, userBio, userId, mail, loadUser, setUsername } = useAuth();
-  const [showEdit, setShowEdit] = React.useState(false);
-  const [userProfileInfo, setUserProfileInfo] = React.useState([]);
-  const inputRef = useRef(null);
+  const { username } = useAuth();
+  const [userProfileInfo, setUserProfileInfo] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const userParamId = searchParams.get("userid");
   const navigate = useNavigate();
@@ -21,7 +19,7 @@ export default function UserProfile() {
     );
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchUserInfo();
   }, []);
 

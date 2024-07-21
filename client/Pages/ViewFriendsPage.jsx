@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
-import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
-import { ExpressUsersPut } from "../functions/ExpressFunctions.jsx";
-import { FiUser, FiUserPlus, FiUserMinus, FiSearch, FiSend } from "react-icons/fi";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FiUserMinus, FiSearch } from "react-icons/fi";
 import { VscAccount, VscSend } from "react-icons/vsc";
 import InvitePopup from "../components/InvitePopup";
 import "./css/viewUsersPage.css";
@@ -10,31 +9,13 @@ import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext.jsx";
 
 export default function ViewFriendsPage() {
-  const {
-    username,
-    fullName,
-    userBio,
-    userFriends,
-    usersChatRooms,
-    userId,
-    userInfo,
-    mail,
-    loadUser,
-    fetchAllFriends,
-    fetchUserInfo,
-    setUserFriends,
-    setUsername,
-  } = useAuth();
+  const { username, userFriends, usersChatRooms, userId, userInfo, loadUser, fetchUserInfo } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [updatedBio, setUpdatedBio] = useState("");
-  const [allUsers, setAllUsers] = useState([]);
-  const [isHovering, setIsHovering] = useState();
   const [actionEvent, setActionEvent] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isRoomsAvailable, setIsRoomsAvailable] = useState(false);
-  const inputRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();

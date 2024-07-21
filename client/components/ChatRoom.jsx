@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useSearchParams, useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FiEdit3, FiTrash2, FiXCircle } from "react-icons/fi";
 import "./css/chatpage.css";
 import { useWebSocket } from "../context/WebSocketContext";
@@ -28,7 +28,7 @@ export function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const [chatLoaded, setChatLoaded] = useState(false);
   const [newSendMessage, setNewSendMessage] = useState();
-  const { userInfo, userId, allUsers, fetchAllUsers, updateChatRooms, fetchUserInfo } = useAuth();
+  const { userInfo, userId, fetchAllUsers, updateChatRooms, fetchUserInfo } = useAuth();
   const [chatRoom, setChatRoom] = useState(null);
   const [dmTitle, setDmTitle] = useState("");
   const [logsRendered, setLogsRendered] = useState(false);

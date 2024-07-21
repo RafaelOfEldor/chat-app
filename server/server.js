@@ -3,11 +3,9 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
-import path from "path";
 import { setupWebSocketServer } from "./websocketServer.js";
 import { serveClientApp, userMiddleware } from "./middleware.js";
 import { setupRoutes } from "./apiController/routes.js";
-
 dotenv.config();
 
 const app = express();
