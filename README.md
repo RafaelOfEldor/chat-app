@@ -26,10 +26,10 @@ in the server folder add a .env file and fill in these with your own:
 
 file:  "chat-app/server/.env"
 ```
-MONGODB_URL=[your_database_uri]
+MONGODB_URL=[your_mongodb_uri]
 SECRET_COOKIE=[your_secret_cookie]
 REACT_APP_ENVIRONMENT_BASE_URL=http://localhost:3000/
-GOOGLE_DISCOVERY_URL=[your_google_discovery_url]<br>
+GOOGLE_DISCOVERY_URL=[your_google_discovery_url]
 MICROSOFT_DISCOVERY_URL=[your_microsoft_discovery_url]
 GOOGLE_CLIENT_ID=[your_google_client_id]<br>
 MICROSOFT_CLIENT_ID=[your_microsoft_client_id]
