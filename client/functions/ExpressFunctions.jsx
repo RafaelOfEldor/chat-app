@@ -38,8 +38,6 @@ export async function ExpressUsersDelete(elementId, elementUserId) {
   });
 }
 
-//
-
 export async function ExpressChatroomPost(elementData) {
   await fetch("/api/chats/rooms/newroom", {
     method: "POST",
