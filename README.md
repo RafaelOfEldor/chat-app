@@ -26,7 +26,6 @@ in the server folder add a .env file and fill in these with your own:
 
 file:  "chat-app/server/.env"
 
-<div style="background-color:rgba(23, 51, 95, 0.8); padding:10px; border:1px solid #ddd; border-radius:4px;">
 MONGODB_URL=[your_database_uri]<br>
 SECRET_COOKIE=[your_secret_cookie]<br>
 REACT_APP_ENVIRONMENT_BASE_URL=http://localhost:3000/<br>
@@ -35,7 +34,6 @@ MICROSOFT_DISCOVERY_URL=[your_microsoft_discovery_url]<br>
 GOOGLE_CLIENT_ID=[your_google_client_id]<br>
 MICROSOFT_CLIENT_ID=[your_microsoft_client_id]<br>
 In the root directory, download dependencies with:<br>
-</div>
 
 ```bash
 npm install
