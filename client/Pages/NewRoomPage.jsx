@@ -76,7 +76,7 @@ export function ChatRooms() {
     } else {
 
       const webSocketMessage = {
-        type = "UPDATE_ROOM",
+        type: "UPDATE_ROOM",
         user_id: userId,
         room_id: roomId
       }
