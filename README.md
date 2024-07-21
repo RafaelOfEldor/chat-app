@@ -4,8 +4,8 @@ Link to website:
 
 A MERN-stack chat application utilizing websockets for live updates. Deployed on heroku.
 
-Any action a user can make that would affect what another user can see, happens live through the websocket.
-This includes but is not limited to things such as adding/removing friends, inviting/removing users
+Any action a user can make that would affect what another user can see or do, happens live through the websocket.
+This includes things such as adding/removing friends, inviting/removing users
 from chat rooms, changing bio/username, sending messages etc.
 
 Made to improve and display my MERN-stack skills.
@@ -31,7 +31,7 @@ SECRET_COOKIE=[your_secret_cookie]
 REACT_APP_ENVIRONMENT_BASE_URL=http://localhost:3000/
 GOOGLE_DISCOVERY_URL=[your_google_discovery_url]
 MICROSOFT_DISCOVERY_URL=[your_microsoft_discovery_url]
-GOOGLE_CLIENT_ID=[your_google_client_id]<br>
+GOOGLE_CLIENT_ID=[your_google_client_id]
 MICROSOFT_CLIENT_ID=[your_microsoft_client_id]
 ```
 
