@@ -1,6 +1,6 @@
 ## chat-app
 
-Link to website:
+Link to website: (Coming soon lol)
 
 A MERN-stack chat application utilizing websockets for live updates. Deployed on heroku.
 
