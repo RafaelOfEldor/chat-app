@@ -84,15 +84,11 @@ export function ChatRooms() {
   }
 
   const chatRoomsElement = chatRooms.map((item, index) => {
-    console.log("usersChatRoomsLatestMessages", usersChatRoomsLatestMessages);
     const roomMessages = usersChatRoomsLatestMessages.find((chat) => chat.id === item?.id);
     let amountOfMessages = null;
     if (roomMessages) {
       amountOfMessages = roomMessages?.messages?.filter((message) => !message?.seenByUser).length;
-      console.log("yurr");
-      console.log("amount", amountOfMessages);
     }
-    console.log("room messages", roomMessages);
     if (item?.type === "dm") return;
     if (item?.isPublic || item?.users.find((a) => a === userId)) {
       return (
@@ -184,8 +180,6 @@ export function ChatRooms() {
       let amountOfMessages = null;
       if (roomMessages) {
         amountOfMessages = roomMessages?.messages?.filter((message) => !message?.seenByUser).length;
-        console.log("yurr");
-        console.log("amount", amountOfMessages);
       }
 
       if (user) {

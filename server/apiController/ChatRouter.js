@@ -130,6 +130,7 @@ export function ChatRouter(mongoDatabase) {
         title: userInput.title,
         description: userInput.description,
         id: userInput.id,
+        users: userInput.users,
         created_by: userInput.created_by,
       };
       const roomExist = await mongoDatabase.collection("chat-rooms").findOne({ title: data.title });
@@ -201,7 +202,7 @@ export function ChatRouter(mongoDatabase) {
 
   router.put("/rooms/newroom", async (req, res) => {
     try {
-      const { room_id, created_by_id, new_title, new_description } = req.body;
+      const { room_id, created_by_id, users, new_title, new_description } = req.body;
       const roomId = parseInt(room_id);
       const roomExist = await mongoDatabase.collection("chat-rooms").findOne({ title: new_title });
 
@@ -214,7 +215,7 @@ export function ChatRouter(mongoDatabase) {
             {
               id: roomId,
             },
-            { $set: { title: new_title, description: new_description } },
+            { $set: { title: new_title, description: new_description, users: users } },
             { returnDocument: true },
           );
           res.sendStatus(204);
