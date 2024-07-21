@@ -8,6 +8,7 @@ import { handleSendMessage } from "./websocketHandlers/sendMessageHandler.js";
 import { handleStatusUpdate } from "./websocketHandlers/statusUpdateHandler.js";
 import { handleInviteUser } from "./websocketHandlers/inviteUserHandler.js";
 import { handleDeleteRoom } from "./websocketHandlers/deleteRoomHandler.js";
+import { handleCreateNewRoom } from "./websocketHandlers/handleCreateNewRoom.js";
 
 let currentChat = [];
 const sockets = [];
@@ -72,6 +73,10 @@ export function setupWebSocketServer(server) {
         case "DELETE_ROOM":
           console.log("DELETE_ROOM");
           handleDeleteRoom(socket, userInput, sockets);
+          break;
+        case "CHAT_ROOMS_UPDATE":
+          console.log("DELETE_ROOM");
+          handleCreateNewRoom(socket, userInput, sockets);
           break;
 
         default:

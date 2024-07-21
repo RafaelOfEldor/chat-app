@@ -6,6 +6,7 @@ import { VscAccount, VscSend } from "react-icons/vsc";
 import "./css/chatRoomsPage.css";
 import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext";
+import ChatRoomInfoPopup from "../components/ChatRoomInfoPopup"; // Import the ChatRoomInfoPopup component
 
 export default function ChatRoomsPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } = useAuth();
@@ -25,8 +26,6 @@ export default function ChatRoomsPage() {
 }
 
 export function ChatRooms() {
-  // return username ? <ChatApplication /> : <h1>Please log in</h1>;
-  // const [chatRooms, setChatRooms] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [newSendMessage, setNewSendMessage] = useState();
   const {
@@ -45,20 +44,24 @@ export function ChatRooms() {
     setUsersChatrooms,
     loadUser,
   } = useAuth();
-  const [receivingUser, setReceivingUser] = React.useState([]);
-  const [initiateChat, setInitiateChat] = React.useState(false);
-  const [logsRendered, setLogsRendered] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState();
+  const [receivingUser, setReceivingUser] = useState([]);
+  const [initiateChat, setInitiateChat] = useState(false);
+  const [logsRendered, setLogsRendered] = useState(false);
+  const [errorMessage, setErrorMessage] = useState();
   const navigate = useNavigate();
   const [webSocket] = useWebSocket();
 
-  React.useEffect(() => {
+  // State for managing the ChatRoomInfoPopup visibility and content
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupInfo, setPopupInfo] = useState("");
+
+  useEffect(() => {
     fetchAllUsers();
     fetchUserInfo();
     fetchRooms();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (newSendMessage?.receiving_user) {
       webSocket.send(JSON.stringify(newSendMessage));
     }
@@ -83,6 +86,16 @@ export function ChatRooms() {
     }
   }
 
+  const handleInfoClick = (info) => {
+    setPopupInfo(info);
+    setIsPopupVisible(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupVisible(false);
+    setPopupInfo("");
+  };
+
   const chatRoomsElement = chatRooms.map((item, index) => {
     const roomMessages = usersChatRoomsLatestMessages.find((chat) => chat.id === item?.id);
     let amountOfMessages = null;
@@ -98,6 +111,9 @@ export function ChatRooms() {
               <h3>{amountOfMessages > 9 ? "9+" : amountOfMessages}</h3>
             </div>
           )}
+          <div className="chatroom-info-circle" onClick={() => handleInfoClick(item.description)}>
+            <h3>i</h3>
+          </div>
           <div className="chat-room-card div">
             <Link
               to={`/chatrooms/room/${item.id}`}
@@ -125,13 +141,6 @@ export function ChatRooms() {
                   ) : (
                     <t style={{ color: "white" }}> {item.created_by}</t>
                   )}
-                  {/* Created by: {item.created_by}
-              {userId === item.created_by_id && item.created_by !== userInfo?.username && (
-                <p style={{ color: "indigo" }}> (old username)</p>
-              )}
-              {userId === item.created_by_id && (
-                <p style={{ color: "orange", fontWeight: "bold" }}> (You)</p>
-              )} */}
                 </h4>
               </div>
             </Link>
@@ -257,6 +266,7 @@ export function ChatRooms() {
           )}
         </div>
       </div>
+      {isPopupVisible && <ChatRoomInfoPopup info={popupInfo} onClose={handleClosePopup} />}
     </div>
   ) : chatRooms ? (
     <div className="loading-results-layout-div">
@@ -264,7 +274,7 @@ export function ChatRooms() {
     </div>
   ) : (
     <div className="loading-results-layout-div">
-      <h1> There are currently no opne chat rooms. </h1>
+      <h1> There are currently no open chat rooms. </h1>
     </div>
   );
 }

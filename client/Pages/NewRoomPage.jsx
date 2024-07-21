@@ -11,7 +11,16 @@ export default function ChatRoomsPage() {
   return username ? (
     <ChatRooms />
   ) : (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", color: "white" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        color: "white",
+      }}
+    >
       <h1>Please log in</h1>
       <button onClick={() => navigate("/login")} style={{ width: "150px", height: "50px", fontSize: "1.3rem" }}>
         Login
@@ -22,21 +31,28 @@ export default function ChatRoomsPage() {
 
 export function ChatRooms() {
   const [isPublic, setIsPublic] = useState(true);
-  const { userId, userInfo, userFriends, chatRooms,  fetchUserInfo, fetchRooms } = useAuth();
+  const { userId, userInfo, userFriends, chatRooms, fetchUserInfo, fetchRooms } = useAuth();
   const [errorMessage, setErrorMessage] = useState();
-  const [searchResults, setSearchResults] = useState(["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8"]);
+  const [searchResults, setSearchResults] = useState([
+    "Item 1",
+    "Item 2",
+    "Item 3",
+    "Item 4",
+    "Item 5",
+    "Item 6",
+    "Item 7",
+    "Item 8",
+  ]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const searchContainerRef = useRef(null);
   const [webSocket] = useWebSocket();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams()
-  const roomId = searchParams.get("roomid");
 
   useEffect(() => {
     fetchRooms();
-    fetch
+    fetch;
     fetchUserInfo();
     setSearchResults(userFriends);
   }, []);
@@ -52,7 +68,7 @@ export function ChatRooms() {
     for (user of selectedItems) {
       usersToInvite.push(user.id);
     }
-    usersToInvite.push(userId)
+    usersToInvite.push(userId);
     console.log(usersToInvite);
     const data = {
       title: e.target.title.value,
@@ -74,14 +90,13 @@ export function ChatRooms() {
     if (!res.ok) {
       setErrorMessage("A room with that name already exists!");
     } else {
-
       const webSocketMessage = {
-        type: "UPDATE_ROOM",
+        type: "CHAT_ROOMS_UPDATE",
         user_id: userId,
-        room_id: roomId
-      }
+        roomid: chatRooms.length + 1,
+      };
       if (webSocket) {
-        webSocket.send(JSON.stringify())
+        webSocket.send(JSON.stringify(webSocketMessage));
       }
       navigate("/chatrooms");
     }
@@ -97,9 +112,10 @@ export function ChatRooms() {
     if (event.target.value === "") {
       setShowResults(false);
     } else {
-      const results = userFriends.filter((item) =>
-        item.username.toLowerCase().includes(event.target.value.toLowerCase())
-       || item.email.toLowerCase().includes(event.target.value.toLowerCase())
+      const results = userFriends.filter(
+        (item) =>
+          item.username.toLowerCase().includes(event.target.value.toLowerCase()) ||
+          item.email.toLowerCase().includes(event.target.value.toLowerCase()),
       );
       setSearchResults(results);
     }
@@ -114,7 +130,7 @@ export function ChatRooms() {
   };
 
   const handleRemoveItem = (item) => {
-    setSelectedItems(selectedItems.filter(i => i !== item));
+    setSelectedItems(selectedItems.filter((i) => i !== item));
   };
 
   const handleFocus = () => {
@@ -145,7 +161,7 @@ export function ChatRooms() {
         <div style={{ textAlign: "start" }}>
           <textarea name="description" placeholder="Write a description for the room" required />
         </div>
-        <div className={`submit-form-bottom-section-${isPublic ?  "is-public" : "not-public"}`}>
+        <div className={`submit-form-bottom-section-${isPublic ? "is-public" : "not-public"}`}>
           {!isPublic && (
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
@@ -154,7 +170,7 @@ export function ChatRooms() {
                   ref={searchContainerRef}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
-                  style={{display: "flex", flexDirection: "column", alignItems: "start"}}
+                  style={{ display: "flex", flexDirection: "column", alignItems: "start" }}
                 >
                   <input
                     type="text"
@@ -165,7 +181,11 @@ export function ChatRooms() {
                   {showResults && searchResults.length > 0 && (
                     <ul className="search-results">
                       {searchResults.map((result) => (
-                        <li key={result.id} onClick={() => handleItemClick(result)} style={{display: "flex", gap: "20px"}}>
+                        <li
+                          key={result.id}
+                          onClick={() => handleItemClick(result)}
+                          style={{ display: "flex", gap: "20px" }}
+                        >
                           <h4>{result.username}</h4> <i>{`(${result.email})`}</i>
                         </li>
                       ))}
@@ -183,7 +203,7 @@ export function ChatRooms() {
               </div>
             </div>
           )}
-            <button type="submit" >Create room</button>
+          <button type="submit">Create room</button>
         </div>
         {errorMessage && <h1 style={{ color: "red" }}>{errorMessage}</h1>}
       </form>
