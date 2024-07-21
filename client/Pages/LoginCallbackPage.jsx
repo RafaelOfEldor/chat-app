@@ -1,36 +1,27 @@
-import React, { useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./css/loadingAndFiller.css";
+import { useWebSocket } from "../context/WebSocketContext";
 
 export default function LoginCallbackPage(props) {
-  const [debug, setDebug] = React.useState();
-  const [error, setError] = React.useState();
+  const [debug, setDebug] = useState();
+  const [error, setError] = useState();
   const navigate = useNavigate();
-  const {
-    loadUser,
-    microsoft_client_id,
-    google_client_id,
-    microsoft_openid_config,
-    google_openid_config,
-  } = useAuth();
+  const [webSocket, setWebSocket] = useWebSocket();
+  const { loadUser } = useAuth();
 
   async function handleCallback() {
-    const hashObject = Object.fromEntries(
-      new URLSearchParams(window.location.hash.substring(1)),
-    );
+    const credentialsRes = await fetch("/api/auth/login/credentials");
+    const credentials = await credentialsRes.json();
+    const { google_openid_config, microsoft_openid_config, google_client_id, microsoft_client_id } = credentials;
+    const hashObject = Object.fromEntries(new URLSearchParams(window.location.hash.substring(1)));
     setDebug(hashObject.access_token);
     let { access_token, state, code, error, error_description } = hashObject;
     const { token_endpoint } = await fetchJSON(microsoft_openid_config);
     const code_verifier = window.sessionStorage.getItem("code_verifier");
-    // console.log(hashObject)
-
-    // console.log(token_endpoint)
 
     if (code) {
-      // console.log(code)
-      // console.log(token_endpoint)
-      // console.log(microsoft_openid_config)
-      // console.log(code_verifier)
       const res = await fetch(token_endpoint, {
         method: "POST",
         body: new URLSearchParams({
@@ -42,7 +33,6 @@ export default function LoginCallbackPage(props) {
         }),
       });
       const json = await res.json();
-      // console.log(json);
       access_token = json.access_token;
     }
 
@@ -57,7 +47,10 @@ export default function LoginCallbackPage(props) {
     if (!res.ok) {
       throw new Error("Something went wrong in callback " + res.statusText);
     }
-    await loadUser();
+    const loadedUserId = await loadUser();
+    const ws = new WebSocket(window.location.origin.replace(/^http/, "ws") + `?userid=${loadedUserId}`);
+
+    setWebSocket(ws);
     navigate("/profile");
   }
 
@@ -69,12 +62,12 @@ export default function LoginCallbackPage(props) {
     return await res.json();
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleCallback();
   }, [window.location.hash]);
   return (
     <div style={{ marginTop: "100px" }}>
-      <div className="lodaing-results-layout-div">
+      <div className="loading-results-layout-div">
         <h1> Loading profile... </h1>
       </div>
       <div>{error}</div>

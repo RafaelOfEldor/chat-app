@@ -1,19 +1,17 @@
 import React from "react";
-import dotenv from "dotenv";
-import { useAuth } from "../context/AuthContext";
-dotenv.config({ path: `${__dirname}/../.env` });
-
-const discoveryUrl = process.env.OPENID_GOOGLE_URL;
 
 export default function LoginWithOpenidButton() {
   const [authorizationUrl, setAuthorizationUrl] = React.useState();
-  const { google_client_id } = useAuth();
 
   async function loadAuthorizationUrl() {
+    const credentialsRes = await fetch("/api/auth/login/credentials");
+    const credentials = await credentialsRes.json();
+    const { google_openid_config, microsoft_openid_config, google_client_id, microsoft_client_id } = credentials;
+
     const state = randomString(50);
     window.sessionStorage.setItem("state", state);
 
-    const res = await fetch(discoveryUrl);
+    const res = await fetch(google_openid_config);
     const discoveryDoc = await res.json();
     const params = {
       response_mode: "fragment",
@@ -24,9 +22,7 @@ export default function LoginWithOpenidButton() {
       prompt: "consent",
       state,
     };
-    setAuthorizationUrl(
-      discoveryDoc.authorization_endpoint + "?" + new URLSearchParams(params),
-    );
+    setAuthorizationUrl(discoveryDoc.authorization_endpoint + "?" + new URLSearchParams(params));
   }
   React.useEffect(() => {
     loadAuthorizationUrl();
@@ -43,8 +39,7 @@ export default function LoginWithOpenidButton() {
 
 function randomString(length) {
   let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {

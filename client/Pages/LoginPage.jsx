@@ -1,15 +1,15 @@
-import React, { useRef } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoginWithOpenidButton from "../functions/LoginWithOpenidButton";
 import LoginWithActiveDirectoryButton from "../functions/LoginWithActiveDirectoryButton";
+import "./css/loginPage.css";
 
 export default function LoginPage(props) {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { loadUser } = useAuth();
+  const { loadUser, username } = useAuth();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -26,8 +26,16 @@ export default function LoginPage(props) {
     loadUser();
     navigate("/");
   }
-  return (
-    <div>
+  return username ? (
+    navigate("/profile")
+  ) : (
+    <div
+      style={{
+        background: "linear-gradient(135deg, rgba(78, 84, 200, 1), rgba(143, 148, 251, 1))",
+        width: "100vw",
+        height: "100vh",
+      }}
+    >
       <div onSubmit={handleSubmit} className="login-div">
         <h1 style={{ marginBottom: "40px" }}>Login:</h1>
         <LoginWithActiveDirectoryButton />

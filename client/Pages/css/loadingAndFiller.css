@@ -1,0 +1,10 @@
+.loading-results-layout-div {
+  display: flex;
+  margin-top: 50vh;
+  margin-left: 45vw;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  color: white;
+}

@@ -16,10 +16,12 @@ export function AuthenticationRouter(mongoDatabase) {
           email: req.user.email,
           username: req.user.username,
           bio: "",
+          friends: [],
+          requests: [],
+          active_chats: [],
+          status: "online",
         };
-        const userExists = await mongoDatabase
-          .collection("users")
-          .findOne({ id: req.user.sub });
+        const userExists = await mongoDatabase.collection("users").findOne({ id: req.user.sub });
         if (!userExists) {
           await mongoDatabase.collection("users").insertOne(user);
         }
@@ -27,6 +29,21 @@ export function AuthenticationRouter(mongoDatabase) {
       } else {
         res.sendStatus(401);
       }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ error: "Failed to fetch user" });
+    }
+  });
+
+  router.get("/login/credentials", async (req, res) => {
+    try {
+      const data = {
+        google_openid_config: process.env.GOOGLE_DISCOVERY_URL,
+        microsoft_openid_config: process.env.MICROSOFT_DISCOVERY_URL,
+        google_client_id: process.env.GOOGLE_CLIENT_ID,
+        microsoft_client_id: process.env.MICROSOFT_CLIENT_ID,
+      };
+      res.json(data);
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ error: "Failed to fetch user" });
@@ -65,7 +82,7 @@ export function AuthenticationRouter(mongoDatabase) {
       res.sendStatus(204);
     } catch (error) {
       console.error("Error getting access token:", error);
-      res.status(500).json({ error: "Failed to create goal" });
+      res.status(500).json({ error: "Failed to get access token" });
     }
     res.end();
   });

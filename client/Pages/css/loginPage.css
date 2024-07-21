@@ -1,0 +1,85 @@
+.back-to-home-from-login-button {
+  text-decoration: none;
+  display: flex;
+  border-style: solid;
+  border-color: rgb(24, 6, 12);
+  width: 250px;
+  height: 60px;
+  font-size: 0.8rem;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10vh;
+  margin-left: 50vw;
+  transform: translate(-50%);
+  transition: ease-in-out 0.1s;
+}
+
+body {
+}
+
+.back-to-home-from-login-button:hover {
+  background-color: rgba(10, 16, 36, 0.3);
+  cursor: pointer;
+}
+
+.login-button-link {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  width: 350px;
+  height: 70px;
+  border-radius: 50px;
+  text-decoration: none;
+  border-style: solid;
+  font-size: 1.8rem;
+  transition: ease-in-out 0.1s;
+}
+
+.login-button-link.microsoft:hover {
+  color: black;
+  background-color: rgba(67, 99, 201, 0.3);
+  cursor: pointer;
+}
+
+.login-button-link.google:hover {
+  color: black;
+  background-color: rgba(197, 100, 44, 0.3);
+  cursor: pointer;
+}
+
+.login-button-link.google {
+  color: red;
+  border-style: solid;
+  font-size: 1.5rem;
+  border-color: red;
+}
+
+.login-button-link.microsoft {
+  color: blue;
+  border-style: solid;
+  font-size: 1.5rem;
+  border-color: blue;
+}
+
+.login-button-link > h1 {
+  font-size: 1rem;
+}
+
+.login-div {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  margin-left: 50vw;
+  margin-top: 30vh;
+  justify-content: center;
+  transform: translate(-50%);
+  align-items: center;
+}
+
+.login-div > input {
+  height: 30px;
+  width: 200px;
+}

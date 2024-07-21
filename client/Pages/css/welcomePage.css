@@ -1,0 +1,91 @@
+.welcome-container {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  color: #a0e1ff;
+}
+
+.message-area {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.left-side {
+  left: 0;
+  background: transparent;
+}
+
+.right-side {
+  right: 0;
+  background: transparent;
+}
+
+.floating-message {
+  backdrop-filter: blur(5px);
+  padding: 10px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+
+.floating-messages-container {
+  filter: blur(4px);
+}
+
+.welcome-description {
+  filter: none;
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  filter: none;
+}
+
+.welcome-title {
+  font-size: 3rem;
+  color: rgb(0, 15, 231);
+}
+
+.welcome-description {
+  font-size: 1.5rem;
+  margin: 20px 0;
+  max-width: 600px;
+}
+
+.welcome-button {
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  color: white;
+  margin-top: 20px;
+  background-color: #4e54c8;
+  border: none;
+  border-radius: 25px;
+  text-decoration: none;
+  cursor: pointer;
+  width: 200px;
+  transition: background-color 0.3s;
+}
+
+.welcome-button:hover {
+  background-color: #67a8ff;
+}
+
+.highlight {
+  color: #3e00b1;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(51, 30, 104, 0.63);
+}
