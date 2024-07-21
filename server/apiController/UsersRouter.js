@@ -265,7 +265,6 @@ export function UsersRouter(mongoDatabase) {
       const result = await mongoDatabase
         .collection("users")
         .findOneAndUpdate({ id: user_id }, { $set: { status: status } }, { returnOriginal: false });
-      console.log("result", result);
       if (result === null) {
         return res.status(404).json({ error: "User not found" });
       }

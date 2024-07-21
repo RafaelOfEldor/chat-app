@@ -9,9 +9,12 @@ export default function LoginCallbackPage(props) {
   const [error, setError] = React.useState();
   const navigate = useNavigate();
   const [webSocket, setWebSocket] = useWebSocket();
-  const { loadUser, microsoft_client_id, google_client_id, microsoft_openid_config, google_openid_config } = useAuth();
+  const { loadUser } = useAuth();
 
   async function handleCallback() {
+    const credentialsRes = await fetch("/api/auth/login/credentials");
+    const credentials = await credentialsRes.json();
+    const { google_openid_config, microsoft_openid_config, google_client_id, microsoft_client_id } = credentials;
     const hashObject = Object.fromEntries(new URLSearchParams(window.location.hash.substring(1)));
     setDebug(hashObject.access_token);
     let { access_token, state, code, error, error_description } = hashObject;

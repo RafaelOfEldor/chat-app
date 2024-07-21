@@ -35,7 +35,6 @@ export function ChatRouter(mongoDatabase) {
       const { user_id, rooms } = req.body;
 
       const response = [];
-      // console.log(rooms);
 
       for (const room of rooms) {
         const { id, prevMessages } = room;
@@ -64,7 +63,6 @@ export function ChatRouter(mongoDatabase) {
         }
       }
       if (response?.length > 0) {
-        // console.log(response);
         res.json(response);
       } else {
         res.sendStatus(204);
@@ -89,8 +87,6 @@ export function ChatRouter(mongoDatabase) {
     try {
       const { room_id, room_length } = req.body;
 
-      console.log("room id", room_id);
-      console.log("room length", room_length);
       let i;
       let a = [];
       for (i = room_length - 1; i > room_length - 11 && i >= 0; i--) {
@@ -177,22 +173,31 @@ export function ChatRouter(mongoDatabase) {
       const userInput = req.body;
       const { room_id } = userInput;
 
-      const chatRoom = await mongoDatabase.collection("chat-rooms").findOneAndDelete({ id: parseInt(room_id) });
+      const roomId = parseInt(room_id);
+
+      const chatRoom = await mongoDatabase.collection("chat-rooms").findOneAndDelete({ id: roomId });
 
       if (chatRoom === null) {
         return res.status(404).json({ error: "Room not found" });
       }
 
-      const messages = await mongoDatabase.collection("chat-messages").deleteMany({ chat_room: parseInt(room_id) });
+      await mongoDatabase.collection("chat-messages").deleteMany({ chat_room: roomId });
 
       const roomsToReorder = await mongoDatabase
         .collection("chat-rooms")
-        .find({ id: { $gt: room_id } })
+        .find({ id: { $gt: roomId } })
         .toArray();
 
       for (const room of roomsToReorder) {
-        await mongoDatabase.collection("chat-rooms").updateOne({ id: room.id }, { $set: { id: room.id - 1 } });
+        const newRoomId = room.id - 1;
+
+        await mongoDatabase.collection("chat-rooms").updateOne({ id: room.id }, { $set: { id: newRoomId } });
+
+        await mongoDatabase
+          .collection("chat-messages")
+          .updateMany({ chat_room: room.id }, { $set: { chat_room: newRoomId } });
       }
+
       res.status(200).json({ deletedRoom: chatRoom });
     } catch (error) {
       console.error("Error removing room:", error);

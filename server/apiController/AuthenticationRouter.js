@@ -35,6 +35,21 @@ export function AuthenticationRouter(mongoDatabase) {
     }
   });
 
+  router.get("/login/credentials", async (req, res) => {
+    try {
+      const data = {
+        google_openid_config: process.env.GOOGLE_DISCOVERY_URL,
+        microsoft_openid_config: process.env.MICROSOFT_DISCOVERY_URL,
+        google_client_id: process.env.GOOGLE_CLIENT_ID,
+        microsoft_client_id: process.env.MICROSOFT_CLIENT_ID,
+      };
+      res.json(data);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ error: "Failed to fetch user" });
+    }
+  });
+
   router.delete("/login", (req, res) => {
     try {
       console.log(req.user);

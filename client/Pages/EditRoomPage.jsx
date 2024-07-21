@@ -66,7 +66,7 @@ export function ChatRooms() {
     const roomRes = await fetch(`/api/chats/room/${roomId}`);
     const room = await roomRes.json();
     setSelectedItems(userFriends.filter((user) => room[0]?.users?.includes(user.id)));
-    setIsPublic(room.isPublic);
+    setIsPublic(room[0].isPublic);
   }
 
   async function handleSubmit(e) {

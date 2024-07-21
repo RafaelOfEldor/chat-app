@@ -34,12 +34,6 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-const baseUrl = process.env.REACT_APP_ENVIRONMENT_BASE_URL;
-const googleClientId = process.env.GOOGLE_CLIENT_ID;
-const microsoftClientId = process.env.MICROSOFT_CLIENT_ID;
-const openIdMicrosoftUrl = process.env.OPENID_MICROSOFT_URL;
-const openIdGoogleUrl = process.env.OPENID_GOOGLE_URL;
-
 export function AuthProvider({ children }) {
   const [chatRooms, setChatRooms] = useState([]);
   const [usersChatRooms, setUsersChatRooms] = useState([]);
@@ -56,9 +50,10 @@ export function AuthProvider({ children }) {
   const [webSocket, setWebSocket] = useWebSocket();
 
   async function loadUser() {
-    const res = await fetch(`${baseUrl}/api/auth/login`);
+    const res = await fetch(`/api/auth/login`);
     if (res.ok) {
       const user = await res.json();
+
       setUsername(user.username);
       setFullName(user.fullName);
       setUserId(user.sub);
@@ -260,10 +255,6 @@ export function AuthProvider({ children }) {
         userRequests,
         usersChatRooms,
         allUsers,
-        google_client_id: googleClientId,
-        microsoft_client_id: microsoftClientId,
-        microsoft_openid_config: openIdMicrosoftUrl,
-        google_openid_config: openIdGoogleUrl,
         setUsername,
         setAllUsers,
         setUserId,

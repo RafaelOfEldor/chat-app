@@ -3,20 +3,21 @@ import dotenv from "dotenv";
 import { useAuth } from "../context/AuthContext";
 dotenv.config({ path: `${__dirname}/../.env` });
 
-const discoveryUrl = process.env.OPENID_MICROSOFT_URL;
-
 export default function LoginWithActiveDirectoryButton() {
   const [authorizationUrl, setAuthorizationUrl] = React.useState();
-  const { microsoft_client_id, microsoft_openid_config } = useAuth();
 
   async function loadAuthorizationUrl() {
+    const credentialsRes = await fetch("/api/auth/login/credentials");
+    const credentials = await credentialsRes.json();
+    const { google_openid_config, microsoft_openid_config, google_client_id, microsoft_client_id } = credentials;
+
     const code_verifier = randomString(50);
     window.sessionStorage.setItem("code_verifier", code_verifier);
     const code_challenge = await sha256(code_verifier);
     const state = randomString(50);
     window.sessionStorage.setItem("state", state);
 
-    const res = await fetch(discoveryUrl);
+    const res = await fetch(microsoft_openid_config);
     const discoveryDoc = await res.json();
     const params = {
       response_mode: "fragment",
