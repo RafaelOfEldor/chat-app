@@ -1,6 +1,6 @@
-## chat-app
+## Link to website: https://yappington-719d6fb9e2ff.herokuapp.com
 
-## Link to website: https://yappington-719d6fb9e2ff.herokuapp.com/
+## chat-app
 
 A MERN-stack chat application utilizing websockets for live updates. Deployed on heroku.
 
