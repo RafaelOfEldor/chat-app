@@ -6,6 +6,7 @@ import "./css/chatRoomsPage.css";
 import "./css/loadingAndFiller.css";
 import { useWebSocket } from "../context/WebSocketContext";
 import ChatRoomInfoPopup from "../components/ChatRoomInfoPopup";
+import { FiSearch } from "react-icons/fi";
 
 export default function ChatRoomsPage() {
   const { username, userId, setUsername, setWebSocket, webSocket, loadUser } = useAuth();
@@ -53,6 +54,9 @@ export function ChatRooms() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [popupInfo, setPopupInfo] = useState("");
 
+  const [roomSearchQuery, setRoomSearchQuery] = useState("");
+  const [dmSearchQuery, setDmSearchQuery] = useState("");
+
   useEffect(() => {
     fetchAllUsers();
     fetchUserInfo();
@@ -64,8 +68,6 @@ export function ChatRooms() {
       webSocket.send(JSON.stringify(newSendMessage));
     }
   }, [newSendMessage]);
-
-  useEffect(() => {}, [chatRooms]);
 
   async function handleDeleteRoom(id) {
     if (webSocket) {
@@ -92,7 +94,34 @@ export function ChatRooms() {
     setPopupInfo("");
   };
 
-  const chatRoomsElement = chatRooms.map((item, index) => {
+  const handleRoomSearch = (event) => {
+    setRoomSearchQuery(event.target.value);
+  };
+
+  const handleDmSearch = (event) => {
+    setDmSearchQuery(event.target.value);
+  };
+
+  const filteredChatRooms = chatRooms.filter(
+    (item) =>
+      item.title.toLowerCase().includes(roomSearchQuery.toLowerCase()) ||
+      item.created_by.toLowerCase().includes(roomSearchQuery.toLowerCase()),
+  );
+
+  const filteredDirectMessages = chatRooms.filter(
+    (item) =>
+      item.type === "dm" &&
+      item.users.length === 2 &&
+      item.users.includes(userId) &&
+      allUsers.some(
+        (user) =>
+          user.id === item.users.find((user) => user !== userId) &&
+          (user.username.toLowerCase().includes(dmSearchQuery.toLowerCase()) ||
+            user.email.toLowerCase().includes(dmSearchQuery.toLowerCase())),
+      ),
+  );
+
+  const chatRoomsElement = filteredChatRooms.map((item, index) => {
     const roomMessages = usersChatRoomsLatestMessages.find((chat) => chat.id === item?.id);
     let amountOfMessages = null;
     if (roomMessages) {
@@ -175,7 +204,7 @@ export function ChatRooms() {
     return map;
   }, [allUsers]);
 
-  const directMessagesElement = chatRooms.map((item, index) => {
+  const directMessagesElement = filteredDirectMessages.map((item, index) => {
     if (item?.type !== "dm") return null;
     if (item?.users?.length !== 2) return null;
     if (item?.users?.includes(userId)) {
@@ -226,12 +255,50 @@ export function ChatRooms() {
     }
     return null;
   });
-  return chatRoomsElement.length > 0 ? (
+
+  return chatRoomsElement.length > 0 ||
+    (directMessagesElement.length > 0 && dmSearchQuery === "" && roomSearchQuery === "") ? (
     <div className="chat-rooms-page">
       <div style={{ display: "flex", gap: "0", height: "100%" }}>
         <div className="chat-rooms-list-container">
-          <h1 style={{ marginLeft: "2vw" }}>Chat rooms</h1>
-          <div className="chat-rooms-list">{chatRoomsElement}</div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingRight: "5vw",
+              paddingTop: "2vh",
+            }}
+          >
+            <h1 style={{ marginLeft: "2vw" }}>Chat rooms</h1>
+            <div className="search-wrapper">
+              <FiSearch style={{ translate: "0% -30%" }} />
+              <input
+                type="text"
+                placeholder="Search chat rooms..."
+                value={roomSearchQuery}
+                onChange={handleRoomSearch}
+                style={{ marginBottom: "10px", paddingLeft: "30px" }}
+              />
+            </div>
+          </div>
+          {chatRoomsElement.length > 0 ? (
+            <div className="chat-rooms-list">{chatRoomsElement}</div>
+          ) : (
+            <div
+              className="chat-rooms-list"
+              style={{
+                fontSize: "2rem",
+                marginTop: "30vh",
+                marginLeft: "47vw",
+                display: "flex",
+                alignItems: "center",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <i>You currently have no chatrooms.</i>
+            </div>
+          )}
           <div className="new-room-button-div">
             <Link to="/newroom" className="new-room-button">
               <h3>Create new room +</h3>
@@ -255,10 +322,177 @@ export function ChatRooms() {
           >
             Direct messages
           </h2>
+
+          <div className="search-wrapper" style={{ width: "90%", paddingRight: "20px" }}>
+            <FiSearch style={{ translate: "0% -30%" }} />
+            <input
+              type="text"
+              placeholder="Search direct messages..."
+              value={dmSearchQuery}
+              onChange={handleDmSearch}
+              style={{ marginBottom: "10px", paddingLeft: "30px", width: "90%" }}
+            />
+          </div>
           {directMessagesElement?.length > 0 ? (
             directMessagesElement
           ) : (
             <i style={{ marginTop: "10px" }}>You currently have no direct messages.</i>
+          )}
+        </div>
+      </div>
+      {isPopupVisible && <ChatRoomInfoPopup info={popupInfo} allUsers={allUsers} onClose={handleClosePopup} />}
+    </div>
+  ) : roomSearchQuery !== "" && chatRooms ? (
+    <div className="chat-rooms-page">
+      <div style={{ display: "flex", gap: "0", height: "100%" }}>
+        <div className="chat-rooms-list-container">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingRight: "5vw",
+              paddingTop: "2vh",
+            }}
+          >
+            <h1 style={{ marginLeft: "2vw" }}>Chat rooms</h1>
+            <div className="search-wrapper">
+              <FiSearch style={{ translate: "0% -30%" }} />
+              <input
+                type="text"
+                placeholder="Search chat rooms..."
+                value={roomSearchQuery}
+                onChange={handleRoomSearch}
+                style={{ marginBottom: "10px", paddingLeft: "30px" }}
+              />
+            </div>
+          </div>
+          <div className="chat-rooms-list">
+            <i>Couldn't find any matching chatrooms...</i>
+          </div>
+          <div className="new-room-button-div">
+            <Link to="/newroom" className="new-room-button">
+              <h3>Create new room +</h3>
+            </Link>
+          </div>
+        </div>
+        <div className="direct-messages-sidebar">
+          <h2
+            style={{
+              marginBottom: "10px",
+              position: "sticky",
+              top: "0",
+              backgroundColor: "rgba(68, 72, 119, 1)",
+              marginLeft: "auto",
+              width: "100%",
+              zIndex: "100",
+              color: "#009bcb",
+              borderBottom: "solid 1px #151A1E",
+              boxShadow: "0 4px 2px -2px rgba(0, 0, 0, 0.4)",
+            }}
+          >
+            Direct messages
+          </h2>
+          <div className="search-wrapper" style={{ width: "90%", paddingRight: "20px" }}>
+            <FiSearch style={{ translate: "0% -30%" }} />
+            <input
+              type="text"
+              placeholder="Search direct messages..."
+              value={dmSearchQuery}
+              onChange={handleDmSearch}
+              style={{ marginBottom: "10px", paddingLeft: "30px", width: "90%" }}
+            />
+          </div>
+          {directMessagesElement?.length > 0 ? (
+            directMessagesElement
+          ) : dmSearchQuery === "" ? (
+            <i style={{ marginTop: "10px" }}>You currently have no direct messages.</i>
+          ) : (
+            <i style={{ marginTop: "10px" }}>Couldn't find any matching direct messages...</i>
+          )}
+        </div>
+      </div>
+      {isPopupVisible && <ChatRoomInfoPopup info={popupInfo} allUsers={allUsers} onClose={handleClosePopup} />}
+    </div>
+  ) : dmSearchQuery !== "" && chatRooms ? (
+    <div className="chat-rooms-page">
+      <div style={{ display: "flex", gap: "0", height: "100%" }}>
+        <div className="chat-rooms-list-container">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingRight: "5vw",
+              paddingTop: "2vh",
+            }}
+          >
+            <h1 style={{ marginLeft: "2vw" }}>Chat rooms</h1>
+            <div className="search-wrapper">
+              <FiSearch style={{ translate: "0% -30%" }} />
+              <input
+                type="text"
+                placeholder="Search chat rooms..."
+                value={roomSearchQuery}
+                onChange={handleRoomSearch}
+                style={{ marginBottom: "10px", paddingLeft: "30px" }}
+              />
+            </div>
+          </div>
+          {chatRoomsElement.length === 0 ? (
+            <div className="chat-rooms-list">{chatRoomsElement}</div>
+          ) : (
+            <div
+              className="chat-rooms-list"
+              style={{
+                fontSize: "2rem",
+                marginTop: "30vh",
+                marginLeft: "47vw",
+                display: "flex",
+                alignItems: "center",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <i>Couldn't find any chatrooms...</i>
+            </div>
+          )}
+          <div className="new-room-button-div">
+            <Link to="/newroom" className="new-room-button">
+              <h3>Create new room +</h3>
+            </Link>
+          </div>
+        </div>
+        <div className="direct-messages-sidebar">
+          <h2
+            style={{
+              marginBottom: "10px",
+              position: "sticky",
+              top: "0",
+              backgroundColor: "rgba(68, 72, 119, 1)",
+              marginLeft: "auto",
+              width: "100%",
+              zIndex: "100",
+              color: "#009bcb",
+              borderBottom: "solid 1px #151A1E",
+              boxShadow: "0 4px 2px -2px rgba(0, 0, 0, 0.4)",
+            }}
+          >
+            Direct messages
+          </h2>
+          <div className="search-wrapper" style={{ width: "90%", paddingRight: "20px" }}>
+            <FiSearch style={{ translate: "0% -30%" }} />
+            <input
+              type="text"
+              placeholder="Search direct messages..."
+              value={dmSearchQuery}
+              onChange={handleDmSearch}
+              style={{ marginBottom: "10px", paddingLeft: "30px", width: "90%" }}
+            />
+          </div>
+          {directMessagesElement?.length > 0 ? (
+            directMessagesElement
+          ) : (
+            <i style={{ marginTop: "10px" }}>Couldn't find any matching direct messages...</i>
           )}
         </div>
       </div>

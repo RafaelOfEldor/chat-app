@@ -126,7 +126,7 @@
 }
 
 .search-wrapper input {
-  background: var(--background);
+  color: #ffffff;
   height: 2.5rem;
   width: 100%;
   border-radius: 0.5rem;
@@ -147,6 +147,11 @@
   right: 1.5rem;
   color: black;
   scale: 1.2;
+}
+
+.search__wrapper input::-webkit-input-placeholder {
+  color: #009bcb;
+  white-space: nowrap;
 }
 
 .user-element {
