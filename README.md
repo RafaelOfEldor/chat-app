@@ -6,7 +6,7 @@ A MERN-stack chat application utilizing websockets for live updates. Deployed on
 
 Any action a user can make that would affect what another user can see or do, happens live through the websocket.
 This includes things such as adding/removing friends, inviting/removing users
-from chat rooms, changing bio/username, sending messages etc.
+from chat rooms, sending messages etc.
 
 Made to improve and display my MERN-stack skills.
 
